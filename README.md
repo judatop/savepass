@@ -1,16 +1,20 @@
-# savepass
+# SavePass
 
-A new Flutter project.
+## Introduction
 
-## Getting Started
+SavePass project is a **password manager** developed in **Flutter**. Its goal is to provide a secure and easy-to-use solution for storing and managing passwords. The app will allow users to create an account, log in, and store their passwords in a secure way. The project is open source and can be used as a starting point for building your own password manager app, just make sure to follow best practices for security and privacy and mention the original project.
 
-This project is a starting point for a Flutter application.
+## Features
 
-A few resources to get you started if this is your first Flutter project:
+## Installation
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+To get a local copy up and running, follow these steps:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/judatop/savepass.git
+   ```
+
+## License
+
+This project is under the MIT License. See the [LICENSE](LICENSE) file.

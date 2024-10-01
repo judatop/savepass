@@ -1,0 +1,14 @@
+{
+    "@@locale": "es",
+    "getStartedTitle": "Almacena tus contraseñas",
+    "getStartedText": "Guarda todas tus contraseñas en un solo lugar",
+    "getStartedSingIn": "Ingresa",
+    "getStartedSingUp": "Regístrate",
+    "signInTitle": "Ingresa a SavePass",
+    "signInGoogle": "Ingresa con Google",
+    "signInFacebook": "Ingresa con Facebook",
+    "signInApple": "Ingresa con Apple",
+    "signInEmail": "Ingresa con tu correo",
+    "signInNoAccount": "¿No tienes una cuenta? Regístrate",
+    "mandatoryField": "Este campo es obligatorio"
+}

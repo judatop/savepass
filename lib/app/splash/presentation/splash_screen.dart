@@ -1,13 +1,56 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:savepass/core/config/routes.dart';
+import 'package:savepass/core/image/image_paths.dart';
 
-class SplashScreen extends StatelessWidget {
+const int splashDuration = 3000;
+const double imagePercentageWidth = 0.5;
+
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    // _initEvents();
+
+    Future.delayed(
+      const Duration(milliseconds: splashDuration),
+      () async {
+        Modular.to.navigate(Routes.getStartedRoute);
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: SystemUiOverlay.values,
+    );
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const AdsScreenTemplate(
-      child: Text('Splash Screen'),
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      backgroundColor: ADSFoundationsColors.whiteColor,
+      body: Center(
+        child: Image.asset(
+          ImagePaths.logoLightImage,
+          width: screenWidth,
+        ),
+      ),
     );
   }
 }

@@ -1,0 +1,14 @@
+{
+    "@@locale": "en",
+    "getStartedTitle": "Store your passwords",
+    "getStartedText": "Save all your passwords in one place",
+    "getStartedSingIn": "Sign in",
+    "getStartedSingUp": "Sign up",
+    "signInTitle": "Sign in to SavePass",
+    "signInGoogle": "Sign in with Google",
+    "signInFacebook": "Sign in with Facebook",
+    "signInApple": "Sign in with Apple",
+    "signInEmail": "Sign in with your email",
+    "signInNoAccount": "¿Don't have an account? Sign up",
+    "mandatoryField": "This field is mandatory"
+}

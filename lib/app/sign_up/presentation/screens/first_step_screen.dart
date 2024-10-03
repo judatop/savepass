@@ -8,6 +8,8 @@ import 'package:savepass/app/sign_up/presentation/blocs/sign_up_state.dart';
 import 'package:savepass/app/sign_up/presentation/widgets/first_step/name_widget.dart';
 import 'package:savepass/app/sign_up/presentation/widgets/first_step/terms_widget.dart';
 import 'package:savepass/app/sign_up/presentation/widgets/first_step/submit_terms_button_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/core/config/routes.dart';
 
 class FirstStepScreen extends StatelessWidget {
   const FirstStepScreen({super.key});
@@ -33,25 +35,68 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceHeight = MediaQuery.of(context).size.height;
+    final appLocalizations = AppLocalizations.of(context)!;
 
-    return AdsScreenTemplate(
-      wrapScroll: false,
-      safeAreaBottom: false,
-      goBack: true,
-      child: Padding(
-        padding: EdgeInsets.only(top: deviceHeight * 0.15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+    return PopScope(
+      canPop: false,
+      child: AdsScreenTemplate(
+        wrapScroll: false,
+        safeAreaBottom: false,
+        child: Stack(
           children: [
-            const AdsTitle(
-              text: 'Let\'s start with your name',
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AdsTitle(
+                  text: appLocalizations.signUpTitle,
+                ),
+                SizedBox(height: deviceHeight * 0.04),
+                const NameWidget(),
+                SizedBox(height: deviceHeight * 0.015),
+                const SubmitTermsButtonWidget(),
+                SizedBox(height: deviceHeight * 0.04),
+                const TermsWidget(),
+              ],
             ),
-            SizedBox(height: deviceHeight * 0.04),
-            const NameWidget(),
-            SizedBox(height: deviceHeight * 0.015),
-            const SubmitTermsButtonWidget(),
-            SizedBox(height: deviceHeight * 0.04),
-            const TermsWidget(),
+            const _SignUpButton(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SignUpButton extends StatelessWidget {
+  const _SignUpButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final appLocalizations = AppLocalizations.of(context)!;
+
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Container(
+        color: colorScheme.brightness == Brightness.light
+            ? Colors.transparent
+            : Colors.black,
+        child: Column(
+          children: [
+            if (colorScheme.brightness == Brightness.light) const Divider(),
+            AdsTextButton(
+              text: appLocalizations.signUpAlreadyAccount,
+              onPressedCallback: () {
+                Modular.to.pop();
+                Modular.to.pushNamed(Routes.signInRoute);
+              },
+              textStyle: const TextStyle(
+                color: Colors.blue,
+              ),
+            ),
           ],
         ),
       ),

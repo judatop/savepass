@@ -29,12 +29,12 @@ class GetStartedScreen extends StatelessWidget {
 
 void _listener(context, state) {
   if (state is OpenSignInState) {
-    // final bloc = Modular.get<SignInBloc>();
-    // bloc.add(const SignInInitialEvent());
+    Modular.to.pop();
     Modular.to.pushNamed(Routes.signInRoute);
   }
 
   if (state is OpenSignUpState) {
+    Modular.to.pop();
     Modular.to.pushNamed(Routes.singUpFirstStepRoute);
   }
 }

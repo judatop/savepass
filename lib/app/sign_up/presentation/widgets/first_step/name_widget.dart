@@ -12,6 +12,7 @@ class NameWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Modular.get<SignUpBloc>();
+
     return BlocBuilder<SignUpBloc, SignUpState>(
       buildWhen: (previous, current) =>
           (previous.model.name != current.model.name) ||

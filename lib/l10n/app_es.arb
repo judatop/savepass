@@ -10,6 +10,11 @@
     "signInApple": "Ingresa con Apple",
     "signInEmail": "Ingresa con tu correo",
     "signInNoAccount": "¿No tienes una cuenta? Regístrate",
+    "signUpAlreadyAccount": "¿Ya tienes una cuenta? Ingresa",
     "mandatoryField": "Este campo es obligatorio",
-    "nameAtLeast3Characters": "El nombre debe tener al menos 3 caracteres"
+    "nameAtLeast3Characters": "El nombre debe tener al menos 3 caracteres",
+    "signUpTitle": "Comencemos con tu nombre",
+    "signUpButtonText": "Continuar",
+    "byJoiningText": "Al unirte, aceptas nuestra",
+    "privacyPolicy": "Política de privacidad"
 }

@@ -5,6 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_bloc.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_event.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_state.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SubmitTermsButtonWidget extends StatelessWidget {
   const SubmitTermsButtonWidget({super.key});
@@ -12,6 +13,8 @@ class SubmitTermsButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Modular.get<SignUpBloc>();
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return BlocBuilder<SignUpBloc, SignUpState>(
       buildWhen: (previous, current) =>
           (previous.model.name != current.model.name),
@@ -24,7 +27,7 @@ class SubmitTermsButtonWidget extends StatelessWidget {
               : () {
                   bloc.add(const OnSubmitFirstStep());
                 },
-          text: 'Continue',
+          text: appLocalizations.signUpButtonText,
         );
       },
     );

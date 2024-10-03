@@ -35,7 +35,7 @@ void _listener(context, state) {
   }
 
   if (state is OpenSignUpState) {
-    Modular.to.pushNamed(Routes.singUpRoute);
+    Modular.to.pushNamed(Routes.singUpFirstStepRoute);
   }
 }
 

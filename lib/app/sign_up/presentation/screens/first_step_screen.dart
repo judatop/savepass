@@ -3,19 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_bloc.dart';
+import 'package:savepass/app/sign_up/presentation/blocs/sign_up_event.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_state.dart';
-import 'package:savepass/app/sign_up/presentation/widgets/first_step_widget.dart';
-import 'package:savepass/app/sign_up/presentation/widgets/name_terms_widget.dart';
-import 'package:savepass/app/sign_up/presentation/widgets/submit_name_terms_widget.dart';
+import 'package:savepass/app/sign_up/presentation/widgets/first_step/name_widget.dart';
+import 'package:savepass/app/sign_up/presentation/widgets/first_step/terms_widget.dart';
+import 'package:savepass/app/sign_up/presentation/widgets/first_step/submit_terms_button_widget.dart';
 
-class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({super.key});
+class FirstStepScreen extends StatelessWidget {
+  const FirstStepScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final bloc = Modular.get<SignUpBloc>();
     return BlocProvider.value(
-      value: bloc,
+      value: bloc..add(const SignUpInitialEvent()),
       child: const BlocListener<SignUpBloc, SignUpState>(
         listener: _listener,
         child: _Body(),
@@ -31,7 +32,6 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
 
     return AdsScreenTemplate(
@@ -47,14 +47,11 @@ class _Body extends StatelessWidget {
               text: 'Let\'s start with your name',
             ),
             SizedBox(height: deviceHeight * 0.04),
-            const FirstStepWidget(),
+            const NameWidget(),
             SizedBox(height: deviceHeight * 0.015),
-            const SubmitNameTermsWidget(),
+            const SubmitTermsButtonWidget(),
             SizedBox(height: deviceHeight * 0.04),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: deviceWidth * 0.03),
-              child: const NameTermsWidget(),
-            ),
+            const TermsWidget(),
           ],
         ),
       ),

@@ -6,8 +6,8 @@ import 'package:savepass/app/sign_up/presentation/blocs/sign_up_bloc.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_event.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_state.dart';
 
-class SubmitNameTermsWidget extends StatelessWidget {
-  const SubmitNameTermsWidget({super.key});
+class SubmitTermsButtonWidget extends StatelessWidget {
+  const SubmitTermsButtonWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

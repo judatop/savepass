@@ -25,7 +25,9 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   FutureOr<void> _onSignUpInitial(
     SignUpInitialEvent event,
     Emitter<SignUpState> emit,
-  ) {}
+  ) {
+    emit(const SignUpInitialState());
+  }
 
   FutureOr<void> _onOpenSignIn(
     OpenSignInEvent event,
@@ -48,21 +50,6 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       return;
     }
 
-    if (state.model.name.value.length < 3) {
-      emit(
-        ChangeSignUpState(
-          state.model.copyWith(
-            name: const TextForm.dirty('Name must have at least 3 characters'),
-          ),
-        ),
-      );
-      return;
-    }
-
-    emit(
-      ChangeSignUpState(
-        state.model.copyWith(name: state.model.name),
-      ),
-    );
+    //TODO: Go to next step
   }
 }

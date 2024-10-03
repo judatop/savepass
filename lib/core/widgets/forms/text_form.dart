@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum TextFormValidationError {
   empty,
+  atLeast3Characters,
 }
 
 class TextForm extends FormzInput<String, TextFormValidationError> {
@@ -17,6 +18,10 @@ class TextForm extends FormzInput<String, TextFormValidationError> {
       return TextFormValidationError.empty;
     }
 
+    if (value.length < 3) {
+      return TextFormValidationError.atLeast3Characters;
+    }
+
     return null;
   }
 
@@ -26,6 +31,8 @@ class TextForm extends FormzInput<String, TextFormValidationError> {
     switch (error) {
       case TextFormValidationError.empty:
         return appLocalizations.mandatoryField;
+      case TextFormValidationError.atLeast3Characters:
+        return appLocalizations.nameAtLeast3Characters;
       default:
         return null;
     }

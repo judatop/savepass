@@ -10,5 +10,6 @@
     "signInApple": "Sign in with Apple",
     "signInEmail": "Sign in with your email",
     "signInNoAccount": "¿Don't have an account? Sign up",
-    "mandatoryField": "This field is mandatory"
+    "mandatoryField": "This field is mandatory",
+    "nameAtLeast3Characters": "The name must have at least 3 characters"
 }

@@ -6,8 +6,8 @@ import 'package:savepass/app/sign_up/presentation/blocs/sign_up_bloc.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_event.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_state.dart';
 
-class FirstStepWidget extends StatelessWidget {
-  const FirstStepWidget({super.key});
+class NameWidget extends StatelessWidget {
+  const NameWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -26,6 +26,7 @@ dependencies:
   intl: any
   flutter_launcher_icons: ^0.14.1
   lottie: ^3.1.2
+  syncfusion_flutter_pdfviewer: ^27.1.51
 
 dev_dependencies:
   flutter_lints: ^3.0.0
@@ -38,6 +39,7 @@ flutter:
     - assets/images/logo/
     - assets/images/splash/
     - assets/lotties/
+    - assets/files/
   fonts:
     - family: Geist
       fonts:

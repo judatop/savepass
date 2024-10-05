@@ -1,6 +1,12 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:savepass/app/sign_in/presentation/sign_in_screen.dart';
+import 'package:savepass/app/get_started/presentation/blocs/get_started_bloc.dart';
+import 'package:savepass/app/get_started/presentation/screens/get_started_screen.dart';
+import 'package:savepass/app/privacy_policy/presentation/screens/privacy_policy_screen.dart';
+import 'package:savepass/app/sign_in/presentation/screens/sign_in_screen.dart';
+import 'package:savepass/app/sign_up/presentation/blocs/sign_up_bloc.dart';
+import 'package:savepass/app/sign_up/presentation/screens/first_step_screen.dart';
+import 'package:savepass/app/sign_up/presentation/screens/second_step_screen.dart';
 import 'package:savepass/app/splash/presentation/splash_screen.dart';
 import 'package:savepass/app/theme/domain/repositories/theme_repository.dart';
 import 'package:savepass/app/theme/infraestructure/repositories_impl/theme_irepository.dart';
@@ -13,6 +19,8 @@ class AppModule extends Module {
     i.addSingleton(FlutterSecureStorage.new);
     i.addSingleton(ThemeBloc.new);
     i.addSingleton<ThemeRepository>(ThemeIRepository.new);
+    i.addSingleton(GetStartedBloc.new);
+    i.addSingleton(SignUpBloc.new);
   }
 
   @override
@@ -22,8 +30,24 @@ class AppModule extends Module {
       child: (context) => const SplashScreen(),
     );
     r.child(
+      Routes.getStartedRoute,
+      child: (context) => const GetStartedScreen(),
+    );
+    r.child(
       Routes.signInRoute,
       child: (context) => const SignInScreen(),
+    );
+    r.child(
+      Routes.singUpFirstStepRoute,
+      child: (context) => const FirstStepScreen(),
+    );
+    r.child(
+      Routes.singUpSecondStepRoute,
+      child: (context) => const SecondStepScreen(),
+    );
+    r.child(
+      Routes.privacyPolicyRoute,
+      child: (context) => PrivacyPolicyScreen(),
     );
   }
 }

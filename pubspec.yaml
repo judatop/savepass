@@ -24,6 +24,9 @@ dependencies:
   flutter_secure_storage: ^9.2.2
   formz: ^0.7.0
   intl: any
+  flutter_launcher_icons: ^0.14.1
+  lottie: ^3.1.2
+  syncfusion_flutter_pdfviewer: ^27.1.51
 
 dev_dependencies:
   flutter_lints: ^3.0.0
@@ -32,6 +35,11 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/logo/
+    - assets/images/splash/
+    - assets/lotties/
+    - assets/files/
   fonts:
     - family: Geist
       fonts:
@@ -53,3 +61,10 @@ flutter:
           weight: 800
         - asset: assets/fonts/Geist-UltraBlack.ttf
           weight: 900
+  generate: true
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/logo/logo_light.png"
+  remove_alpha_ios: true

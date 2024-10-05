@@ -1,0 +1,20 @@
+{
+    "@@locale": "es",
+    "getStartedTitle": "Almacena tus contraseñas",
+    "getStartedText": "Guarda todas tus contraseñas en un solo lugar",
+    "getStartedSingIn": "Ingresa",
+    "getStartedSingUp": "Regístrate",
+    "signInTitle": "Ingresa a SavePass",
+    "signInGoogle": "Ingresa con Google",
+    "signInFacebook": "Ingresa con Facebook",
+    "signInApple": "Ingresa con Apple",
+    "signInEmail": "Ingresa con tu correo",
+    "signInNoAccount": "¿No tienes una cuenta? Regístrate",
+    "signUpAlreadyAccount": "¿Ya tienes una cuenta? Ingresa",
+    "mandatoryField": "Este campo es obligatorio",
+    "nameAtLeast3Characters": "El nombre debe tener al menos 3 caracteres",
+    "signUpTitle": "Comencemos con tu nombre",
+    "signUpButtonText": "Continuar",
+    "byJoiningText": "Al unirte, aceptas nuestra",
+    "privacyPolicy": "Política de privacidad"
+}

@@ -12,6 +12,8 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     on<NameSignUpChangedEvent>(_onNameSignUpChanged);
     on<OpenSignInEvent>(_onOpenSignIn);
     on<OnSubmitFirstStep>(_onOnSubmitFirstStep);
+    on<AlreadyHaveAccountEvent>(_onAlreadyHaveAccountEvent);
+    on<OpenPrivacyPolicyEvent>(_onOpenPrivacyPolicyEvent);
   }
 
   FutureOr<void> _onNameSignUpChanged(
@@ -51,5 +53,21 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     }
 
     //TODO: Go to next step
+  }
+
+  FutureOr<void> _onAlreadyHaveAccountEvent(
+    AlreadyHaveAccountEvent event,
+    Emitter<SignUpState> emit,
+  ) {
+    emit(SignUpLoadingState(state.model));
+    emit(OpenSignInState(state.model));
+  }
+
+  FutureOr<void> _onOpenPrivacyPolicyEvent(
+    OpenPrivacyPolicyEvent event,
+    Emitter<SignUpState> emit,
+  ) {
+    emit(SignUpLoadingState(state.model));
+    emit(OpenPrivacyPolicyState(state.model));
   }
 }

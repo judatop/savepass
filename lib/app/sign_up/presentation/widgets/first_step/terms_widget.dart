@@ -1,7 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:savepass/core/config/routes.dart';
+import 'package:savepass/app/sign_up/presentation/blocs/sign_up_bloc.dart';
+import 'package:savepass/app/sign_up/presentation/blocs/sign_up_event.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TermsWidget extends StatelessWidget {
@@ -9,6 +10,7 @@ class TermsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Modular.get<SignUpBloc>();
     final textTheme = Theme.of(context).textTheme;
     final deviceWidth = MediaQuery.of(context).size.width;
     final appLocalizations = AppLocalizations.of(context)!;
@@ -28,7 +30,7 @@ class TermsWidget extends StatelessWidget {
                 decoration: TextDecoration.underline,
               ),
               recognizer: TapGestureRecognizer()
-                ..onTap = () => Modular.to.pushNamed(Routes.privacyPolicyRoute),
+                ..onTap = () => bloc.add(const OpenPrivacyPolicyEvent()),
             ),
           ],
         ),

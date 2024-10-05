@@ -14,8 +14,20 @@ class SignUpInitialState extends SignUpState {
   const SignUpInitialState() : super(const SignUpStateModel());
 }
 
+class SignUpLoadingState extends SignUpState {
+  const SignUpLoadingState(super.model);
+}
+
 class ChangeSignUpState extends SignUpState {
   const ChangeSignUpState(super.model);
+}
+
+class OpenSignInState extends SignUpState {
+  const OpenSignInState(super.model);
+}
+
+class OpenPrivacyPolicyState extends SignUpState {
+  const OpenPrivacyPolicyState(super.model);
 }
 
 class SignUpStateModel extends Equatable {

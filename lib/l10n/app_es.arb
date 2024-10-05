@@ -16,5 +16,6 @@
     "signUpTitle": "Comencemos con tu nombre",
     "signUpButtonText": "Continuar",
     "byJoiningText": "Al unirte, aceptas nuestra",
-    "privacyPolicy": "Política de privacidad"
+    "privacyPolicy": "Política de privacidad",
+    "incorrectEmail": "El correo ingresado es incorrecto"
 }

@@ -16,5 +16,6 @@
     "signUpTitle": "Let's start with your name",
     "signUpButtonText": "Continue",
     "byJoiningText": "By joining, you agree to our",
-    "privacyPolicy": "Privacy Policy"
+    "privacyPolicy": "Privacy Policy",
+    "incorrectEmail": "Incorrect email"
 }

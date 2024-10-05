@@ -24,3 +24,11 @@ class OpenSignInEvent extends SignUpEvent {
 class OnSubmitFirstStep extends SignUpEvent {
   const OnSubmitFirstStep() : super();
 }
+
+class AlreadyHaveAccountEvent extends SignUpEvent {
+  const AlreadyHaveAccountEvent() : super();
+}
+
+class OpenPrivacyPolicyEvent extends SignUpEvent {
+  const OpenPrivacyPolicyEvent() : super();
+}

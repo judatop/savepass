@@ -27,7 +27,16 @@ class FirstStepScreen extends StatelessWidget {
   }
 }
 
-void _listener(context, state) {}
+void _listener(context, state) {
+  if (state is OpenSignInState) {
+    Modular.to.pop();
+    Modular.to.pushNamed(Routes.signInRoute);
+  }
+
+  if(state is OpenPrivacyPolicyState){
+    Modular.to.pushNamed(Routes.privacyPolicyRoute);
+  }
+}
 
 class _Body extends StatelessWidget {
   const _Body();
@@ -75,6 +84,7 @@ class _SignUpButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final appLocalizations = AppLocalizations.of(context)!;
+    final bloc = Modular.get<SignUpBloc>();
 
     return Positioned(
       bottom: 0,
@@ -89,12 +99,10 @@ class _SignUpButton extends StatelessWidget {
             if (colorScheme.brightness == Brightness.light) const Divider(),
             AdsTextButton(
               text: appLocalizations.signUpAlreadyAccount,
-              onPressedCallback: () {
-                Modular.to.pop();
-                Modular.to.pushNamed(Routes.signInRoute);
-              },
+              onPressedCallback: () =>
+                  bloc.add(const AlreadyHaveAccountEvent()),
               textStyle: const TextStyle(
-                color: Colors.blue,
+                color: ADSFoundationsColors.linkColor,
               ),
             ),
           ],

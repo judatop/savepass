@@ -30,7 +30,7 @@ class SignInFooterWidget extends StatelessWidget {
                 Modular.to.pushNamed(Routes.singUpFirstStepRoute);
               },
               textStyle: const TextStyle(
-                color: Colors.blue,
+                color: ADSFoundationsColors.linkColor,
               ),
             ),
           ],

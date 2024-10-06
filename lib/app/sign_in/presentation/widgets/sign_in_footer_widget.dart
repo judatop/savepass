@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -11,6 +13,7 @@ class SignInFooterWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final appLocalizations = AppLocalizations.of(context)!;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Positioned(
       bottom: 0,
@@ -20,20 +23,26 @@ class SignInFooterWidget extends StatelessWidget {
         color: colorScheme.brightness == Brightness.light
             ? Colors.transparent
             : Colors.black,
-        child: Column(
-          children: [
-            if (colorScheme.brightness == Brightness.light) const Divider(),
-            AdsTextButton(
-              text: appLocalizations.signInNoAccount,
-              onPressedCallback: () {
-                Modular.to.pop();
-                Modular.to.pushNamed(Routes.singUpFirstStepRoute);
-              },
-              textStyle: const TextStyle(
-                color: ADSFoundationsColors.linkColor,
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: screenHeight * 0.01,
+            bottom: screenHeight * (Platform.isAndroid ? 0.01 : 0.03),
+          ),
+          child: Column(
+            children: [
+              if (colorScheme.brightness == Brightness.light) const Divider(),
+              AdsTextButton(
+                text: appLocalizations.signInNoAccount,
+                onPressedCallback: () {
+                  Modular.to.pop();
+                  Modular.to.pushNamed(Routes.singUpFirstStepRoute);
+                },
+                textStyle: const TextStyle(
+                  color: ADSFoundationsColors.linkColor,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

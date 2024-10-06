@@ -8,15 +8,25 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const PopScope(
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return PopScope(
       canPop: false,
       child: AdsScreenTemplate(
         wrapScroll: false,
         safeAreaBottom: false,
+        padding: EdgeInsets.zero,
         child: Stack(
           children: [
-            SignInOptionsWidget(),
-            SignInFooterWidget(),
+            Padding(
+              padding: EdgeInsets.only(
+                left: screenWidth * ADSFoundationSizes.defaultHorizontalPadding,
+                right:
+                    screenWidth * ADSFoundationSizes.defaultHorizontalPadding,
+              ),
+              child: const SignInOptionsWidget(),
+            ),
+            const SignInFooterWidget(),
           ],
         ),
       ),

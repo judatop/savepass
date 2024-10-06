@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,7 +35,7 @@ void _listener(context, state) {
     Modular.to.pushNamed(Routes.signInRoute);
   }
 
-  if(state is OpenPrivacyPolicyState){
+  if (state is OpenPrivacyPolicyState) {
     Modular.to.pushNamed(Routes.privacyPolicyRoute);
   }
 }
@@ -45,29 +47,38 @@ class _Body extends StatelessWidget {
   Widget build(BuildContext context) {
     final deviceHeight = MediaQuery.of(context).size.height;
     final appLocalizations = AppLocalizations.of(context)!;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return PopScope(
       canPop: false,
       child: AdsScreenTemplate(
         wrapScroll: false,
         safeAreaBottom: false,
+        padding: EdgeInsets.zero,
         child: Stack(
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                AdsTitle(
-                  text: appLocalizations.signUpTitle,
-                ),
-                SizedBox(height: deviceHeight * 0.04),
-                const NameWidget(),
-                SizedBox(height: deviceHeight * 0.015),
-                const SubmitTermsButtonWidget(),
-                SizedBox(height: deviceHeight * 0.04),
-                const TermsWidget(),
-              ],
+            Padding(
+              padding: EdgeInsets.only(
+                left: screenWidth * ADSFoundationSizes.defaultHorizontalPadding,
+                right:
+                    screenWidth * ADSFoundationSizes.defaultHorizontalPadding,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  AdsTitle(
+                    text: appLocalizations.signUpTitle,
+                  ),
+                  SizedBox(height: deviceHeight * 0.04),
+                  const NameWidget(),
+                  SizedBox(height: deviceHeight * 0.015),
+                  const SubmitTermsButtonWidget(),
+                  SizedBox(height: deviceHeight * 0.04),
+                  const TermsWidget(),
+                ],
+              ),
             ),
             const _SignUpButton(),
           ],
@@ -85,6 +96,7 @@ class _SignUpButton extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final appLocalizations = AppLocalizations.of(context)!;
     final bloc = Modular.get<SignUpBloc>();
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Positioned(
       bottom: 0,
@@ -94,18 +106,24 @@ class _SignUpButton extends StatelessWidget {
         color: colorScheme.brightness == Brightness.light
             ? Colors.transparent
             : Colors.black,
-        child: Column(
-          children: [
-            if (colorScheme.brightness == Brightness.light) const Divider(),
-            AdsTextButton(
-              text: appLocalizations.signUpAlreadyAccount,
-              onPressedCallback: () =>
-                  bloc.add(const AlreadyHaveAccountEvent()),
-              textStyle: const TextStyle(
-                color: ADSFoundationsColors.linkColor,
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: screenHeight * 0.01,
+            bottom: screenHeight * (Platform.isAndroid ? 0.01 : 0.03),
+          ),
+          child: Column(
+            children: [
+              if (colorScheme.brightness == Brightness.light) const Divider(),
+              AdsTextButton(
+                text: appLocalizations.signUpAlreadyAccount,
+                onPressedCallback: () =>
+                    bloc.add(const AlreadyHaveAccountEvent()),
+                textStyle: const TextStyle(
+                  color: ADSFoundationsColors.linkColor,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

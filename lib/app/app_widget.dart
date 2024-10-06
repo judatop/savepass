@@ -31,7 +31,7 @@ class AppWidget extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: AppLocalizations.supportedLocales,
-            theme: ADSTheme.lightTheme,
+            theme: ADSTheme.darkTheme,
             routerConfig: Modular.routerConfig,
             debugShowCheckedModeBanner: false,
           );

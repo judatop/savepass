@@ -1,51 +1,21 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:savepass/app/sign_up/presentation/blocs/sign_up_bloc.dart';
+import 'package:savepass/app/sign_up/presentation/blocs/sign_up_event.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/utils/auth_utils.dart';
 
 class SignUpOptionsWidget extends StatelessWidget {
   const SignUpOptionsWidget({super.key});
 
-  void signUpWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-      debugPrint('googleUser id: ${googleUser?.id}');
-
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
-
-      await FirebaseAuth.instance.signInWithCredential(credential);
-
-      Modular.to.popAndPushNamed(Routes.homeRoute);
-    } catch (e) {
-      debugPrint('Error: $e');
-    }
-  }
-
-  void signUpwithGithub() async {
-    GithubAuthProvider githubProvider = GithubAuthProvider();
-    await FirebaseAuth.instance.signInWithProvider(githubProvider);
-  }
-
-  void signUpWithEmail() {
-    Modular.to.pushNamed(Routes.singUpSecondStepRoute);
-  }
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final deviceHeight = MediaQuery.of(context).size.height;
     final appLocalizations = AppLocalizations.of(context)!;
+    final bloc = Modular.get<SignUpBloc>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -63,7 +33,7 @@ class SignUpOptionsWidget extends StatelessWidget {
             ),
           ),
           child: AdsFilledIconButton(
-            onPressedCallback: signUpWithGoogle,
+            onPressedCallback: () => bloc.add(const SignUpWithGoogleEvent()),
             text:
                 '${appLocalizations.getStartedSingUp} ${appLocalizations.authWithGoogle}',
             icon: Icons.g_mobiledata,
@@ -109,7 +79,7 @@ class SignUpOptionsWidget extends StatelessWidget {
         ),
         SizedBox(height: deviceHeight * 0.01),
         AdsFilledIconButton(
-          onPressedCallback: signUpwithGithub,
+          onPressedCallback: () => bloc.add(const SignUpWithGithubEvent()),
           text:
               '${appLocalizations.getStartedSingUp} ${appLocalizations.authWithGithub}',
           buttonStyle: ButtonStyle(
@@ -125,7 +95,8 @@ class SignUpOptionsWidget extends StatelessWidget {
         const Divider(),
         SizedBox(height: deviceHeight * 0.025),
         AdsOutlinedIconButton(
-          onPressedCallback: signUpWithEmail,
+          onPressedCallback: () =>
+              Modular.to.pushNamed(Routes.singUpSecondStepRoute),
           text:
               '${appLocalizations.getStartedSingUp} ${appLocalizations.authEmail}',
           icon: Icons.email,

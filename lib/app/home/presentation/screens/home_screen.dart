@@ -9,28 +9,31 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final deviceHeight = MediaQuery.of(context).size.height;
 
-    return AdsScreenTemplate(
-      safeAreaBottom: false,
-      safeAreaTop: false,
-      wrapScroll: false,
-      padding: EdgeInsets.zero,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: SafeArea(
-              top: true,
-              child: Column(
-                children: [
-                  SizedBox(height: deviceHeight * 0.02),
-                  const AdsHeadline(
-                    text: 'SavePass',
-                  ),
-                ],
+    return PopScope(
+      canPop: false,
+      child: AdsScreenTemplate(
+        safeAreaBottom: false,
+        safeAreaTop: false,
+        wrapScroll: false,
+        padding: EdgeInsets.zero,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: SafeArea(
+                top: true,
+                child: Column(
+                  children: [
+                    SizedBox(height: deviceHeight * 0.02),
+                    const AdsHeadline(
+                      text: 'SavePass',
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          const CustomBottomNavigationBar(),
-        ],
+            const CustomBottomNavigationBar(),
+          ],
+        ),
       ),
     );
   }

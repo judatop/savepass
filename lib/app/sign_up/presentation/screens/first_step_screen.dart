@@ -39,6 +39,10 @@ void _listener(context, state) {
   if (state is OpenSecondStepState) {
     Modular.to.pushNamed(Routes.singUpSecondStepRoute);
   }
+
+  if (state is OpenHomeState) {
+    Modular.to.popAndPushNamed(Routes.homeRoute);
+  }
 }
 
 class _Body extends StatelessWidget {

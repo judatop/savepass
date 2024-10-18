@@ -64,3 +64,11 @@ class ToggleMasterPasswordEvent extends SignUpEvent {
 class SubmitSignUpFormEvent extends SignUpEvent {
   const SubmitSignUpFormEvent() : super();
 }
+
+class SignUpWithGoogleEvent extends SignUpEvent {
+  const SignUpWithGoogleEvent() : super();
+}
+
+class SignUpWithGithubEvent extends SignUpEvent {
+  const SignUpWithGithubEvent() : super();
+}

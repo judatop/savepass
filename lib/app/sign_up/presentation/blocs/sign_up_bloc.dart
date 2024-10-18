@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/web.dart';
 import 'package:savepass/app/sign_up/infrastructure/models/master_password_form.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_event.dart';
@@ -24,6 +25,8 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     on<AvatarChangedEvent>(_onAvatarChanged);
     on<ToggleMasterPasswordEvent>(_onToggleMasterPasswordEvent);
     on<SubmitSignUpFormEvent>(_onSubmitSignUpFormEvent);
+    on<SignUpWithGoogleEvent>(_onSignUpWithGoogleEvent);
+    on<SignUpWithGithubEvent>(_onSignUpWithGithubEvent);
   }
 
   FutureOr<void> _onNameSignUpChanged(
@@ -151,7 +154,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     }
 
     try {
-       await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: state.model.email.value,
         password: state.model.masterPassword.value,
       );
@@ -166,5 +169,49 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         state.model.copyWith(status: FormzSubmissionStatus.success),
       ),
     );
+  }
+
+  FutureOr<void> _onSignUpWithGoogleEvent(
+    SignUpWithGoogleEvent event,
+    Emitter<SignUpState> emit,
+  ) async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      emit(
+        OpenHomeState(
+          state.model,
+        ),
+      );
+    } catch (e) {
+      Logger().e(e.toString());
+    }
+  }
+
+  FutureOr<void> _onSignUpWithGithubEvent(
+    SignUpWithGithubEvent event,
+    Emitter<SignUpState> emit,
+  ) async {
+    try {
+      GithubAuthProvider githubProvider = GithubAuthProvider();
+      await FirebaseAuth.instance.signInWithProvider(githubProvider);
+      emit(
+        OpenHomeState(
+          state.model,
+        ),
+      );
+    } catch (e) {
+      Logger().e(e.toString());
+    }
   }
 }

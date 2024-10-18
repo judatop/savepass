@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -26,14 +25,12 @@ class EmailForm extends FormzInput<String, EmailFormValidationError> {
     return null;
   }
 
-  String? getError(BuildContext context, EmailFormValidationError? error) {
-    final appLocalizations = AppLocalizations.of(context)!;
-
+  String? getError(AppLocalizations intl10, EmailFormValidationError? error) {
     switch (error) {
       case EmailFormValidationError.invalid:
-        return appLocalizations.incorrectEmail;
+        return intl10.incorrectEmail;
       case EmailFormValidationError.empty:
-        return appLocalizations.mandatoryField;
+        return intl10.mandatoryField;
       default:
         return null;
     }

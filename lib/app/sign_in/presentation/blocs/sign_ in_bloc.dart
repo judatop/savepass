@@ -14,13 +14,13 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     SignInInitialEvent event,
     Emitter<SignInState> emit,
   ) {
-    emit(const SignInStateInitialState());
+    emit(const SignInInitialState());
   }
 
   FutureOr<void> _onOpenSignUp(
     OpenSignUpEvent event,
     Emitter<SignInState> emit,
   ) {
-    emit(const OpenSignUpState());
+    emit(OpenSignUpState(state.model));
   }
 }

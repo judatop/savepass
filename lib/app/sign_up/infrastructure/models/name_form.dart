@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -7,10 +6,10 @@ enum TextFormValidationError {
   atLeast3Characters,
 }
 
-class TextForm extends FormzInput<String, TextFormValidationError> {
-  const TextForm.pure() : super.pure('');
+class NameForm extends FormzInput<String, TextFormValidationError> {
+  const NameForm.pure() : super.pure('');
 
-  const TextForm.dirty([super.value = '']) : super.dirty();
+  const NameForm.dirty([super.value = '']) : super.dirty();
 
   @override
   TextFormValidationError? validator(String? value) {
@@ -25,14 +24,12 @@ class TextForm extends FormzInput<String, TextFormValidationError> {
     return null;
   }
 
-  String? getError(BuildContext context, TextFormValidationError? error) {
-    final appLocalizations = AppLocalizations.of(context)!;
-
+  String? getError(AppLocalizations intl, TextFormValidationError? error) {
     switch (error) {
       case TextFormValidationError.empty:
-        return appLocalizations.mandatoryField;
+        return intl.mandatoryField;
       case TextFormValidationError.atLeast3Characters:
-        return appLocalizations.nameAtLeast3Characters;
+        return intl.nameAtLeast3Characters;
       default:
         return null;
     }

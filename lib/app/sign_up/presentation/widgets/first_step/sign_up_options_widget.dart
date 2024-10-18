@@ -1,39 +1,60 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:savepass/core/config/routes.dart';
+import 'package:savepass/core/utils/auth_utils.dart';
 
-const List<Color> googleButtonColors = [
-  Color(0xFFFABC06),
-  Color(0xFF38A953),
-  Color(0xFF4286F5),
-];
+class SignUpOptionsWidget extends StatelessWidget {
+  const SignUpOptionsWidget({super.key});
 
-class AuthOptions extends StatelessWidget {
-  final void Function() onTapGoogle;
-  final void Function() onTapApple;
-  final void Function() onTapFacebook;
+  void signUpWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-  const AuthOptions({
-    super.key,
-    required this.onTapGoogle,
-    required this.onTapApple,
-    required this.onTapFacebook,
-  });
+      debugPrint('googleUser id: ${googleUser?.id}');
+
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      Modular.to.popAndPushNamed(Routes.homeRoute);
+    } catch (e) {
+      debugPrint('Error: $e');
+    }
+  }
+
+  void signUpwithGithub() async {
+    GithubAuthProvider githubProvider = GithubAuthProvider();
+    await FirebaseAuth.instance.signInWithProvider(githubProvider);
+  }
+
+  void signUpWithEmail() {
+    Modular.to.pushNamed(Routes.singUpSecondStepRoute);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final deviceHeight = MediaQuery.of(context).size.height;
     final appLocalizations = AppLocalizations.of(context)!;
-    final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         DecoratedBox(
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: googleButtonColors,
+              colors: AuthUtils.googleButtonsColors,
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -42,8 +63,9 @@ class AuthOptions extends StatelessWidget {
             ),
           ),
           child: AdsFilledIconButton(
-            onPressedCallback: onTapGoogle,
-            text: appLocalizations.signInGoogle,
+            onPressedCallback: signUpWithGoogle,
+            text:
+                '${appLocalizations.getStartedSingUp} ${appLocalizations.authWithGoogle}',
             icon: Icons.g_mobiledata,
             iconSize: ADSFoundationSizes.sizeIconMedium,
             iconColor: ADSFoundationsColors.whiteColor,
@@ -55,8 +77,9 @@ class AuthOptions extends StatelessWidget {
         ),
         SizedBox(height: deviceHeight * 0.01),
         AdsFilledIconButton(
-          onPressedCallback: onTapApple,
-          text: appLocalizations.signInApple,
+          onPressedCallback: () {},
+          text:
+              '${appLocalizations.getStartedSingUp} ${appLocalizations.authWithApple}',
           icon: Icons.apple,
           iconSize: ADSFoundationSizes.sizeIconMedium,
           iconColor: colorScheme.brightness == Brightness.light
@@ -86,14 +109,15 @@ class AuthOptions extends StatelessWidget {
         ),
         SizedBox(height: deviceHeight * 0.01),
         AdsFilledIconButton(
-          onPressedCallback: onTapFacebook,
-          text: appLocalizations.signInFacebook,
+          onPressedCallback: signUpwithGithub,
+          text:
+              '${appLocalizations.getStartedSingUp} ${appLocalizations.authWithGithub}',
           buttonStyle: ButtonStyle(
             backgroundColor: WidgetStateProperty.all(
               const Color(0xFF136AFF),
             ),
           ),
-          icon: Icons.facebook,
+          icon: Icons.library_books,
           iconSize: ADSFoundationSizes.sizeIconMedium,
           iconColor: ADSFoundationsColors.whiteColor,
         ),
@@ -101,9 +125,10 @@ class AuthOptions extends StatelessWidget {
         const Divider(),
         SizedBox(height: deviceHeight * 0.025),
         AdsOutlinedIconButton(
-          onPressedCallback: () {},
-          text: appLocalizations.signInEmail,
-          icon: Icons.chevron_right,
+          onPressedCallback: signUpWithEmail,
+          text:
+              '${appLocalizations.getStartedSingUp} ${appLocalizations.authEmail}',
+          icon: Icons.email,
           iconSize: ADSFoundationSizes.sizeIconMedium,
         ),
       ],

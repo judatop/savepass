@@ -20,11 +20,11 @@ class TermsWidget extends StatelessWidget {
       child: RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
-          text: appLocalizations.byJoiningText,
+          text: '${appLocalizations.byJoiningText} ',
           style: textTheme.bodyMedium,
           children: <TextSpan>[
             TextSpan(
-              text: ' ${appLocalizations.privacyPolicy}',
+              text: appLocalizations.privacyPolicy,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 decoration: TextDecoration.underline,

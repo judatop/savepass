@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:savepass/core/widgets/forms/email_form.dart';
+import 'package:savepass/core/form/email_form.dart';
 
 abstract class SignInState extends Equatable {
   final SignInStateModel model;

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:savepass/app/theme/infraestructure/models/theme_model.dart';
+import 'package:savepass/app/theme/infrastructure/models/theme_model.dart';
 import 'package:savepass/app/theme/utils/theme_utils.dart';
 
 abstract class ThemeState extends Equatable {

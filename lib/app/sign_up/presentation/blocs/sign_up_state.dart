@@ -1,5 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:savepass/core/widgets/forms/text_form.dart';
+import 'package:formz/formz.dart';
+import 'package:savepass/app/sign_up/infrastructure/models/master_password_form.dart';
+import 'package:savepass/core/form/email_form.dart';
+import 'package:savepass/core/form/text_form.dart';
 
 abstract class SignUpState extends Equatable {
   final SignUpStateModel model;
@@ -30,28 +33,61 @@ class OpenPrivacyPolicyState extends SignUpState {
   const OpenPrivacyPolicyState(super.model);
 }
 
+class OpenSecondStepState extends SignUpState {
+  const OpenSecondStepState(super.model);
+}
+
+class OpenHomeState extends SignUpState {
+  const OpenHomeState(super.model);
+}
+
 class SignUpStateModel extends Equatable {
   final TextForm name;
-  final bool submitAlredyClicked;
+  final EmailForm email;
+  final MasterPasswordForm masterPassword;
+  final bool alreadySubmitted;
+  final String? selectedImg;
+  final bool showMasterPassword;
+  final FormzSubmissionStatus status;
 
   const SignUpStateModel({
     this.name = const TextForm.pure(),
-    this.submitAlredyClicked = false,
+    this.email = const EmailForm.pure(),
+    this.masterPassword = const MasterPasswordForm.pure(),
+    this.alreadySubmitted = false,
+    this.selectedImg,
+    this.showMasterPassword = false,
+    this.status = FormzSubmissionStatus.initial,
   });
 
   SignUpStateModel copyWith({
     TextForm? name,
-    bool? submitAlredyClicked,
+    EmailForm? email,
+    MasterPasswordForm? masterPassword,
+    bool? alreadySubmitted,
+    String? selectedImg,
+    bool? showMasterPassword,
+    FormzSubmissionStatus? status,
   }) {
     return SignUpStateModel(
       name: name ?? this.name,
-      submitAlredyClicked: submitAlredyClicked ?? this.submitAlredyClicked,
+      email: email ?? this.email,
+      masterPassword: masterPassword ?? this.masterPassword,
+      alreadySubmitted: alreadySubmitted ?? this.alreadySubmitted,
+      selectedImg: selectedImg ?? this.selectedImg,
+      showMasterPassword: showMasterPassword ?? this.showMasterPassword,
+      status: status ?? this.status,
     );
   }
 
   @override
   List<Object?> get props => [
         name,
-        submitAlredyClicked,
+        email,
+        masterPassword,
+        alreadySubmitted,
+        selectedImg,
+        showMasterPassword,
+        status,
       ];
 }

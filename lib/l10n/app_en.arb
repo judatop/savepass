@@ -23,6 +23,7 @@
     "nameSignUpForm": "Name",
     "emailSignUpForm": "Email",
     "masterPasswordSignUpForm": "Master Password",
+    "masterPasswordText": "The master password is used to access the application if biometric data is not used.",
     "optionalForm": "(Optional)",
     "atLeast8Characters": "The password must have at least 8 characters",
     "containsLowerCase": "The password must contain at least one lowercase letter",

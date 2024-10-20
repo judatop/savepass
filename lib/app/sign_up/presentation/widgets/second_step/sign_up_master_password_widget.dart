@@ -16,6 +16,7 @@ class SignUpMasterPasswordWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = Modular.get<SignUpBloc>();
     final intl = AppLocalizations.of(context)!;
+    final textTheme = Theme.of(context).textTheme;
 
     return BlocBuilder<SignUpBloc, SignUpState>(
       buildWhen: (previous, current) =>
@@ -26,30 +27,47 @@ class SignUpMasterPasswordWidget extends StatelessWidget {
       builder: (context, state) {
         final model = state.model;
 
-        return AdsFormField(
-          label: '${intl.masterPasswordSignUpForm}:',
-          formField: AdsTextField(
-            key: const Key('signUp_masterPassword_textField'),
-            errorText: model.alreadySubmitted
-                ? model.masterPassword
-                    .getError(intl, model.masterPassword.error)
-                : null,
-            onChanged: (value) {
-              final bloc = Modular.get<SignUpBloc>();
-              bloc.add(PasswordChangedEvent(password: value));
-            },
-            obscureText: !model.showMasterPassword,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(
-                RegexUtils.password,
-              ),
-            ],
-            textInputAction: TextInputAction.done,
-            suffixIcon: model.showMasterPassword
-                ? Icons.visibility_off
-                : Icons.visibility,
-            onTapSuffixIcon: () => bloc.add(const ToggleMasterPasswordEvent()),
-          ),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${intl.masterPasswordSignUpForm}:',
+              style:
+                  textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Text(
+              intl.masterPasswordText,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            AdsTextField(
+              key: const Key('signUp_masterPassword_textField'),
+              errorText: model.alreadySubmitted
+                  ? model.masterPassword
+                      .getError(intl, model.masterPassword.error)
+                  : null,
+              onChanged: (value) {
+                final bloc = Modular.get<SignUpBloc>();
+                bloc.add(PasswordChangedEvent(password: value));
+              },
+              obscureText: !model.showMasterPassword,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(
+                  RegexUtils.password,
+                ),
+              ],
+              textInputAction: TextInputAction.done,
+              suffixIcon: model.showMasterPassword
+                  ? Icons.visibility_off
+                  : Icons.visibility,
+              onTapSuffixIcon: () =>
+                  bloc.add(const ToggleMasterPasswordEvent()),
+            ),
+          ],
         );
       },
     );

@@ -23,6 +23,7 @@
     "nameSignUpForm": "Nombre",
     "emailSignUpForm": "Correo",
     "masterPasswordSignUpForm": "Contraseña Maestra",
+    "masterPasswordText": "La contraseña maestra sirve para acceder a la aplicación en caso de no utilizar datos biométricos.",
     "optionalForm": "(Opcional)",
     "atLeast8Characters": "La contraseña debe tener al menos 8 caracteres",
     "containsLowerCase": "La contraseña debe contener al menos una letra minúscula",

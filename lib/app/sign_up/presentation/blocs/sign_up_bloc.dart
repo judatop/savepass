@@ -161,15 +161,25 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
       //TODO: Upload name and image to supabase
       Future.delayed(const Duration(seconds: 2));
-    } catch (e) {
-      Logger().e(e.toString());
-    }
 
-    emit(
-      OpenHomeState(
-        state.model.copyWith(status: FormzSubmissionStatus.success),
-      ),
-    );
+      emit(
+        OpenHomeState(
+          state.model.copyWith(status: FormzSubmissionStatus.success),
+        ),
+      );
+    } catch (e) {
+      if (e is FirebaseAuthException) {
+        if (e.code == 'email-already-in-use') {
+          emit(
+            EmailAlreadyInUseState(
+              state.model.copyWith(status: FormzSubmissionStatus.failure),
+            ),
+          );
+        }
+      }
+
+      Logger().e('sign up error: ${e.toString()}');
+    }
   }
 
   FutureOr<void> _onSignUpWithGoogleEvent(

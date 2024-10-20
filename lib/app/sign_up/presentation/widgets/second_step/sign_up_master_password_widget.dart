@@ -9,8 +9,23 @@ import 'package:savepass/app/sign_up/presentation/blocs/sign_up_state.dart';
 import 'package:savepass/core/utils/regex_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class SignUpMasterPasswordWidget extends StatelessWidget {
+class SignUpMasterPasswordWidget extends StatefulWidget {
   const SignUpMasterPasswordWidget({super.key});
+
+  @override
+  State<SignUpMasterPasswordWidget> createState() =>
+      _SignUpMasterPasswordWidgetState();
+}
+
+class _SignUpMasterPasswordWidgetState
+    extends State<SignUpMasterPasswordWidget> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    _controller = TextEditingController();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +41,8 @@ class SignUpMasterPasswordWidget extends StatelessWidget {
               current.model.showMasterPassword),
       builder: (context, state) {
         final model = state.model;
+        final masterPassword = model.masterPassword.value;
+        _controller.text = masterPassword;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,6 +62,7 @@ class SignUpMasterPasswordWidget extends StatelessWidget {
               height: 5,
             ),
             AdsTextField(
+              controller: _controller,
               key: const Key('signUp_masterPassword_textField'),
               errorText: model.alreadySubmitted
                   ? model.masterPassword

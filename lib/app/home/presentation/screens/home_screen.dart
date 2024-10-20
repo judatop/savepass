@@ -1,7 +1,9 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/auth_init/presentation/widgets/bottom_navigation_bar.dart';
+import 'package:savepass/core/config/routes.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -31,6 +33,7 @@ class HomeScreen extends StatelessWidget {
                     AdsFilledButton(
                       onPressedCallback: () {
                         FirebaseAuth.instance.signOut();
+                        Modular.to.popAndPushNamed(Routes.getStartedRoute);
                       },
                       text: 'Sign Out',
                     ),

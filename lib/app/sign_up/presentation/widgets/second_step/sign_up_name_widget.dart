@@ -9,8 +9,21 @@ import 'package:savepass/app/sign_up/presentation/blocs/sign_up_state.dart';
 import 'package:savepass/core/utils/regex_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class SignUpNameWidget extends StatelessWidget {
+class SignUpNameWidget extends StatefulWidget {
   const SignUpNameWidget({super.key});
+
+  @override
+  State<SignUpNameWidget> createState() => _SignUpNameWidgetState();
+}
+
+class _SignUpNameWidgetState extends State<SignUpNameWidget> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    _controller = TextEditingController();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +34,13 @@ class SignUpNameWidget extends StatelessWidget {
           (previous.model.name != current.model.name) ||
           (previous.model.alreadySubmitted != current.model.alreadySubmitted),
       builder: (context, state) {
+        final name = state.model.name.value;
+        _controller.text = name;
+
         return AdsFormField(
           label: '${appLocalizations.nameSignUpForm}:',
           formField: AdsTextField(
+            controller: _controller,
             hintText: appLocalizations.optionalForm,
             key: const Key('signUp_name_textField'),
             keyboardType: TextInputType.text,

@@ -7,8 +7,21 @@ import 'package:savepass/app/sign_up/presentation/blocs/sign_up_event.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class SignUpEmailWidget extends StatelessWidget {
+class SignUpEmailWidget extends StatefulWidget {
   const SignUpEmailWidget({super.key});
+
+  @override
+  State<SignUpEmailWidget> createState() => _SignUpEmailWidgetState();
+}
+
+class _SignUpEmailWidgetState extends State<SignUpEmailWidget> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    _controller = TextEditingController();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +33,13 @@ class SignUpEmailWidget extends StatelessWidget {
           (previous.model.alreadySubmitted != current.model.alreadySubmitted),
       builder: (context, state) {
         final model = state.model;
+        final email = model.email.value;
+        _controller.text = email;
 
         return AdsFormField(
           label: '${intl.emailSignUpForm}:',
           formField: AdsTextField(
+            controller: _controller,
             key: const Key('signUp_email_textField'),
             keyboardType: TextInputType.emailAddress,
             errorText: model.alreadySubmitted

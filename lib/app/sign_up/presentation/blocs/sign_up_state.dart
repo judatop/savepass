@@ -41,6 +41,10 @@ class OpenHomeState extends SignUpState {
   const OpenHomeState(super.model);
 }
 
+class EmailAlreadyInUseState extends SignUpState {
+  const EmailAlreadyInUseState(super.model);
+}
+
 class SignUpStateModel extends Equatable {
   final TextForm name;
   final EmailForm email;

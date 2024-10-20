@@ -37,5 +37,7 @@
     "photoAccessButton": "Grant access",
     "permanentTitle": "Attention",
     "permanentText": "You have permanently denied access to the gallery, in order to select a profile picture for your account, you must grant access permissions to the gallery from your device settings.",
-    "permanentButton": "Understood"
+    "permanentButton": "Understood",
+    "emailAlreadyInUse": "The email is already in use",
+    "close": "Close"
 }

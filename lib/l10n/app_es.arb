@@ -37,5 +37,7 @@
     "photoAccessButton": "Otorgar acceso",
     "permanentTitle": "Atención",
     "permanentText": "Haz denegado permanentemente el acceso a la galería, para poder seleccionar una foto de perfil para tu cuenta, debes otorgar los permisos de acceso a la galería desde la configuración de tu dispositivo.",
-    "permanentButton": "Entendido"
+    "permanentButton": "Entendido",
+    "emailAlreadyInUse": "El correo ya está en uso",
+    "close": "Cerrar"
 }

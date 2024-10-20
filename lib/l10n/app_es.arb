@@ -30,5 +30,11 @@
     "containsNumber": "La contraseña debe contener al menos un número",
     "containsSpecialCharacter": "La contraseña debe contener al menos un carácter especial",
     "notContains3RepeatedCharacters": "La contraseña no debe contener 3 caracteres repetidos",
-    "notContains3ConsecutiveCharacters": "La contraseña no debe contener 3 caracteres consecutivos"
+    "notContains3ConsecutiveCharacters": "La contraseña no debe contener 3 caracteres consecutivos",
+    "photoAccessTitle": "Acceso a fotografías requerido",
+    "photoAccessText": "Es necesario conceder los permisos de acceso a la galería, esto te permitirá seleccionar una foto de perfil para tu cuenta.",
+    "photoAccessButton": "Otorgar acceso",
+    "permanentTitle": "Atención",
+    "permanentText": "Haz denegado permanentemente el acceso a la galería, para poder seleccionar una foto de perfil para tu cuenta, debes otorgar los permisos de acceso a la galería desde la configuración de tu dispositivo.",
+    "permanentButton": "Entendido"
 }

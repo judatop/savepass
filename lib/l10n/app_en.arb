@@ -30,5 +30,11 @@
     "containsNumber": "The password must contain at least one number",
     "containsSpecialCharacter": "The password must contain at least one special character",
     "notContains3RepeatedCharacters": "The password must not contain 3 repeated characters",
-    "notContains3ConsecutiveCharacters": "The password must not contain 3 consecutive characters"
+    "notContains3ConsecutiveCharacters": "The password must not contain 3 consecutive characters",
+    "photoAccessTitle": "Photo access required",
+    "photoAccessText": "It is necessary to grant access permissions to the gallery, this will allow you to select a profile picture for your account.",
+    "photoAccessButton": "Grant access",
+    "permanentTitle": "Attention",
+    "permanentText": "You have permanently denied access to the gallery, in order to select a profile picture for your account, you must grant access permissions to the gallery from your device settings.",
+    "permanentButton": "Understood"
 }

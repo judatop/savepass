@@ -160,6 +160,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       );
 
       //TODO: Upload name and image to supabase
+      Future.delayed(const Duration(seconds: 2));
     } catch (e) {
       Logger().e(e.toString());
     }

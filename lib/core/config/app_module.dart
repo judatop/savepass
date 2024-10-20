@@ -14,6 +14,7 @@ import 'package:savepass/app/theme/domain/repositories/theme_repository.dart';
 import 'package:savepass/app/theme/infrastructure/repositories_impl/theme_irepository.dart';
 import 'package:savepass/app/theme/presentation/blocs/theme_bloc.dart';
 import 'package:savepass/core/config/routes.dart';
+import 'package:savepass/core/screens/photo_permission_screen.dart';
 
 class AppModule extends Module {
   @override
@@ -58,6 +59,10 @@ class AppModule extends Module {
     r.child(
       Routes.authInitRoute,
       child: (context) => const AuthInitScreen(),
+    );
+    r.child(
+      Routes.photoPermissionRoute,
+      child: (context) => PhotoPermissionScreen(callbackIfSuccess: r.args.data),
     );
   }
 }

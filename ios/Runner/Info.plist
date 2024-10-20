@@ -60,9 +60,5 @@
 		</array>
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>SavePass requires access to your photo library to save your images</string>
-		<key>NSCameraUsageDescription</key>
-		<string>SavePass requires access to your camera to take photos</string>
-		<key>NSMicrophoneUsageDescription</key>
-		<string>SavePass requires access to your microphone to record audio</string>
 	</dict>
 </plist>

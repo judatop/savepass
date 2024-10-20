@@ -1,4 +1,5 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:savepass/app/auth_init/presentation/widgets/bottom_navigation_bar.dart';
 
@@ -26,6 +27,12 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(height: deviceHeight * 0.02),
                     const AdsHeadline(
                       text: 'SavePass',
+                    ),
+                    AdsFilledButton(
+                      onPressedCallback: () {
+                        FirebaseAuth.instance.signOut();
+                      },
+                      text: 'Sign Out',
                     ),
                   ],
                 ),

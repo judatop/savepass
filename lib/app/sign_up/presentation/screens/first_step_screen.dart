@@ -53,6 +53,7 @@ class _Body extends StatelessWidget {
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
     final appLocalizations = AppLocalizations.of(context)!;
+    final textTheme = Theme.of(context).textTheme;
 
     return PopScope(
       canPop: false,
@@ -64,7 +65,6 @@ class _Body extends StatelessWidget {
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
@@ -76,10 +76,16 @@ class _Body extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      AdsHeadline(text: appLocalizations.authTitle),
-                      SizedBox(height: deviceHeight * 0.05),
+                      Text(
+                        appLocalizations.authTitle,
+                        style: textTheme.headlineMedium?.copyWith(
+                          fontSize: 26,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: deviceHeight * 0.03),
                       const SignUpOptionsWidget(),
-                      SizedBox(height: deviceHeight * 0.04),
+                      SizedBox(height: deviceHeight * 0.03),
                       const TermsWidget(),
                     ],
                   ),

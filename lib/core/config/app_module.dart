@@ -5,6 +5,8 @@ import 'package:savepass/app/get_started/presentation/blocs/get_started_bloc.dar
 import 'package:savepass/app/get_started/presentation/screens/get_started_screen.dart';
 import 'package:savepass/app/home/presentation/screens/home_screen.dart';
 import 'package:savepass/app/privacy_policy/presentation/screens/privacy_policy_screen.dart';
+import 'package:savepass/app/sign_in/presentation/blocs/sign_in_bloc.dart';
+import 'package:savepass/app/sign_in/presentation/screens/sign_in_email_screen.dart';
 import 'package:savepass/app/sign_in/presentation/screens/sign_in_screen.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_bloc.dart';
 import 'package:savepass/app/sign_up/presentation/screens/first_step_screen.dart';
@@ -24,6 +26,7 @@ class AppModule extends Module {
     i.addSingleton<ThemeRepository>(ThemeIRepository.new);
     i.addSingleton(GetStartedBloc.new);
     i.addSingleton(SignUpBloc.new);
+    i.addSingleton(SignInBloc.new);
   }
 
   @override
@@ -39,6 +42,10 @@ class AppModule extends Module {
     r.child(
       Routes.signInRoute,
       child: (context) => const SignInScreen(),
+    );
+    r.child(
+      Routes.signInEmail,
+      child: (context) => const SignInEmailScreen(),
     );
     r.child(
       Routes.singUpFirstStepRoute,

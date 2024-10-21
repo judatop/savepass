@@ -4,6 +4,7 @@ class Routes {
   static const String introRoute = '/intro';
   static const String homeRoute = '/home';
   static const String signInRoute = '/signin';
+  static const String signInEmail = '/signInEmail';
   static const String singUpFirstStepRoute = '/signUpFirstStep';
   static const String singUpSecondStepRoute = '/signUpSecondStep';
   static const String accountRoute = '/account';

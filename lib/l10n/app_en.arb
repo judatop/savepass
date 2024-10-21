@@ -12,7 +12,8 @@
     "signUpAlreadyAccount": "¿Already have an account? Sign in",
     "mandatoryField": "This field is mandatory",
     "nameAtLeast3Characters": "The name must have at least 3 characters",
-    "authTitle": "Select your prefered authentication method",
+    "authTitle": "Sign up with your preferred authentication method",
+    "signInTitle": "Sign in with your preffered authentication method",
     "signUpButtonText": "Continue",
     "byJoiningText": "By joining, you agree to our",
     "privacyPolicy": "Privacy Policy",
@@ -39,5 +40,6 @@
     "permanentText": "You have permanently denied access to the gallery, in order to select a profile picture for your account, you must grant access permissions to the gallery from your device settings.",
     "permanentButton": "Understood",
     "emailAlreadyInUse": "The email is already in use",
-    "close": "Close"
+    "close": "Close",
+    "invalidCredentials": "Invalid credentials"
 }

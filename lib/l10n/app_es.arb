@@ -12,7 +12,8 @@
     "signUpAlreadyAccount": "¿Ya tienes una cuenta? Ingresa",
     "mandatoryField": "Este campo es obligatorio",
     "nameAtLeast3Characters": "El nombre debe tener al menos 3 caracteres",
-    "authTitle": "Selecciona tu método de autenticación preferido",
+    "authTitle": "Regístrate con tu método de autenticación preferido",
+    "signInTitle": "Ingresa con tu método de autenticación preferido",
     "signUpButtonText": "Continuar",
     "byJoiningText": "Al unirte, aceptas nuestra",
     "privacyPolicy": "Política de privacidad",
@@ -39,5 +40,6 @@
     "permanentText": "Haz denegado permanentemente el acceso a la galería, para poder seleccionar una foto de perfil para tu cuenta, debes otorgar los permisos de acceso a la galería desde la configuración de tu dispositivo.",
     "permanentButton": "Entendido",
     "emailAlreadyInUse": "El correo ya está en uso",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "invalidCredentials": "Credenciales inválidas"
 }

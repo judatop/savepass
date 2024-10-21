@@ -15,7 +15,6 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   SignUpBloc() : super(const SignUpInitialState()) {
     on<SignUpInitialEvent>(_onSignUpInitial);
     on<NameSignUpChangedEvent>(_onNameSignUpChanged);
-    on<OpenSignInEvent>(_onOpenSignIn);
     on<OnSubmitFirstStep>(_onOnSubmitFirstStep);
     on<AlreadyHaveAccountEvent>(_onAlreadyHaveAccountEvent);
     on<OpenPrivacyPolicyEvent>(_onOpenPrivacyPolicyEvent);
@@ -43,11 +42,6 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   ) {
     emit(const SignUpInitialState());
   }
-
-  FutureOr<void> _onOpenSignIn(
-    OpenSignInEvent event,
-    Emitter<SignUpState> emit,
-  ) {}
 
   FutureOr<void> _onOnSubmitFirstStep(
     OnSubmitFirstStep event,

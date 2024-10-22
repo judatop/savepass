@@ -22,7 +22,7 @@ class _AuthInitScreenState extends State<AuthInitScreen> {
     super.initState();
   }
 
-  Future<void> _openBiometrics() async {
+  void _openBiometrics() async {
     final LocalAuthentication auth = LocalAuthentication();
 
     final bool isDeviceSupported = await auth.isDeviceSupported();
@@ -46,8 +46,7 @@ class _AuthInitScreenState extends State<AuthInitScreen> {
     } else {}
 
     if (isAuthenticated) {
-      Modular.to.pop();
-      Modular.to.pushNamed(Routes.homeRoute);
+      Modular.to.navigate(Routes.homeRoute);
     }
   }
 

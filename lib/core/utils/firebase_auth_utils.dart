@@ -1,19 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:logger/web.dart';
+import 'package:savepass/core/config/routes.dart';
 
 class FirebaseAuthUtils {
-  static Future<void> initAuthListeners() async {
+  static void initAuthListeners() async {
     final logger = Logger();
 
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) async {
       if (user == null) {
-        logger.i('User is currently signed out!');
-      } else {
-        logger.i('User is signed in!');
-        logger.i(
-          'Welcome uid: ${user.uid}, name: ${user.displayName}, email: ${user.email}, phoneNumber: ${user.phoneNumber}, photo: ${user.photoURL} ',
-        );
+        Modular.to.navigate(Routes.getStartedRoute);
+        return;
       }
+
+      logger.i(
+        'User is signed in, uid: ${user.uid}, name: ${user.displayName}, email: ${user.email}',
+      );
     });
   }
 }

@@ -4,9 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/auth_init/presentation/widgets/bottom_navigation_bar.dart';
 import 'package:savepass/core/config/routes.dart';
+import 'package:savepass/core/utils/firebase_auth_utils.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    FirebaseAuthUtils.initAuthListeners();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

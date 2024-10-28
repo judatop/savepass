@@ -6,8 +6,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/core/config/routes.dart';
 
-class SignInFooterWidget extends StatelessWidget {
-  const SignInFooterWidget({super.key});
+class DontHaveAccountWidget extends StatelessWidget {
+  const DontHaveAccountWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class SignInFooterWidget extends StatelessWidget {
                 text: appLocalizations.signInNoAccount,
                 onPressedCallback: () {
                   Modular.to.pop();
-                  Modular.to.pushNamed(Routes.singUpFirstStepRoute);
+                  Modular.to.pushNamed(Routes.signUpOptionsRoute);
                 },
                 textStyle: const TextStyle(
                   color: ADSFoundationsColors.linkColor,

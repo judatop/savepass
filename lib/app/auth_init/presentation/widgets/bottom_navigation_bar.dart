@@ -27,7 +27,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           elevation: 5,
           child: Container(
             width: deviceWidth,
-            height: blockSizeHorizontal * 18,
+            height: blockSizeHorizontal * 16,
             decoration: BoxDecoration(
               color: Colors.grey[900],
               borderRadius:

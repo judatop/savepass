@@ -29,13 +29,11 @@ class GetStartedScreen extends StatelessWidget {
 
 void _listener(context, state) {
   if (state is OpenSignInState) {
-    Modular.to.pop();
     Modular.to.pushNamed(Routes.signInRoute);
   }
 
   if (state is OpenSignUpState) {
-    Modular.to.pop();
-    Modular.to.pushNamed(Routes.singUpFirstStepRoute);
+    Modular.to.pushNamed(Routes.signUpOptionsRoute);
   }
 }
 
@@ -52,42 +50,45 @@ class _Body extends StatelessWidget {
     return AdsScreenTemplate(
       safeAreaBottom: false,
       wrapScroll: false,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  ColorFiltered(
-                    colorFilter: ColorFilter.mode(
-                      colorScheme.primary,
-                      BlendMode.modulate,
+      child: PopScope(
+        canPop: true,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    ColorFiltered(
+                      colorFilter: ColorFilter.mode(
+                        colorScheme.primary,
+                        BlendMode.modulate,
+                      ),
+                      child: Lottie.asset(LottiePaths.getStarted),
                     ),
-                    child: Lottie.asset(LottiePaths.getStarted),
-                  ),
-                  AdsHeadline(
-                    text: appLocalizations.getStartedTitle,
-                  ),
-                  SizedBox(height: screenHeight * 0.015),
-                  Text(
-                    appLocalizations.getStartedText,
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+                    AdsHeadline(
+                      text: appLocalizations.getStartedTitle,
+                    ),
+                    SizedBox(height: screenHeight * 0.015),
+                    Text(
+                      appLocalizations.getStartedText,
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          AdsFilledButton(
-            text: appLocalizations.getStartedSingIn,
-            onPressedCallback: () => bloc.add(const OpenSignInEvent()),
-          ),
-          SizedBox(height: screenHeight * 0.01),
-          AdsOutlinedButton(
-            onPressedCallback: () => bloc.add(const OpenSignUpEvent()),
-            text: appLocalizations.getStartedSingUp,
-          ),
-        ],
+            AdsFilledButton(
+              text: appLocalizations.getStartedSingIn,
+              onPressedCallback: () => bloc.add(const OpenSignInEvent()),
+            ),
+            SizedBox(height: screenHeight * 0.01),
+            AdsOutlinedButton(
+              onPressedCallback: () => bloc.add(const OpenSignUpEvent()),
+              text: appLocalizations.getStartedSingUp,
+            ),
+          ],
+        ),
       ),
     );
   }

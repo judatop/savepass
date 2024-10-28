@@ -5,22 +5,19 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:savepass/app/app_widget.dart';
 import 'package:savepass/core/config/app_module.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:savepass/core/utils/firebase_auth_utils.dart';
 import 'firebase_options.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  SystemChrome.setPreferredOrientations([
+  await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  initializeDateFormatting('es', null);
-  FirebaseAuthUtils.initAuthListeners();
+  await initializeDateFormatting('es', null);
+
   return runApp(
     ModularApp(
       module: AppModule(),

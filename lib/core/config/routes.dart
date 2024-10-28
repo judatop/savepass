@@ -4,8 +4,9 @@ class Routes {
   static const String introRoute = '/intro';
   static const String homeRoute = '/home';
   static const String signInRoute = '/signin';
-  static const String singUpFirstStepRoute = '/signUpFirstStep';
-  static const String singUpSecondStepRoute = '/signUpSecondStep';
+  static const String signInEmail = '/signInEmail';
+  static const String signUpOptionsRoute = '/signUpOptions';
+  static const String signUpEmailRoute = '/signUpEmail';
   static const String accountRoute = '/account';
   static const String settingsRoute = '/settings';
   static const String themeRoute = '/theme';
@@ -14,4 +15,6 @@ class Routes {
   static const String permissionRoute = '/permission';
   static const String privacyPolicyRoute = '/privacyPolicy';
   static const String authInitRoute = '/authInit';
+  static const String photoPermissionRoute = '/photoPermission';
+  static const String syncMasterPasswordRoute = '/syncMasterPassword';
 }

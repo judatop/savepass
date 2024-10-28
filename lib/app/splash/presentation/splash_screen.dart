@@ -21,11 +21,14 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    // _initEvents();
 
+    _timerSplash();
+  }
+
+  void _timerSplash() {
     Future.delayed(
       const Duration(milliseconds: splashDuration),
-      () async {
+      () {
         final user = FirebaseAuth.instance.currentUser;
 
         if (user != null) {

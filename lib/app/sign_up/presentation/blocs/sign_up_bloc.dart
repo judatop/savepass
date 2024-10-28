@@ -6,6 +6,7 @@ import 'package:formz/formz.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/web.dart';
 import 'package:savepass/app/sign_up/infrastructure/models/master_password_form.dart';
+import 'package:savepass/app/sign_up/infrastructure/models/sign_up_type_enum.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_event.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_state.dart';
 import 'package:savepass/core/form/email_form.dart';
@@ -15,7 +16,6 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   SignUpBloc() : super(const SignUpInitialState()) {
     on<SignUpInitialEvent>(_onSignUpInitial);
     on<NameSignUpChangedEvent>(_onNameSignUpChanged);
-    on<OpenSignInEvent>(_onOpenSignIn);
     on<OnSubmitFirstStep>(_onOnSubmitFirstStep);
     on<AlreadyHaveAccountEvent>(_onAlreadyHaveAccountEvent);
     on<OpenPrivacyPolicyEvent>(_onOpenPrivacyPolicyEvent);
@@ -27,6 +27,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     on<SubmitSignUpFormEvent>(_onSubmitSignUpFormEvent);
     on<SignUpWithGoogleEvent>(_onSignUpWithGoogleEvent);
     on<SignUpWithGithubEvent>(_onSignUpWithGithubEvent);
+    on<SubmitSyncPasswordEvent>(_onSubmitSyncPasswordEvent);
   }
 
   FutureOr<void> _onNameSignUpChanged(
@@ -44,11 +45,6 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     emit(const SignUpInitialState());
   }
 
-  FutureOr<void> _onOpenSignIn(
-    OpenSignInEvent event,
-    Emitter<SignUpState> emit,
-  ) {}
-
   FutureOr<void> _onOnSubmitFirstStep(
     OnSubmitFirstStep event,
     Emitter<SignUpState> emit,
@@ -65,7 +61,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       return;
     }
 
-    emit(OpenSecondStepState(state.model));
+    emit(OpenSignUpWithEmailState(state.model));
   }
 
   FutureOr<void> _onAlreadyHaveAccountEvent(
@@ -160,15 +156,26 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       );
 
       //TODO: Upload name and image to supabase
-    } catch (e) {
-      Logger().e(e.toString());
-    }
+      Future.delayed(const Duration(seconds: 2));
 
-    emit(
-      OpenHomeState(
-        state.model.copyWith(status: FormzSubmissionStatus.success),
-      ),
-    );
+      emit(
+        OpenHomeState(
+          state.model.copyWith(status: FormzSubmissionStatus.success),
+        ),
+      );
+    } catch (e) {
+      if (e is FirebaseAuthException) {
+        if (e.code == 'email-already-in-use') {
+          emit(
+            EmailAlreadyInUseState(
+              state.model.copyWith(status: FormzSubmissionStatus.failure),
+            ),
+          );
+        }
+      }
+
+      Logger().e('sign up error: ${e.toString()}');
+    }
   }
 
   FutureOr<void> _onSignUpWithGoogleEvent(
@@ -186,11 +193,14 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         idToken: googleAuth?.idToken,
       );
 
-      await FirebaseAuth.instance.signInWithCredential(credential);
+      final user = await FirebaseAuth.instance.signInWithCredential(credential);
 
       emit(
-        OpenHomeState(
-          state.model,
+        SyncMasterPasswordState(
+          state.model.copyWith(
+            userFirebase: user.user,
+            signUpType: SignUpTypeEnum.google,
+          ),
         ),
       );
     } catch (e) {
@@ -204,14 +214,56 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   ) async {
     try {
       GithubAuthProvider githubProvider = GithubAuthProvider();
-      await FirebaseAuth.instance.signInWithProvider(githubProvider);
+      final user =
+          await FirebaseAuth.instance.signInWithProvider(githubProvider);
       emit(
-        OpenHomeState(
-          state.model,
+        SyncMasterPasswordState(
+          state.model.copyWith(
+            userFirebase: user.user,
+            signUpType: SignUpTypeEnum.github,
+          ),
         ),
       );
     } catch (e) {
       Logger().e(e.toString());
+    }
+  }
+
+  FutureOr<void> _onSubmitSyncPasswordEvent(
+    SubmitSyncPasswordEvent event,
+    Emitter<SignUpState> emit,
+  ) async {
+    emit(
+      ChangeSignUpState(
+        state.model.copyWith(
+          alreadySubmitted: true,
+          status: FormzSubmissionStatus.inProgress,
+        ),
+      ),
+    );
+
+    if (!Formz.validate([
+      state.model.masterPassword,
+    ])) {
+      emit(
+        ChangeSignUpState(
+          state.model.copyWith(status: FormzSubmissionStatus.initial),
+        ),
+      );
+      return;
+    }
+
+    try {
+      //TODO: Sync master password to Supabase
+      await Future.delayed(const Duration(seconds: 3));
+
+      emit(
+        OpenHomeState(
+          state.model.copyWith(status: FormzSubmissionStatus.success),
+        ),
+      );
+    } catch (e) {
+      Logger().e('sign up error: ${e.toString()}');
     }
   }
 }

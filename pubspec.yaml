@@ -20,7 +20,7 @@ dependencies:
   flutter_bloc: ^8.1.6
   flutter_localizations:
     sdk: flutter
-  flutter_modular: ^6.3.4
+  flutter_modular: ^6.3.2
   flutter_secure_storage: ^9.2.2
   formz: ^0.7.0
   intl: any

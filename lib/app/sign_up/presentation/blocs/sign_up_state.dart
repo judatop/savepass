@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:formz/formz.dart';
 import 'package:savepass/app/sign_up/infrastructure/models/master_password_form.dart';
+import 'package:savepass/app/sign_up/infrastructure/models/sign_up_type_enum.dart';
 import 'package:savepass/core/form/email_form.dart';
 import 'package:savepass/core/form/text_form.dart';
 
@@ -33,8 +35,8 @@ class OpenPrivacyPolicyState extends SignUpState {
   const OpenPrivacyPolicyState(super.model);
 }
 
-class OpenSecondStepState extends SignUpState {
-  const OpenSecondStepState(super.model);
+class OpenSignUpWithEmailState extends SignUpState {
+  const OpenSignUpWithEmailState(super.model);
 }
 
 class OpenHomeState extends SignUpState {
@@ -45,6 +47,10 @@ class EmailAlreadyInUseState extends SignUpState {
   const EmailAlreadyInUseState(super.model);
 }
 
+class SyncMasterPasswordState extends SignUpState {
+  const SyncMasterPasswordState(super.model);
+}
+
 class SignUpStateModel extends Equatable {
   final TextForm name;
   final EmailForm email;
@@ -53,6 +59,8 @@ class SignUpStateModel extends Equatable {
   final String? selectedImg;
   final bool showMasterPassword;
   final FormzSubmissionStatus status;
+  final User? userFirebase;
+  final SignUpTypeEnum? signUpType;
 
   const SignUpStateModel({
     this.name = const TextForm.pure(),
@@ -62,6 +70,8 @@ class SignUpStateModel extends Equatable {
     this.selectedImg,
     this.showMasterPassword = false,
     this.status = FormzSubmissionStatus.initial,
+    this.userFirebase,
+    this.signUpType,
   });
 
   SignUpStateModel copyWith({
@@ -72,6 +82,8 @@ class SignUpStateModel extends Equatable {
     String? selectedImg,
     bool? showMasterPassword,
     FormzSubmissionStatus? status,
+    User? userFirebase,
+    SignUpTypeEnum? signUpType,
   }) {
     return SignUpStateModel(
       name: name ?? this.name,
@@ -81,6 +93,8 @@ class SignUpStateModel extends Equatable {
       selectedImg: selectedImg ?? this.selectedImg,
       showMasterPassword: showMasterPassword ?? this.showMasterPassword,
       status: status ?? this.status,
+      userFirebase: userFirebase ?? this.userFirebase,
+      signUpType: signUpType ?? this.signUpType,
     );
   }
 
@@ -93,5 +107,7 @@ class SignUpStateModel extends Equatable {
         selectedImg,
         showMasterPassword,
         status,
+        userFirebase,
+        signUpType,
       ];
 }

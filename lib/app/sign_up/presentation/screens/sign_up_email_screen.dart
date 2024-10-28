@@ -6,18 +6,18 @@ import 'package:formz/formz.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_bloc.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_event.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_state.dart';
-import 'package:savepass/app/sign_up/presentation/widgets/second_step/sign_up_avatar_widget.dart';
-import 'package:savepass/app/sign_up/presentation/widgets/second_step/sign_up_email_widget.dart';
-import 'package:savepass/app/sign_up/presentation/widgets/second_step/sign_up_master_password_widget.dart';
-import 'package:savepass/app/sign_up/presentation/widgets/second_step/sign_up_name_widget.dart';
-import 'package:savepass/app/sign_up/presentation/widgets/second_step/sign_up_submit_button_widget.dart';
+import 'package:savepass/app/sign_up/presentation/widgets/sign_up_email/sign_up_avatar_widget.dart';
+import 'package:savepass/app/sign_up/presentation/widgets/sign_up_email/sign_up_email_widget.dart';
+import 'package:savepass/app/sign_up/presentation/widgets/sign_up_email/sign_up_master_password_widget.dart';
+import 'package:savepass/app/sign_up/presentation/widgets/sign_up_email/sign_up_name_widget.dart';
+import 'package:savepass/app/sign_up/presentation/widgets/sign_up_email/sign_up_submit_button_widget.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class SecondStepScreen extends StatelessWidget {
-  const SecondStepScreen({super.key});
+class SignUpEmailScreen extends StatelessWidget {
+  const SignUpEmailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +36,7 @@ void _listener(context, state) {
   final intl = AppLocalizations.of(context)!;
 
   if (state is OpenHomeState) {
-    Modular.to.pop();
-    Modular.to.popAndPushNamed(Routes.homeRoute);
+    Modular.to.pushNamedAndRemoveUntil(Routes.homeRoute, (route) => false);
   }
 
   if (state is EmailAlreadyInUseState) {

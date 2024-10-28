@@ -9,6 +9,7 @@ import 'package:savepass/app/sign_in/presentation/widgets/dont_have_account_widg
 import 'package:savepass/app/sign_in/presentation/widgets/sign_in_options_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:savepass/core/config/routes.dart';
+import 'package:savepass/core/utils/snackbar_utils.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -27,8 +28,18 @@ class SignInScreen extends StatelessWidget {
 }
 
 void _listener(context, state) {
-  if (state is OpenHomeState) {
-    Modular.to.popAndPushNamed(Routes.homeRoute);
+  final intl = AppLocalizations.of(context)!;
+
+  if (state is OpenAuthScreenState) {
+    Modular.to.pushNamedAndRemoveUntil(Routes.authInitRoute, (_) => false);
+  }
+
+  if(state is OpenSyncMasterPasswordState){
+    Modular.to.pushNamedAndRemoveUntil(Routes.syncMasterPasswordRoute, (_) => false);
+  }
+
+  if (state is GeneralErrorState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.genericError);
   }
 }
 
@@ -43,7 +54,7 @@ class _Body extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return PopScope(
-      canPop: false,
+      canPop: true,
       child: AdsScreenTemplate(
         wrapScroll: false,
         safeAreaBottom: false,

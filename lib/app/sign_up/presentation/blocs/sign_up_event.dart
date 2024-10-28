@@ -65,6 +65,10 @@ class SubmitSignUpFormEvent extends SignUpEvent {
   const SubmitSignUpFormEvent() : super();
 }
 
+class SubmitSyncPasswordEvent extends SignUpEvent {
+  const SubmitSyncPasswordEvent() : super();
+}
+
 class SignUpWithGoogleEvent extends SignUpEvent {
   const SignUpWithGoogleEvent() : super();
 }

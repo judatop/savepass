@@ -41,5 +41,11 @@
     "permanentButton": "Entendido",
     "emailAlreadyInUse": "El correo ya está en uso",
     "close": "Cerrar",
-    "invalidCredentials": "Credenciales inválidas"
+    "invalidCredentials": "Credenciales inválidas",
+    "genericError": "Ocurrió un error, por favor intenta de nuevo más tarde",
+    "actionNeeded": "Acción necesaria",
+    "authBiometricMsg": "Por favor autentícate para continuar",
+    "hello": "Hola",
+    "authInitText": "Puedes autenticarte usando tu contraseña maestra o usando biometría",
+    "useBiometrics": "Usar biometría"
 }

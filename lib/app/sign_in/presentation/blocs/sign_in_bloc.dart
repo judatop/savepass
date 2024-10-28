@@ -37,7 +37,9 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   }
 
   FutureOr<void> _onSignInWithGoogleEvent(
-      SignInWithGoogleEvent event, Emitter<SignInState> emit) async {
+    SignInWithGoogleEvent event,
+    Emitter<SignInState> emit,
+  ) async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -49,15 +51,21 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         idToken: googleAuth?.idToken,
       );
 
-      await FirebaseAuth.instance.signInWithCredential(credential);
+      final user = await FirebaseAuth.instance.signInWithCredential(credential);
 
+      //TODO: check if user is synched with master password
       emit(
-        OpenHomeState(
+        OpenAuthScreenState(
           state.model,
         ),
       );
     } catch (e) {
       Logger().e(e.toString());
+      emit(
+        GeneralErrorState(
+          state.model,
+        ),
+      );
     }
   }
 
@@ -95,7 +103,9 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   }
 
   FutureOr<void> _onToggleMasterPasswordEvent(
-      ToggleMasterPasswordEvent event, Emitter<SignInState> emit) {
+    ToggleMasterPasswordEvent event,
+    Emitter<SignInState> emit,
+  ) {
     emit(
       ChangeSignInState(
         state.model

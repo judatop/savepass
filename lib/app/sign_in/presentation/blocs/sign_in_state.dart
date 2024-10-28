@@ -36,6 +36,18 @@ class InvalidCredentialsState extends SignInState {
   const InvalidCredentialsState(super.model);
 }
 
+class OpenAuthScreenState extends SignInState {
+  const OpenAuthScreenState(super.model);
+}
+
+class OpenSyncMasterPasswordState extends SignInState {
+  const OpenSyncMasterPasswordState(super.model);
+}
+
+class GeneralErrorState extends SignInState {
+  const GeneralErrorState(super.model);
+}
+
 class SignInStateModel extends Equatable {
   final EmailForm email;
   final PasswordForm password;

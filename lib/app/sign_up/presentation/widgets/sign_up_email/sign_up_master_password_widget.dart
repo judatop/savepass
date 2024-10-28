@@ -59,7 +59,7 @@ class _SignUpMasterPasswordWidgetState
               intl.masterPasswordText,
             ),
             const SizedBox(
-              height: 5,
+              height: 15,
             ),
             AdsTextField(
               controller: _controller,

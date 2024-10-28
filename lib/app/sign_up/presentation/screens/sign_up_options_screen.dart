@@ -5,14 +5,14 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_bloc.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_event.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_state.dart';
-import 'package:savepass/app/sign_up/presentation/widgets/first_step/already_have_account_widget.dart';
-import 'package:savepass/app/sign_up/presentation/widgets/first_step/sign_up_options_widget.dart';
-import 'package:savepass/app/sign_up/presentation/widgets/first_step/terms_widget.dart';
+import 'package:savepass/app/sign_up/presentation/widgets/sign_up_options/already_have_account_widget.dart';
+import 'package:savepass/app/sign_up/presentation/widgets/sign_up_options/sign_up_options_widget.dart';
+import 'package:savepass/app/sign_up/presentation/widgets/sign_up_options/terms_widget.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class FirstStepScreen extends StatelessWidget {
-  const FirstStepScreen({super.key});
+class SignUpOptionsScreen extends StatelessWidget {
+  const SignUpOptionsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +36,15 @@ void _listener(context, state) {
     Modular.to.pushNamed(Routes.privacyPolicyRoute);
   }
 
-  if (state is OpenSecondStepState) {
-    Modular.to.pushNamed(Routes.singUpSecondStepRoute);
+  if (state is OpenSignUpWithEmailState) {
+    Modular.to.pushNamed(Routes.signUpEmailRoute);
   }
 
-  if (state is OpenHomeState) {
-    Modular.to.popAndPushNamed(Routes.homeRoute);
+  if (state is SyncMasterPasswordState) {
+    Modular.to.pushNamedAndRemoveUntil(
+      Routes.syncMasterPasswordRoute,
+      (route) => false,
+    );
   }
 }
 
@@ -56,7 +59,7 @@ class _Body extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return PopScope(
-      canPop: false,
+      canPop: true,
       child: AdsScreenTemplate(
         wrapScroll: false,
         safeAreaBottom: false,

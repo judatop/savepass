@@ -35,7 +35,7 @@ class DontHaveAccountWidget extends StatelessWidget {
                 text: appLocalizations.signInNoAccount,
                 onPressedCallback: () {
                   Modular.to.pop();
-                  Modular.to.pushNamed(Routes.singUpFirstStepRoute);
+                  Modular.to.pushNamed(Routes.signUpOptionsRoute);
                 },
                 textStyle: const TextStyle(
                   color: ADSFoundationsColors.linkColor,

@@ -41,5 +41,11 @@
     "permanentButton": "Understood",
     "emailAlreadyInUse": "The email is already in use",
     "close": "Close",
-    "invalidCredentials": "Invalid credentials"
+    "invalidCredentials": "Invalid credentials",
+    "genericError": "An error occurred, please try again later",
+    "actionNeeded": "Action needed",
+    "authBiometricMsg": "Please authenticate to continue",
+    "hello": "Hello",
+    "authInitText": "You can authenticate using your master password or using biometrics",
+    "useBiometrics": "Use biometrics"
 }

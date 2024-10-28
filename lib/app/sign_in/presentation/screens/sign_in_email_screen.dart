@@ -34,8 +34,7 @@ void _listener(context, state) {
   final intl = AppLocalizations.of(context)!;
 
   if (state is OpenHomeState) {
-    Modular.to.pop();
-    Modular.to.popAndPushNamed(Routes.homeRoute);
+    Modular.to.pushNamedAndRemoveUntil(Routes.homeRoute, (route) => false);
   }
 
   if (state is InvalidCredentialsState) {

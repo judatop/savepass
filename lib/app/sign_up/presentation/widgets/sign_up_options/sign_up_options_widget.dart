@@ -96,7 +96,7 @@ class SignUpOptionsWidget extends StatelessWidget {
         SizedBox(height: deviceHeight * 0.025),
         AdsOutlinedIconButton(
           onPressedCallback: () =>
-              Modular.to.pushNamed(Routes.singUpSecondStepRoute),
+              Modular.to.pushNamed(Routes.signUpEmailRoute),
           text:
               '${appLocalizations.getStartedSingUp} ${appLocalizations.authEmail}',
           icon: Icons.email,

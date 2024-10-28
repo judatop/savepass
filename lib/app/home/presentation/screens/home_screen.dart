@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final deviceHeight = MediaQuery.of(context).size.height;
 
     return PopScope(
-      canPop: false,
+      canPop: true,
       child: AdsScreenTemplate(
         safeAreaBottom: false,
         safeAreaTop: false,
@@ -45,7 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     AdsFilledButton(
                       onPressedCallback: () {
                         FirebaseAuth.instance.signOut();
-                        Modular.to.popAndPushNamed(Routes.getStartedRoute);
+                        Modular.to.pushNamedAndRemoveUntil(
+                            Routes.getStartedRoute, (route) => false);
                       },
                       text: 'Sign Out',
                     ),

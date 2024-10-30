@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:formz/formz.dart';
 import 'package:savepass/app/sign_up/infrastructure/models/master_password_form.dart';
 import 'package:savepass/app/sign_up/infrastructure/models/sign_up_type_enum.dart';
@@ -59,7 +58,7 @@ class SignUpStateModel extends Equatable {
   final String? selectedImg;
   final bool showMasterPassword;
   final FormzSubmissionStatus status;
-  final User? userFirebase;
+  // final User? userFirebase;
   final SignUpTypeEnum? signUpType;
 
   const SignUpStateModel({
@@ -70,7 +69,7 @@ class SignUpStateModel extends Equatable {
     this.selectedImg,
     this.showMasterPassword = false,
     this.status = FormzSubmissionStatus.initial,
-    this.userFirebase,
+    // this.userFirebase,
     this.signUpType,
   });
 
@@ -82,7 +81,7 @@ class SignUpStateModel extends Equatable {
     String? selectedImg,
     bool? showMasterPassword,
     FormzSubmissionStatus? status,
-    User? userFirebase,
+    // User? userFirebase,
     SignUpTypeEnum? signUpType,
   }) {
     return SignUpStateModel(
@@ -93,7 +92,7 @@ class SignUpStateModel extends Equatable {
       selectedImg: selectedImg ?? this.selectedImg,
       showMasterPassword: showMasterPassword ?? this.showMasterPassword,
       status: status ?? this.status,
-      userFirebase: userFirebase ?? this.userFirebase,
+      // userFirebase: userFirebase ?? this.userFirebase,
       signUpType: signUpType ?? this.signUpType,
     );
   }
@@ -107,7 +106,7 @@ class SignUpStateModel extends Equatable {
         selectedImg,
         showMasterPassword,
         status,
-        userFirebase,
+        // userFirebase,
         signUpType,
       ];
 }

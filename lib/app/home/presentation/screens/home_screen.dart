@@ -1,5 +1,4 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/auth_init/presentation/widgets/bottom_navigation_bar.dart';
@@ -44,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     AdsFilledButton(
                       onPressedCallback: () {
-                        FirebaseAuth.instance.signOut();
+                        // FirebaseAuth.instance.signOut();
                         Modular.to.pushNamedAndRemoveUntil(
                             Routes.getStartedRoute, (route) => false);
                       },

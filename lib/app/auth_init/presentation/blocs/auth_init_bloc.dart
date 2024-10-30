@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:logger/web.dart';
@@ -67,11 +66,11 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
     }
 
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      // final user = FirebaseAuth.instance.currentUser;
 
-      if (user?.email == null) {
-        throw Exception('User not found');
-      }
+      // if (user?.email == null) {
+      //   throw Exception('User not found');
+      // }
 
       //TODO: uncomment
       // await FirebaseAuth.instance.signInWithCredential(
@@ -89,15 +88,15 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
         ),
       );
     } catch (e) {
-      if (e is FirebaseAuthException) {
-        if (e.code == 'invalid-credential') {
-          emit(
-            InvalidMasterPasswordState(
-              state.model.copyWith(status: FormzSubmissionStatus.failure),
-            ),
-          );
-        }
-      }
+      // if (e is FirebaseAuthException) {
+      //   if (e.code == 'invalid-credential') {
+      //     emit(
+      //       InvalidMasterPasswordState(
+      //         state.model.copyWith(status: FormzSubmissionStatus.failure),
+      //       ),
+      //     );
+      //   }
+      // }
 
       Logger().e('submit auth error: ${e.toString()}');
     }

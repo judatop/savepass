@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/web.dart';
 import 'package:savepass/app/sign_up/infrastructure/models/master_password_form.dart';
 import 'package:savepass/app/sign_up/infrastructure/models/sign_up_type_enum.dart';
@@ -149,84 +147,84 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       return;
     }
 
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: state.model.email.value,
-        password: state.model.masterPassword.value,
-      );
+    // try {
+    //   await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    //     email: state.model.email.value,
+    //     password: state.model.masterPassword.value,
+    //   );
 
-      //TODO: Upload name and image to supabase
-      Future.delayed(const Duration(seconds: 2));
+    //   //TODO: Upload name and image to supabase
+    //   Future.delayed(const Duration(seconds: 2));
 
-      emit(
-        OpenHomeState(
-          state.model.copyWith(status: FormzSubmissionStatus.success),
-        ),
-      );
-    } catch (e) {
-      if (e is FirebaseAuthException) {
-        if (e.code == 'email-already-in-use') {
-          emit(
-            EmailAlreadyInUseState(
-              state.model.copyWith(status: FormzSubmissionStatus.failure),
-            ),
-          );
-        }
-      }
+    //   emit(
+    //     OpenHomeState(
+    //       state.model.copyWith(status: FormzSubmissionStatus.success),
+    //     ),
+    //   );
+    // } catch (e) {
+    //   if (e is FirebaseAuthException) {
+    //     if (e.code == 'email-already-in-use') {
+    //       emit(
+    //         EmailAlreadyInUseState(
+    //           state.model.copyWith(status: FormzSubmissionStatus.failure),
+    //         ),
+    //       );
+    //     }
+    //   }
 
-      Logger().e('sign up error: ${e.toString()}');
-    }
+    //   Logger().e('sign up error: ${e.toString()}');
+    // }
   }
 
   FutureOr<void> _onSignUpWithGoogleEvent(
     SignUpWithGoogleEvent event,
     Emitter<SignUpState> emit,
   ) async {
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    // try {
+    //   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+    //   final GoogleSignInAuthentication? googleAuth =
+    //       await googleUser?.authentication;
 
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
+    //   final credential = GoogleAuthProvider.credential(
+    //     accessToken: googleAuth?.accessToken,
+    //     idToken: googleAuth?.idToken,
+    //   );
 
-      final user = await FirebaseAuth.instance.signInWithCredential(credential);
+    //   final user = await FirebaseAuth.instance.signInWithCredential(credential);
 
-      emit(
-        SyncMasterPasswordState(
-          state.model.copyWith(
-            userFirebase: user.user,
-            signUpType: SignUpTypeEnum.google,
-          ),
-        ),
-      );
-    } catch (e) {
-      Logger().e(e.toString());
-    }
+    //   emit(
+    //     SyncMasterPasswordState(
+    //       state.model.copyWith(
+    //         userFirebase: user.user,
+    //         signUpType: SignUpTypeEnum.google,
+    //       ),
+    //     ),
+    //   );
+    // } catch (e) {
+    //   Logger().e(e.toString());
+    // }
   }
 
   FutureOr<void> _onSignUpWithGithubEvent(
     SignUpWithGithubEvent event,
     Emitter<SignUpState> emit,
   ) async {
-    try {
-      GithubAuthProvider githubProvider = GithubAuthProvider();
-      final user =
-          await FirebaseAuth.instance.signInWithProvider(githubProvider);
-      emit(
-        SyncMasterPasswordState(
-          state.model.copyWith(
-            userFirebase: user.user,
-            signUpType: SignUpTypeEnum.github,
-          ),
-        ),
-      );
-    } catch (e) {
-      Logger().e(e.toString());
-    }
+    // try {
+    //   GithubAuthProvider githubProvider = GithubAuthProvider();
+    //   final user =
+    //       await FirebaseAuth.instance.signInWithProvider(githubProvider);
+    //   emit(
+    //     SyncMasterPasswordState(
+    //       state.model.copyWith(
+    //         userFirebase: user.user,
+    //         signUpType: SignUpTypeEnum.github,
+    //       ),
+    //     ),
+    //   );
+    // } catch (e) {
+    //   Logger().e(e.toString());
+    // }
   }
 
   FutureOr<void> _onSubmitSyncPasswordEvent(

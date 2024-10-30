@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/web.dart';
 import 'package:savepass/app/sign_in/presentation/blocs/sign_in_event.dart';
 import 'package:savepass/app/sign_in/presentation/blocs/sign_in_state.dart';
@@ -41,17 +39,17 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     Emitter<SignInState> emit,
   ) async {
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      // final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+      // final GoogleSignInAuthentication? googleAuth =
+      //     await googleUser?.authentication;
 
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
+      // final credential = GoogleAuthProvider.credential(
+      //   accessToken: googleAuth?.accessToken,
+      //   idToken: googleAuth?.idToken,
+      // );
 
-      final user = await FirebaseAuth.instance.signInWithCredential(credential);
+      // final user = await FirebaseAuth.instance.signInWithCredential(credential);
 
       //TODO: check if user is synched with master password
       emit(
@@ -73,17 +71,17 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     SignInWithGithubEvent event,
     Emitter<SignInState> emit,
   ) async {
-    try {
-      GithubAuthProvider githubProvider = GithubAuthProvider();
-      await FirebaseAuth.instance.signInWithProvider(githubProvider);
-      emit(
-        OpenHomeState(
-          state.model,
-        ),
-      );
-    } catch (e) {
-      Logger().e(e.toString());
-    }
+    // try {
+    //   GithubAuthProvider githubProvider = GithubAuthProvider();
+    //   await FirebaseAuth.instance.signInWithProvider(githubProvider);
+    //   emit(
+    //     OpenHomeState(
+    //       state.model,
+    //     ),
+    //   );
+    // } catch (e) {
+    //   Logger().e(e.toString());
+    // }
   }
 
   FutureOr<void> _onEmailChanged(
@@ -139,33 +137,33 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       return;
     }
 
-    try {
-      await FirebaseAuth.instance.signInWithCredential(
-        EmailAuthProvider.credential(
-          email: state.model.email.value,
-          password: state.model.password.value,
-        ),
-      );
+    // try {
+    //   await FirebaseAuth.instance.signInWithCredential(
+    //     EmailAuthProvider.credential(
+    //       email: state.model.email.value,
+    //       password: state.model.password.value,
+    //     ),
+    //   );
 
-      Future.delayed(const Duration(seconds: 2));
+    //   Future.delayed(const Duration(seconds: 2));
 
-      emit(
-        OpenHomeState(
-          state.model.copyWith(status: FormzSubmissionStatus.success),
-        ),
-      );
-    } catch (e) {
-      if (e is FirebaseAuthException) {
-        if (e.code == 'invalid-credential') {
-          emit(
-            InvalidCredentialsState(
-              state.model.copyWith(status: FormzSubmissionStatus.failure),
-            ),
-          );
-        }
-      }
+    //   emit(
+    //     OpenHomeState(
+    //       state.model.copyWith(status: FormzSubmissionStatus.success),
+    //     ),
+    //   );
+    // } catch (e) {
+    //   if (e is FirebaseAuthException) {
+    //     if (e.code == 'invalid-credential') {
+    //       emit(
+    //         InvalidCredentialsState(
+    //           state.model.copyWith(status: FormzSubmissionStatus.failure),
+    //         ),
+    //       );
+    //     }
+    //   }
 
-      Logger().e('sign in error: ${e.toString()}');
-    }
+    //   Logger().e('sign in error: ${e.toString()}');
+    // }
   }
 }

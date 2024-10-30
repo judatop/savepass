@@ -27,10 +27,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.1
   lottie: ^3.1.2
   syncfusion_flutter_pdfviewer: ^27.1.51
-  firebase_core: ^3.6.0
   flutter_dotenv: ^5.1.0
-  firebase_auth: ^5.3.1
-  google_sign_in: ^6.2.1
   local_auth: ^2.3.0
   logger: ^2.4.0
   image_picker: ^1.1.2

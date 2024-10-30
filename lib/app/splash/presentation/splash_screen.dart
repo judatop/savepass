@@ -1,5 +1,4 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -29,14 +28,14 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(
       const Duration(milliseconds: splashDuration),
       () {
-        final user = FirebaseAuth.instance.currentUser;
+        // final user = FirebaseAuth.instance.currentUser;
 
-        if (user != null) {
-          Modular.to.navigate(Routes.authInitRoute);
-          return;
-        }
+        // if (user != null) {
+        //   Modular.to.navigate(Routes.authInitRoute);
+        //   return;
+        // }
 
-        Modular.to.navigate(Routes.getStartedRoute);
+        // Modular.to.navigate(Routes.getStartedRoute);
       },
     );
   }

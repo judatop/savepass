@@ -39,13 +39,6 @@ void _listener(context, state) {
   if (state is OpenSignUpWithEmailState) {
     Modular.to.pushNamed(Routes.signUpEmailRoute);
   }
-
-  if (state is SyncMasterPasswordState) {
-    Modular.to.pushNamedAndRemoveUntil(
-      Routes.syncMasterPasswordRoute,
-      (route) => false,
-    );
-  }
 }
 
 class _Body extends StatelessWidget {

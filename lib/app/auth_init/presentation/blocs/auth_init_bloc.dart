@@ -2,13 +2,20 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:logger/web.dart';
+import 'package:savepass/app/auth_init/domain/repositories/auth_init_repository.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_event.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_state.dart';
+import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/core/form/password_form.dart';
 
 class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
-  AuthInitBloc() : super(const AuthInitInitialState()) {
+  final ProfileRepository profileRepository;
+  final AuthInitRepository authInitRepository;
+
+  AuthInitBloc({
+    required this.profileRepository,
+    required this.authInitRepository,
+  }) : super(const AuthInitInitialState()) {
     on<AuthInitInitialEvent>(_onAuthInitInitial);
     on<PasswordChangedEvent>(_onPasswordChanged);
     on<ToggleMasterPasswordEvent>(_onToggleMasterPasswordEvent);
@@ -18,8 +25,22 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
   FutureOr<void> _onAuthInitInitial(
     AuthInitInitialEvent event,
     Emitter<AuthInitState> emit,
-  ) {
+  ) async {
     emit(const AuthInitInitialState());
+
+    final res = await profileRepository.getProfile();
+    res.fold(
+      (l) {},
+      (r) {
+        emit(
+          ChangeAuthInitState(
+            state.model.copyWith(
+              profile: r,
+            ),
+          ),
+        );
+      },
+    );
   }
 
   FutureOr<void> _onPasswordChanged(
@@ -65,40 +86,47 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
       return;
     }
 
-    try {
-      // final user = FirebaseAuth.instance.currentUser;
+    final profile = state.model.profile;
 
-      // if (user?.email == null) {
-      //   throw Exception('User not found');
-      // }
-
-      //TODO: uncomment
-      // await FirebaseAuth.instance.signInWithCredential(
-      //   EmailAuthProvider.credential(
-      //     email: user!.email!,
-      //     password: state.model.password.value,
-      //   ),
-      // );
-
-      await Future.delayed(const Duration(seconds: 5));
-
+    if (profile == null || profile.masterPasswordUuid == null) {
       emit(
-        OpenHomeState(
-          state.model.copyWith(status: FormzSubmissionStatus.success),
+        GeneralErrorState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
         ),
       );
-    } catch (e) {
-      // if (e is FirebaseAuthException) {
-      //   if (e.code == 'invalid-credential') {
-      //     emit(
-      //       InvalidMasterPasswordState(
-      //         state.model.copyWith(status: FormzSubmissionStatus.failure),
-      //       ),
-      //     );
-      //   }
-      // }
-
-      Logger().e('submit auth error: ${e.toString()}');
+      return;
     }
+
+    final masterPassword = state.model.password.value;
+
+    final response = await authInitRepository.checkMasterPassword(
+      secretUuid: profile.masterPasswordUuid!,
+      inputPassword: masterPassword,
+    );
+
+    response.fold(
+      (l) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(status: FormzSubmissionStatus.failure),
+          ),
+        );
+      },
+      (r) {
+        if (r) {
+          emit(
+            OpenHomeState(
+              state.model.copyWith(status: FormzSubmissionStatus.success),
+            ),
+          );
+        } else {
+          emit(
+            InvalidMasterPasswordState(
+              state.model.copyWith(status: FormzSubmissionStatus.failure),
+            ),
+          );
+        }
+      },
+    );
   }
 }

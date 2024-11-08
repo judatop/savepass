@@ -44,7 +44,7 @@ class _MasterPasswordWidgetState extends State<MasterPasswordWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AdsTextField(
-              hintText: 'Master Password',
+              hintText: intl.masterPasswordSignUpForm,
               controller: _controller,
               key: const Key('signUp_masterPassword_textField'),
               errorText: model.alreadySubmitted

@@ -43,6 +43,10 @@ void _listener(context, state) {
   if (state is InvalidMasterPasswordState) {
     SnackBarUtils.showErrroSnackBar(context, intl.invalidCredentials);
   }
+
+  if (state is GeneralErrorState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.genericError);
+  }
 }
 
 class _Body extends StatelessWidget {
@@ -109,7 +113,6 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceHeight = MediaQuery.of(context).size.height;
-    // final user = FirebaseAuth.instance.currentUser;
     final textTheme = Theme.of(context).textTheme;
     final intl = AppLocalizations.of(context)!;
 
@@ -117,61 +120,73 @@ class _Body extends StatelessWidget {
       wrapScroll: false,
       child: BlocBuilder<AuthInitBloc, AuthInitState>(
         buildWhen: (previous, current) =>
-            (previous.model.status != current.model.status),
+            (previous.model.status != current.model.status) ||
+            (previous.model.profile != current.model.profile),
         builder: (context, state) {
+          final profile = state.model.profile;
+          String? displayName;
+          String? photoURL;
+
+          if (profile != null) {
+            displayName = profile.displayName;
+            photoURL = profile.avatar;
+          }
+
           return Skeletonizer(
             enabled: state.model.status.isInProgress,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(height: deviceHeight * 0.02),
+                SizedBox(
+                  height: deviceHeight * (Platform.isAndroid ? 0.05 : 0.02),
+                ),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //   children: [
-                        //     Column(
-                        //       crossAxisAlignment: CrossAxisAlignment.start,
-                        //       children: [
-                        //         AdsHeadline(
-                        //           text: intl.hello,
-                        //         ),
-                        //         if (user?.displayName != null)
-                        //           Text(
-                        //             user!.displayName!,
-                        //             style: textTheme.titleMedium?.copyWith(
-                        //               fontWeight: FontWeight.w400,
-                        //             ),
-                        //           ),
-                        //       ],
-                        //     ),
-                        //     AdsAvatar(
-                        //       imageUrl: user?.photoURL,
-                        //     ),
-                        //   ],
-                        // ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                AdsHeadline(
+                                  text: intl.hello,
+                                ),
+                                if (displayName != null)
+                                  Text(
+                                    displayName,
+                                    style: textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            AdsAvatar(
+                              imageUrl: photoURL,
+                            ),
+                          ],
+                        ),
                         SizedBox(height: deviceHeight * 0.15),
-                        Text(
-                          intl.authInitText,
-                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        AdsSubtitle(
+                          text: intl.authInitText,
+                          textAlign: TextAlign.start,
                         ),
                         SizedBox(height: deviceHeight * 0.02),
                         const MasterPasswordWidget(),
-                        SizedBox(height: deviceHeight * 0.02),
+                        SizedBox(height: deviceHeight * 0.05),
                         const SubmitButtonWidget(),
                       ],
                     ),
                   ),
                 ),
                 SizedBox(height: deviceHeight * 0.01),
-                AdsOutlinedIconButton(
-                  onPressedCallback: () => _openBiometrics(context),
-                  text: intl.useBiometrics,
-                  icon: Platform.isIOS ? Icons.face : Icons.fingerprint,
-                ),
+                // AdsOutlinedIconButton(
+                //   onPressedCallback: () => _openBiometrics(context),
+                //   text: intl.useBiometrics,
+                //   icon: Platform.isIOS ? Icons.face : Icons.fingerprint,
+                // ),
               ],
             ),
           );

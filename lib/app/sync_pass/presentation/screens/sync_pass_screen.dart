@@ -3,23 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
-import 'package:savepass/app/sign_up/presentation/blocs/sign_up_bloc.dart';
-import 'package:savepass/app/sign_up/presentation/blocs/sign_up_state.dart';
-import 'package:savepass/app/sign_up/presentation/widgets/sign_up_email/sign_up_master_password_widget.dart';
-import 'package:savepass/app/sign_up/presentation/widgets/sign_up_sync_password/submit_sync_password_widget.dart';
+import 'package:savepass/app/sync_pass/presentation/blocs/sync_bloc.dart';
+import 'package:savepass/app/sync_pass/presentation/blocs/sync_state.dart';
+import 'package:savepass/app/sync_pass/presentation/widgets/master_password_widget.dart';
+import 'package:savepass/app/sync_pass/presentation/widgets/submit_sync_pass_widget.dart';
 import 'package:savepass/core/config/routes.dart';
+import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class SignUpSyncMasterPasswordScreen extends StatelessWidget {
-  const SignUpSyncMasterPasswordScreen({super.key});
+class SyncPassScreen extends StatelessWidget {
+  const SyncPassScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Modular.get<SignUpBloc>();
+    final bloc = Modular.get<SyncBloc>();
     return BlocProvider.value(
       value: bloc,
-      child: const BlocListener<SignUpBloc, SignUpState>(
+      child: const BlocListener<SyncBloc, SyncState>(
         listener: _listener,
         child: _Body(),
       ),
@@ -28,8 +29,14 @@ class SignUpSyncMasterPasswordScreen extends StatelessWidget {
 }
 
 void _listener(context, state) {
+  final intl = AppLocalizations.of(context)!;
+
   if (state is OpenHomeState) {
     Modular.to.pushNamedAndRemoveUntil(Routes.homeRoute, (route) => false);
+  }
+
+  if (state is GeneralErrorState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.genericError);
   }
 }
 
@@ -45,7 +52,7 @@ class _Body extends StatelessWidget {
       wrapScroll: false,
       child: PopScope(
         canPop: false,
-        child: BlocBuilder<SignUpBloc, SignUpState>(
+        child: BlocBuilder<SyncBloc, SyncState>(
           buildWhen: (previous, current) =>
               (previous.model.status != current.model.status),
           builder: (context, state) {
@@ -55,11 +62,16 @@ class _Body extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  AdsHeadline(text: intl.actionNeeded),
+                  AdsHeadline(text: intl.registerMasterPassword),
                   SizedBox(height: deviceHeight * 0.05),
-                  const SignUpMasterPasswordWidget(),
-                  SizedBox(height: deviceHeight * 0.02),
-                  const SubmitSyncPasswordWidget(),
+                  Text(
+                    intl.masterPasswordText,
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: deviceHeight * 0.025),
+                  const MasterPasswordWidget(),
+                  SizedBox(height: deviceHeight * 0.025),
+                  const SubmitSyncPassWidget(),
                 ],
               ),
             );

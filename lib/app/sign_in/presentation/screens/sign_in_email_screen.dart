@@ -33,12 +33,20 @@ class SignInEmailScreen extends StatelessWidget {
 void _listener(context, state) {
   final intl = AppLocalizations.of(context)!;
 
-  if (state is OpenHomeState) {
-    Modular.to.pushNamedAndRemoveUntil(Routes.homeRoute, (route) => false);
-  }
-
   if (state is InvalidCredentialsState) {
     SnackBarUtils.showErrroSnackBar(context, intl.invalidCredentials);
+  }
+
+  if (state is GeneralErrorState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.genericError);
+  }
+
+  if (state is OpenSyncMasterPasswordState) {
+    Modular.to.pushNamed(Routes.syncMasterPasswordRoute);
+  }
+
+  if (state is OpenAuthScreenState) {
+    Modular.to.pushNamed(Routes.authInitRoute);
   }
 }
 
@@ -48,6 +56,7 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceHeight = MediaQuery.of(context).size.height;
+    final intl = AppLocalizations.of(context)!;
 
     return AdsScreenTemplate(
       goBack: true,
@@ -62,10 +71,13 @@ class _Body extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                SizedBox(height: deviceHeight * 0.1),
+                AdsHeadline(text: intl.signInDesc),
+                SizedBox(height: deviceHeight * 0.05),
                 const SignInEmailWidget(),
                 SizedBox(height: deviceHeight * 0.02),
                 const SignInPasswordWidget(),
-                SizedBox(height: deviceHeight * 0.05),
+                SizedBox(height: deviceHeight * 0.03),
                 const SignInSubmitButtonWidget(),
               ],
             ),

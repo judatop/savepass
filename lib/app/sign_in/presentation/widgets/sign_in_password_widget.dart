@@ -46,7 +46,7 @@ class _SignInPasswordWidgetState extends State<SignInPasswordWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${intl.masterPasswordSignUpForm}:',
+              '${intl.passwordTitle}:',
               style:
                   textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
             ),

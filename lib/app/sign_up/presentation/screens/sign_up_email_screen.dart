@@ -8,7 +8,7 @@ import 'package:savepass/app/sign_up/presentation/blocs/sign_up_event.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_state.dart';
 import 'package:savepass/app/sign_up/presentation/widgets/sign_up_email/sign_up_avatar_widget.dart';
 import 'package:savepass/app/sign_up/presentation/widgets/sign_up_email/sign_up_email_widget.dart';
-import 'package:savepass/app/sign_up/presentation/widgets/sign_up_email/sign_up_master_password_widget.dart';
+import 'package:savepass/app/sign_up/presentation/widgets/sign_up_email/sign_up_password_widget.dart';
 import 'package:savepass/app/sign_up/presentation/widgets/sign_up_email/sign_up_name_widget.dart';
 import 'package:savepass/app/sign_up/presentation/widgets/sign_up_email/sign_up_submit_button_widget.dart';
 import 'package:savepass/core/config/routes.dart';
@@ -35,12 +35,23 @@ class SignUpEmailScreen extends StatelessWidget {
 void _listener(context, state) {
   final intl = AppLocalizations.of(context)!;
 
-  if (state is OpenHomeState) {
-    Modular.to.pushNamedAndRemoveUntil(Routes.homeRoute, (route) => false);
+  if (state is EmailAlreadyInUseState) {
+    SnackBarUtils.showErrroSnackBar(
+      context,
+      intl.emailAlreadyInUse,
+    );
   }
 
-  if (state is EmailAlreadyInUseState) {
-    SnackBarUtils.showErrroSnackBar(context, intl.emailAlreadyInUse);
+  if (state is GeneralErrorState) {
+    SnackBarUtils.showErrroSnackBar(
+      context,
+      intl.genericError,
+    );
+  }
+
+  if (state is OpenSyncPassState) {
+    Modular.to
+        .pushNamedAndRemoveUntil(Routes.syncMasterPasswordRoute, (_) => false);
   }
 }
 
@@ -70,7 +81,7 @@ class _Body extends StatelessWidget {
                 SizedBox(height: deviceHeight * 0.02),
                 const SignUpEmailWidget(),
                 SizedBox(height: deviceHeight * 0.02),
-                const SignUpMasterPasswordWidget(),
+                const SignUpPasswordWidget(),
                 SizedBox(height: deviceHeight * 0.05),
                 const SignUpSubmitButtonWidget(),
               ],

@@ -1,10 +1,9 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/auth_init/presentation/widgets/bottom_navigation_bar.dart';
 import 'package:savepass/core/config/routes.dart';
-import 'package:savepass/core/utils/firebase_auth_utils.dart';
+import 'package:savepass/main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,7 +15,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-    FirebaseAuthUtils.initAuthListeners();
     super.initState();
   }
 
@@ -43,10 +41,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       text: 'SavePass',
                     ),
                     AdsFilledButton(
-                      onPressedCallback: () {
-                        FirebaseAuth.instance.signOut();
+                      onPressedCallback: () async {
+                        await supabase.auth.signOut();
                         Modular.to.pushNamedAndRemoveUntil(
-                            Routes.getStartedRoute, (route) => false);
+                          Routes.getStartedRoute,
+                          (route) => false,
+                        );
                       },
                       text: 'Sign Out',
                     ),

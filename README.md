@@ -12,6 +12,12 @@ If you find issues with this app, feel free to submit a PR or create a new issue
 
 ## How to Get Started
 
+### Supabase
+
+```bash
+dart run build_runner build -d
+```
+
 ### Firebase
 This app uses Firebase services for authentication. To get started, you need to create a Firebase project and configure the authentication with Google, Github & Apple. After that, install firebase cli and flutterfire on your computer and you need to execute the following commands:
 

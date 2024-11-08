@@ -9,16 +9,14 @@ import 'package:savepass/app/sign_up/presentation/blocs/sign_up_state.dart';
 import 'package:savepass/core/utils/regex_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class SignUpMasterPasswordWidget extends StatefulWidget {
-  const SignUpMasterPasswordWidget({super.key});
+class SignUpPasswordWidget extends StatefulWidget {
+  const SignUpPasswordWidget({super.key});
 
   @override
-  State<SignUpMasterPasswordWidget> createState() =>
-      _SignUpMasterPasswordWidgetState();
+  State<SignUpPasswordWidget> createState() => _SignUpPasswordWidgetState();
 }
 
-class _SignUpMasterPasswordWidgetState
-    extends State<SignUpMasterPasswordWidget> {
+class _SignUpPasswordWidgetState extends State<SignUpPasswordWidget> {
   late final TextEditingController _controller;
 
   @override
@@ -35,53 +33,44 @@ class _SignUpMasterPasswordWidgetState
 
     return BlocBuilder<SignUpBloc, SignUpState>(
       buildWhen: (previous, current) =>
-          (previous.model.masterPassword != current.model.masterPassword) ||
+          (previous.model.password != current.model.password) ||
           (previous.model.alreadySubmitted != current.model.alreadySubmitted) ||
-          (previous.model.showMasterPassword !=
-              current.model.showMasterPassword),
+          (previous.model.showPassword != current.model.showPassword),
       builder: (context, state) {
         final model = state.model;
-        final masterPassword = model.masterPassword.value;
+        final masterPassword = model.password.value;
         _controller.text = masterPassword;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${intl.masterPasswordSignUpForm}:',
+              '${intl.passwordTitle}:',
               style:
                   textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(
               height: 5,
             ),
-            Text(
-              intl.masterPasswordText,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
             AdsTextField(
               controller: _controller,
               key: const Key('signUp_masterPassword_textField'),
               errorText: model.alreadySubmitted
-                  ? model.masterPassword
-                      .getError(intl, model.masterPassword.error)
+                  ? model.password.getError(intl, model.password.error)
                   : null,
               onChanged: (value) {
                 final bloc = Modular.get<SignUpBloc>();
                 bloc.add(PasswordChangedEvent(password: value));
               },
-              obscureText: !model.showMasterPassword,
+              obscureText: !model.showPassword,
               inputFormatters: [
                 FilteringTextInputFormatter.allow(
                   RegexUtils.password,
                 ),
               ],
               textInputAction: TextInputAction.done,
-              suffixIcon: model.showMasterPassword
-                  ? Icons.visibility_off
-                  : Icons.visibility,
+              suffixIcon:
+                  model.showPassword ? Icons.visibility_off : Icons.visibility,
               onTapSuffixIcon: () =>
                   bloc.add(const ToggleMasterPasswordEvent()),
             ),

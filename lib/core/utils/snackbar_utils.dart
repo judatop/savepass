@@ -52,3 +52,8 @@ class SnackBarUtils {
     ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 }
+
+class SnackBarErrors {
+  static const String generalErrorCode = 'general_error';
+  static const String invalidCredentials = 'invalid_credentials';
+}

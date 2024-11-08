@@ -1,17 +1,23 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:logger/web.dart';
+import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
+import 'package:savepass/app/sign_in/domain/repositories/sign_in_repository.dart';
 import 'package:savepass/app/sign_in/presentation/blocs/sign_in_event.dart';
 import 'package:savepass/app/sign_in/presentation/blocs/sign_in_state.dart';
 import 'package:savepass/core/form/email_form.dart';
 import 'package:savepass/core/form/password_form.dart';
+import 'package:savepass/core/utils/snackbar_utils.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
-  SignInBloc() : super(const SignInInitialState()) {
+  final SignInRepository signInRepository;
+  final ProfileRepository profileRepository;
+
+  SignInBloc({
+    required this.signInRepository,
+    required this.profileRepository,
+  }) : super(const SignInInitialState()) {
     on<SignInInitialEvent>(_onSignInInitial);
     on<OpenSignUpEvent>(_onOpenSignUp);
     on<SignInWithGoogleEvent>(_onSignInWithGoogleEvent);
@@ -40,50 +46,14 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     SignInWithGoogleEvent event,
     Emitter<SignInState> emit,
   ) async {
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
-
-      final user = await FirebaseAuth.instance.signInWithCredential(credential);
-
-      //TODO: check if user is synched with master password
-      emit(
-        OpenAuthScreenState(
-          state.model,
-        ),
-      );
-    } catch (e) {
-      Logger().e(e.toString());
-      emit(
-        GeneralErrorState(
-          state.model,
-        ),
-      );
-    }
+    //TODO: implement google sign in
   }
 
   FutureOr<void> _onSignInWithGithubEvent(
     SignInWithGithubEvent event,
     Emitter<SignInState> emit,
   ) async {
-    try {
-      GithubAuthProvider githubProvider = GithubAuthProvider();
-      await FirebaseAuth.instance.signInWithProvider(githubProvider);
-      emit(
-        OpenHomeState(
-          state.model,
-        ),
-      );
-    } catch (e) {
-      Logger().e(e.toString());
-    }
+    //TODO: implement github sign in
   }
 
   FutureOr<void> _onEmailChanged(
@@ -139,33 +109,80 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       return;
     }
 
-    try {
-      await FirebaseAuth.instance.signInWithCredential(
-        EmailAuthProvider.credential(
-          email: state.model.email.value,
-          password: state.model.password.value,
-        ),
-      );
+    final email = state.model.email.value.toLowerCase();
+    final password = state.model.password.value;
+    final response = await signInRepository.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
 
-      Future.delayed(const Duration(seconds: 2));
+    bool? successSignIn;
+    response.fold(
+      (l) {
+        if (l.failure is String) {
+          final code = l.failure;
+          if (code == SnackBarErrors.invalidCredentials) {
+            emit(
+              InvalidCredentialsState(
+                state.model.copyWith(
+                  status: FormzSubmissionStatus.failure,
+                ),
+              ),
+            );
+            return;
+          }
 
-      emit(
-        OpenHomeState(
-          state.model.copyWith(status: FormzSubmissionStatus.success),
-        ),
-      );
-    } catch (e) {
-      if (e is FirebaseAuthException) {
-        if (e.code == 'invalid-credential') {
           emit(
-            InvalidCredentialsState(
-              state.model.copyWith(status: FormzSubmissionStatus.failure),
+            GeneralErrorState(
+              state.model.copyWith(
+                status: FormzSubmissionStatus.failure,
+              ),
             ),
           );
         }
-      }
+      },
+      (r) {
+        successSignIn = true;
+      },
+    );
 
-      Logger().e('sign in error: ${e.toString()}');
+    if (successSignIn == null) {
+      return;
     }
+
+    final hasMasterPasswordResponse =
+        await profileRepository.checkIfHasMasterPassword();
+
+    hasMasterPasswordResponse.fold(
+      (l) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.failure,
+            ),
+          ),
+        );
+      },
+      (r) {
+        if (!r) {
+          emit(
+            OpenSyncMasterPasswordState(
+              state.model.copyWith(
+                status: FormzSubmissionStatus.success,
+              ),
+            ),
+          );
+          return;
+        }
+
+        emit(
+          OpenAuthScreenState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.success,
+            ),
+          ),
+        );
+      },
+    );
   }
 }

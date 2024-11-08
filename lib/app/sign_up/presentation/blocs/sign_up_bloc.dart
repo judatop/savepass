@@ -1,19 +1,24 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:logger/web.dart';
-import 'package:savepass/app/sign_up/infrastructure/models/master_password_form.dart';
-import 'package:savepass/app/sign_up/infrastructure/models/sign_up_type_enum.dart';
+import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
+import 'package:savepass/app/sign_up/domain/repositories/sign_up_repository.dart';
+import 'package:savepass/app/sign_up/infrastructure/models/sign_up_password_form.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_event.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_state.dart';
 import 'package:savepass/core/form/email_form.dart';
 import 'package:savepass/core/form/text_form.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
-  SignUpBloc() : super(const SignUpInitialState()) {
+  final SignUpRepository signUpRepository;
+  final ProfileRepository profileRepository;
+
+  SignUpBloc({
+    required this.signUpRepository,
+    required this.profileRepository,
+  }) : super(const SignUpInitialState()) {
     on<SignUpInitialEvent>(_onSignUpInitial);
     on<NameSignUpChangedEvent>(_onNameSignUpChanged);
     on<OnSubmitFirstStep>(_onOnSubmitFirstStep);
@@ -27,7 +32,6 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     on<SubmitSignUpFormEvent>(_onSubmitSignUpFormEvent);
     on<SignUpWithGoogleEvent>(_onSignUpWithGoogleEvent);
     on<SignUpWithGithubEvent>(_onSignUpWithGithubEvent);
-    on<SubmitSyncPasswordEvent>(_onSubmitSyncPasswordEvent);
   }
 
   FutureOr<void> _onNameSignUpChanged(
@@ -100,8 +104,8 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     PasswordChangedEvent event,
     Emitter<SignUpState> emit,
   ) {
-    final password = MasterPasswordForm.dirty(event.password);
-    emit(ChangeSignUpState(state.model.copyWith(masterPassword: password)));
+    final password = SignUpPasswordForm.dirty(event.password);
+    emit(ChangeSignUpState(state.model.copyWith(password: password)));
   }
 
   FutureOr<void> _onAvatarChanged(
@@ -118,8 +122,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   ) {
     emit(
       ChangeSignUpState(
-        state.model
-            .copyWith(showMasterPassword: !state.model.showMasterPassword),
+        state.model.copyWith(showPassword: !state.model.showPassword),
       ),
     );
   }
@@ -139,7 +142,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
     if (!Formz.validate([
       state.model.email,
-      state.model.masterPassword,
+      state.model.password,
     ])) {
       emit(
         ChangeSignUpState(
@@ -149,121 +152,95 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       return;
     }
 
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: state.model.email.value,
-        password: state.model.masterPassword.value,
-      );
+    final email = state.model.email.value.toLowerCase();
+    final password = state.model.password.value;
 
-      //TODO: Upload name and image to supabase
-      Future.delayed(const Duration(seconds: 2));
+    final signUpResponse = await signUpRepository.signUpWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
 
+    User? user;
+    signUpResponse.fold(
+      (l) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(status: FormzSubmissionStatus.failure),
+          ),
+        );
+        return;
+      },
+      (r) async {
+        user = r.user;
+      },
+    );
+
+    if (user == null || user?.id == null) {
       emit(
-        OpenHomeState(
-          state.model.copyWith(status: FormzSubmissionStatus.success),
+        GeneralErrorState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
         ),
       );
-    } catch (e) {
-      if (e is FirebaseAuthException) {
-        if (e.code == 'email-already-in-use') {
+      return;
+    }
+
+    final userId = user!.id;
+
+    final selectedImg = state.model.selectedImg;
+
+    String? fileUuid;
+    if (selectedImg != null) {
+      final uploadAvatarResponse =
+          await profileRepository.uploadAvatar(selectedImg);
+      uploadAvatarResponse.fold(
+        (l) {
           emit(
-            EmailAlreadyInUseState(
+            GeneralErrorState(
               state.model.copyWith(status: FormzSubmissionStatus.failure),
             ),
           );
-        }
-      }
-
-      Logger().e('sign up error: ${e.toString()}');
+        },
+        (r) async {
+          fileUuid = r;
+        },
+      );
     }
+
+    final createProfileResponse = await profileRepository.createProfile(
+      userId: userId,
+      displayName: state.model.name.value,
+      avatarUuid: fileUuid!,
+    );
+
+    createProfileResponse.fold(
+      (l) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(status: FormzSubmissionStatus.failure),
+          ),
+        );
+      },
+      (r) {
+        emit(
+          OpenSyncPassState(
+            state.model.copyWith(status: FormzSubmissionStatus.success),
+          ),
+        );
+      },
+    );
   }
 
   FutureOr<void> _onSignUpWithGoogleEvent(
     SignUpWithGoogleEvent event,
     Emitter<SignUpState> emit,
   ) async {
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
-
-      final user = await FirebaseAuth.instance.signInWithCredential(credential);
-
-      emit(
-        SyncMasterPasswordState(
-          state.model.copyWith(
-            userFirebase: user.user,
-            signUpType: SignUpTypeEnum.google,
-          ),
-        ),
-      );
-    } catch (e) {
-      Logger().e(e.toString());
-    }
+    //TODO: Implement Google Sign Up
   }
 
   FutureOr<void> _onSignUpWithGithubEvent(
     SignUpWithGithubEvent event,
     Emitter<SignUpState> emit,
   ) async {
-    try {
-      GithubAuthProvider githubProvider = GithubAuthProvider();
-      final user =
-          await FirebaseAuth.instance.signInWithProvider(githubProvider);
-      emit(
-        SyncMasterPasswordState(
-          state.model.copyWith(
-            userFirebase: user.user,
-            signUpType: SignUpTypeEnum.github,
-          ),
-        ),
-      );
-    } catch (e) {
-      Logger().e(e.toString());
-    }
-  }
-
-  FutureOr<void> _onSubmitSyncPasswordEvent(
-    SubmitSyncPasswordEvent event,
-    Emitter<SignUpState> emit,
-  ) async {
-    emit(
-      ChangeSignUpState(
-        state.model.copyWith(
-          alreadySubmitted: true,
-          status: FormzSubmissionStatus.inProgress,
-        ),
-      ),
-    );
-
-    if (!Formz.validate([
-      state.model.masterPassword,
-    ])) {
-      emit(
-        ChangeSignUpState(
-          state.model.copyWith(status: FormzSubmissionStatus.initial),
-        ),
-      );
-      return;
-    }
-
-    try {
-      //TODO: Sync master password to Supabase
-      await Future.delayed(const Duration(seconds: 3));
-
-      emit(
-        OpenHomeState(
-          state.model.copyWith(status: FormzSubmissionStatus.success),
-        ),
-      );
-    } catch (e) {
-      Logger().e('sign up error: ${e.toString()}');
-    }
+    //TODO: Implement Github Sign Up
   }
 }

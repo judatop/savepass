@@ -2,6 +2,7 @@ import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:formz/formz.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_bloc.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_event.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_state.dart';
@@ -10,6 +11,7 @@ import 'package:savepass/app/sign_up/presentation/widgets/sign_up_options/sign_u
 import 'package:savepass/app/sign_up/presentation/widgets/sign_up_options/terms_widget.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class SignUpOptionsScreen extends StatelessWidget {
   const SignUpOptionsScreen({super.key});
@@ -38,6 +40,10 @@ void _listener(context, state) {
 
   if (state is OpenSignUpWithEmailState) {
     Modular.to.pushNamed(Routes.signUpEmailRoute);
+  }
+
+  if (state is OpenSyncPassState) {
+    Modular.to.pushNamed(Routes.syncMasterPasswordRoute);
   }
 }
 
@@ -70,20 +76,29 @@ class _Body extends StatelessWidget {
                     right: deviceWidth *
                         ADSFoundationSizes.defaultHorizontalPadding,
                   ),
-                  child: Column(
-                    children: [
-                      Text(
-                        appLocalizations.authTitle,
-                        style: textTheme.headlineMedium?.copyWith(
-                          fontSize: 26,
+                  child: BlocBuilder<SignUpBloc, SignUpState>(
+                    buildWhen: (previous, current) =>
+                        (previous.model.status != current.model.status),
+                    builder: (context, state) {
+                      return Skeletonizer(
+                        enabled: state.model.status.isInProgress,
+                        child: Column(
+                          children: [
+                            Text(
+                              appLocalizations.authTitle,
+                              style: textTheme.headlineMedium?.copyWith(
+                                fontSize: 26,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: deviceHeight * 0.03),
+                            const SignUpOptionsWidget(),
+                            SizedBox(height: deviceHeight * 0.03),
+                            const TermsWidget(),
+                          ],
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: deviceHeight * 0.03),
-                      const SignUpOptionsWidget(),
-                      SizedBox(height: deviceHeight * 0.03),
-                      const TermsWidget(),
-                    ],
+                      );
+                    },
                   ),
                 ),
               ],

@@ -16,4 +16,10 @@ final class Env {
   @EnviedField(varName: 'SUPABASE_BUCKET_AVATARS_FOLDER', obfuscate: true)
   static final String supabaseBucketAvatarsFolder =
       _Env.supabaseBucketAvatarsFolder;
+
+  @EnviedField(varName: 'GOOGLE_WEB_CLIENT_ID', obfuscate: true)
+  static final String googleWebClientId = _Env.googleWebClientId;
+
+  @EnviedField(varName: 'GOOGLE_IOS_CLIENT_ID', obfuscate: true)
+  static final String googleIosClientId = _Env.googleIosClientId;
 }

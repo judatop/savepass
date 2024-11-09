@@ -49,5 +49,20 @@
 		</array>
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>SavePass requires access to your photo library to save your images</string>
+		<!-- Google Sign-in Section -->
+		<key>GIDClientID</key>
+		<string>191323413292-kjaplj4sguueorab046kpb79bfvd83tj.apps.googleusercontent.com</string>
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>com.googleusercontent.apps.191323413292-kjaplj4sguueorab046kpb79bfvd83tj</string>
+				</array>
+			</dict>
+		</array>
+		<!-- End of the Google Sign-in Section -->
 	</dict>
 </plist>

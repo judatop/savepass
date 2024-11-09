@@ -1,11 +1,35 @@
 PODS:
   - app_links (0.0.2):
     - Flutter
+  - AppAuth (1.7.5):
+    - AppAuth/Core (= 1.7.5)
+    - AppAuth/ExternalUserAgent (= 1.7.5)
+  - AppAuth/Core (1.7.5)
+  - AppAuth/ExternalUserAgent (1.7.5):
+    - AppAuth/Core
   - device_info_plus (0.0.1):
     - Flutter
   - Flutter (1.0.0)
   - flutter_secure_storage (6.0.0):
     - Flutter
+  - google_sign_in_ios (0.0.1):
+    - AppAuth (>= 1.7.4)
+    - Flutter
+    - FlutterMacOS
+    - GoogleSignIn (~> 7.1)
+    - GTMSessionFetcher (>= 3.4.0)
+  - GoogleSignIn (7.1.0):
+    - AppAuth (< 2.0, >= 1.7.3)
+    - GTMAppAuth (< 5.0, >= 4.1.1)
+    - GTMSessionFetcher/Core (~> 3.3)
+  - GTMAppAuth (4.1.1):
+    - AppAuth/Core (~> 1.7)
+    - GTMSessionFetcher/Core (< 4.0, >= 3.3)
+  - GTMSessionFetcher (3.5.0):
+    - GTMSessionFetcher/Full (= 3.5.0)
+  - GTMSessionFetcher/Core (3.5.0)
+  - GTMSessionFetcher/Full (3.5.0):
+    - GTMSessionFetcher/Core
   - image_picker_ios (0.0.1):
     - Flutter
   - local_auth_darwin (0.0.1):
@@ -29,6 +53,7 @@ DEPENDENCIES:
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - Flutter (from `Flutter`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/darwin`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - local_auth_darwin (from `.symlinks/plugins/local_auth_darwin/darwin`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -36,6 +61,13 @@ DEPENDENCIES:
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - syncfusion_flutter_pdfviewer (from `.symlinks/plugins/syncfusion_flutter_pdfviewer/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
+
+SPEC REPOS:
+  trunk:
+    - AppAuth
+    - GoogleSignIn
+    - GTMAppAuth
+    - GTMSessionFetcher
 
 EXTERNAL SOURCES:
   app_links:
@@ -46,6 +78,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  google_sign_in_ios:
+    :path: ".symlinks/plugins/google_sign_in_ios/darwin"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
   local_auth_darwin:
@@ -63,9 +97,14 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   app_links: e7a6750a915a9e161c58d91bc610e8cd1d4d0ad0
+  AppAuth: 501c04eda8a8d11f179dbe8637b7a91bb7e5d2fa
   device_info_plus: 97af1d7e84681a90d0693e63169a5d50e0839a0d
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_secure_storage: d33dac7ae2ea08509be337e775f6b59f1ff45f12
+  google_sign_in_ios: 07375bfbf2620bc93a602c0e27160d6afc6ead38
+  GoogleSignIn: d4281ab6cf21542b1cfaff85c191f230b399d2db
+  GTMAppAuth: f69bd07d68cd3b766125f7e072c45d7340dea0de
+  GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
   image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
   local_auth_darwin: 66e40372f1c29f383a314c738c7446e2f7fdadc3
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46

@@ -49,7 +49,7 @@ class _Body extends StatelessWidget {
     final intl = AppLocalizations.of(context)!;
 
     return AdsScreenTemplate(
-      wrapScroll: false,
+      wrapScroll: true,
       child: PopScope(
         canPop: false,
         child: BlocBuilder<SyncBloc, SyncState>(
@@ -62,6 +62,7 @@ class _Body extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  SizedBox(height: deviceHeight * 0.15),
                   AdsHeadline(text: intl.registerMasterPassword),
                   SizedBox(height: deviceHeight * 0.05),
                   Text(

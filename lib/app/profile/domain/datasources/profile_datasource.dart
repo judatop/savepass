@@ -17,4 +17,6 @@ abstract class ProfileDatasource {
   Future<Either<Fail, bool>> checkIfHasMasterPassword();
 
   Future<Either<Fail, ProfileEntity>> getProfile();
+
+  Future<Either<Fail, bool>> isEmailExists(String email);
 }

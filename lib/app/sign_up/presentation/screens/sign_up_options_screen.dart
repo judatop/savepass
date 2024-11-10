@@ -11,6 +11,7 @@ import 'package:savepass/app/sign_up/presentation/widgets/sign_up_options/sign_u
 import 'package:savepass/app/sign_up/presentation/widgets/sign_up_options/terms_widget.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class SignUpOptionsScreen extends StatelessWidget {
@@ -30,6 +31,8 @@ class SignUpOptionsScreen extends StatelessWidget {
 }
 
 void _listener(context, state) {
+  final intl = AppLocalizations.of(context)!;
+
   if (state is OpenSignInState) {
     Modular.to.popAndPushNamed(Routes.signInRoute);
   }
@@ -44,6 +47,10 @@ void _listener(context, state) {
 
   if (state is OpenSyncPassState) {
     Modular.to.pushNamed(Routes.syncMasterPasswordRoute);
+  }
+
+  if (state is EmailAlreadyInUseState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.emailAlreadyInUse);
   }
 }
 

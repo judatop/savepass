@@ -116,7 +116,8 @@ class SupabaseProfileDatasource implements ProfileDatasource {
     try {
       final res = await supabase
           .from(DbUtils.profilesTable)
-          .select('display_name, avatar_uuid, master_password_uuid');
+          .select('display_name, avatar_uuid, master_password_uuid')
+          .eq('user_uuid', supabase.auth.currentUser!.id);
 
       if (res.isEmpty) {
         return Left(
@@ -143,6 +144,25 @@ class SupabaseProfileDatasource implements ProfileDatasource {
       log.e('getProfile: $e');
       return Left(
         Fail(SnackBarErrors.generalErrorCode),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Fail, bool>> isEmailExists(String email) async {
+    try {
+      final emailAlreadyExists = await supabase.rpc(
+        DbUtils.isEmailExists,
+        params: {
+          'email_to_verify': email,
+        },
+      );
+
+      return Right(emailAlreadyExists as bool);
+    } catch (e) {
+      log.e('isEmailExists: $e');
+      return Left(
+        Fail('Error occurred while checking if email already exists'),
       );
     }
   }

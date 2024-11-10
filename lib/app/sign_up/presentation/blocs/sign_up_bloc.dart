@@ -215,7 +215,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     final createProfileResponse = await profileRepository.createProfile(
       userId: userId,
       displayName: state.model.name.value,
-      avatarUuid: fileUuid!,
+      avatarUuid: fileUuid,
     );
 
     createProfileResponse.fold(
@@ -273,6 +273,36 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       if (idToken == null) {
         emit(
           GeneralErrorState(
+            state.model.copyWith(status: FormzSubmissionStatus.failure),
+          ),
+        );
+        return;
+      }
+
+      final emailExistResponse =
+          await profileRepository.isEmailExists(googleUser.email);
+
+      bool? emailExists;
+
+      emailExistResponse.fold(
+        (l) {},
+        (r) {
+          emailExists = r;
+        },
+      );
+
+      if (emailExists == null) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(status: FormzSubmissionStatus.failure),
+          ),
+        );
+        return;
+      }
+
+      if (emailExists!) {
+        emit(
+          EmailAlreadyInUseState(
             state.model.copyWith(status: FormzSubmissionStatus.failure),
           ),
         );

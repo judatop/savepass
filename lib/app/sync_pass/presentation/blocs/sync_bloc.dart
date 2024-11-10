@@ -7,6 +7,7 @@ import 'package:savepass/app/sign_up/infrastructure/models/master_password_form.
 import 'package:savepass/app/sync_pass/presentation/blocs/sync_event.dart';
 import 'package:savepass/app/sync_pass/presentation/blocs/sync_state.dart';
 import 'package:savepass/core/global/domain/repositories/secret_repository.dart';
+import 'package:savepass/core/global/utils/secret_utils.dart';
 import 'package:uuid/uuid.dart';
 
 class SyncBloc extends Bloc<SyncEvent, SyncState> {
@@ -66,10 +67,12 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     }
 
     final masterPassword = state.model.masterPassword.value;
-    final uuid = const Uuid().v4();
+    final name = '${const Uuid().v4()}-${SecretUtils.passwordKey}';
 
-    final secretResponse =
-        await secretRepository.addSecret(secret: masterPassword, name: uuid);
+    final secretResponse = await secretRepository.addSecret(
+      secret: masterPassword,
+      name: name,
+    );
 
     String? masterPasswordUuid;
 

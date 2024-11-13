@@ -48,6 +48,10 @@ class GeneralErrorState extends SignInState {
   const GeneralErrorState(super.model);
 }
 
+class EmailAlreadyInUseState extends SignInState {
+  const EmailAlreadyInUseState(super.model);
+}
+
 class SignInStateModel extends Equatable {
   final EmailForm email;
   final PasswordForm password;

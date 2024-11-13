@@ -18,5 +18,5 @@ abstract class ProfileDatasource {
 
   Future<Either<Fail, ProfileEntity>> getProfile();
 
-  Future<Either<Fail, bool>> isEmailExists(String email);
+  Future<Either<Fail, String?>> isEmailExists(String email);
 }

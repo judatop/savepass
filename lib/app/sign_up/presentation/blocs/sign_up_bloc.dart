@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:logger/logger.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
+import 'package:savepass/app/profile/utils/profile_utils.dart';
 import 'package:savepass/app/sign_up/domain/repositories/sign_up_repository.dart';
 import 'package:savepass/app/sign_up/infrastructure/models/sign_up_password_form.dart';
 import 'package:savepass/app/sign_up/presentation/blocs/sign_up_event.dart';
@@ -282,16 +283,18 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       final emailExistResponse =
           await profileRepository.isEmailExists(googleUser.email);
 
-      bool? emailExists;
-
+      String? provider;
+      bool isError = false;
       emailExistResponse.fold(
-        (l) {},
+        (l) {
+          isError = true;
+        },
         (r) {
-          emailExists = r;
+          provider = r;
         },
       );
 
-      if (emailExists == null) {
+      if (isError) {
         emit(
           GeneralErrorState(
             state.model.copyWith(status: FormzSubmissionStatus.failure),
@@ -300,7 +303,51 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         return;
       }
 
-      if (emailExists!) {
+      if (provider == null) {
+        final response = await supabase.auth.signInWithIdToken(
+          provider: OAuthProvider.google,
+          idToken: idToken,
+          accessToken: accessToken,
+        );
+
+        final user = response.user;
+
+        if (user == null) {
+          emit(
+            GeneralErrorState(
+              state.model.copyWith(status: FormzSubmissionStatus.failure),
+            ),
+          );
+          return;
+        }
+
+        final createProfileResponse = await profileRepository.createProfile(
+          userId: user.id,
+          displayName: googleUser.displayName,
+          avatarUuid: googleUser.photoUrl,
+        );
+
+        createProfileResponse.fold(
+          (l) {
+            emit(
+              GeneralErrorState(
+                state.model.copyWith(status: FormzSubmissionStatus.failure),
+              ),
+            );
+          },
+          (r) {
+            emit(
+              OpenSyncPassState(
+                state.model.copyWith(status: FormzSubmissionStatus.success),
+              ),
+            );
+          },
+        );
+
+        return;
+      }
+
+      if (provider != ProfileUtils.googleProvider) {
         emit(
           EmailAlreadyInUseState(
             state.model.copyWith(status: FormzSubmissionStatus.failure),
@@ -309,44 +356,16 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         return;
       }
 
-      final response = await supabase.auth.signInWithIdToken(
+      await supabase.auth.signInWithIdToken(
         provider: OAuthProvider.google,
         idToken: idToken,
         accessToken: accessToken,
       );
 
-      final user = response.user;
-
-      if (user == null) {
-        emit(
-          GeneralErrorState(
-            state.model.copyWith(status: FormzSubmissionStatus.failure),
-          ),
-        );
-        return;
-      }
-
-      final createProfileResponse = await profileRepository.createProfile(
-        userId: user.id,
-        displayName: googleUser.displayName,
-        avatarUuid: googleUser.photoUrl,
-      );
-
-      createProfileResponse.fold(
-        (l) {
-          emit(
-            GeneralErrorState(
-              state.model.copyWith(status: FormzSubmissionStatus.failure),
-            ),
-          );
-        },
-        (r) {
-          emit(
-            OpenSyncPassState(
-              state.model.copyWith(status: FormzSubmissionStatus.success),
-            ),
-          );
-        },
+      emit(
+        OpenAuthScreenState(
+          state.model.copyWith(status: FormzSubmissionStatus.success),
+        ),
       );
     } catch (error) {
       log.e('onSignUpWithGoogle error: $error');

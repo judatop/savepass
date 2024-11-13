@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
@@ -149,7 +150,7 @@ class SupabaseProfileDatasource implements ProfileDatasource {
   }
 
   @override
-  Future<Either<Fail, bool>> isEmailExists(String email) async {
+  Future<Either<Fail, String?>> isEmailExists(String email) async {
     try {
       final emailAlreadyExists = await supabase.rpc(
         DbUtils.isEmailExists,
@@ -158,7 +159,13 @@ class SupabaseProfileDatasource implements ProfileDatasource {
         },
       );
 
-      return Right(emailAlreadyExists as bool);
+      if (emailAlreadyExists == null) {
+        return const Right(null);
+      }
+
+      Map<String, dynamic> jsonMap = jsonDecode(emailAlreadyExists);
+
+      return Right(jsonMap['provider'] as String?);
     } catch (e) {
       log.e('isEmailExists: $e');
       return Left(

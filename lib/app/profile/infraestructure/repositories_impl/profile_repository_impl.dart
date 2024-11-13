@@ -44,7 +44,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  Future<Either<Fail, bool>> isEmailExists(String email) async {
+  Future<Either<Fail, String?>> isEmailExists(String email) async {
     return await datasource.isEmailExists(email);
   }
 }

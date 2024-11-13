@@ -52,6 +52,10 @@ void _listener(context, state) {
   if (state is EmailAlreadyInUseState) {
     SnackBarUtils.showErrroSnackBar(context, intl.emailAlreadyInUse);
   }
+
+  if (state is OpenAuthScreenState) {
+    Modular.to.pushNamedAndRemoveUntil(Routes.authInitRoute, (_) => false);
+  }
 }
 
 class _Body extends StatelessWidget {

@@ -2,6 +2,7 @@ import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:formz/formz.dart';
 import 'package:savepass/app/sign_in/presentation/blocs/sign_in_bloc.dart';
 import 'package:savepass/app/sign_in/presentation/blocs/sign_in_event.dart';
 import 'package:savepass/app/sign_in/presentation/blocs/sign_in_state.dart';
@@ -10,6 +11,7 @@ import 'package:savepass/app/sign_in/presentation/widgets/sign_in_options_widget
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -34,12 +36,17 @@ void _listener(context, state) {
     Modular.to.pushNamedAndRemoveUntil(Routes.authInitRoute, (_) => false);
   }
 
-  if(state is OpenSyncMasterPasswordState){
-    Modular.to.pushNamedAndRemoveUntil(Routes.syncMasterPasswordRoute, (_) => false);
+  if (state is OpenSyncMasterPasswordState) {
+    Modular.to
+        .pushNamedAndRemoveUntil(Routes.syncMasterPasswordRoute, (_) => false);
   }
 
   if (state is GeneralErrorState) {
     SnackBarUtils.showErrroSnackBar(context, intl.genericError);
+  }
+
+  if (state is EmailAlreadyInUseState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.emailAlreadyInUse);
   }
 }
 
@@ -72,18 +79,27 @@ class _Body extends StatelessWidget {
                     right: deviceWidth *
                         ADSFoundationSizes.defaultHorizontalPadding,
                   ),
-                  child: Column(
-                    children: [
-                      Text(
-                        appLocalizations.signInTitle,
-                        style: textTheme.headlineMedium?.copyWith(
-                          fontSize: 26,
+                  child: BlocBuilder<SignInBloc, SignInState>(
+                    buildWhen: (previous, current) =>
+                        (previous.model.status != current.model.status),
+                    builder: (context, state) {
+                      return Skeletonizer(
+                        enabled: state.model.status.isInProgress,
+                        child: Column(
+                          children: [
+                            Text(
+                              appLocalizations.signInTitle,
+                              style: textTheme.headlineMedium?.copyWith(
+                                fontSize: 26,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: deviceHeight * 0.03),
+                            const SignInOptionsWidget(),
+                          ],
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: deviceHeight * 0.03),
-                      const SignInOptionsWidget(),
-                    ],
+                      );
+                    },
                   ),
                 ),
               ],

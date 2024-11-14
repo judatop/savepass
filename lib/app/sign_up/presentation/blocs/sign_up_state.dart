@@ -54,6 +54,10 @@ class OpenSyncPassState extends SignUpState {
   const OpenSyncPassState(super.model);
 }
 
+class OpenAuthScreenState extends SignUpState {
+  const OpenAuthScreenState(super.model);
+}
+
 class SignUpStateModel extends Equatable {
   final TextForm name;
   final EmailForm email;

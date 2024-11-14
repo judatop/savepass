@@ -42,4 +42,9 @@ class ProfileRepositoryImpl implements ProfileRepository {
   Future<Either<Fail, ProfileEntity>> getProfile() async {
     return await datasource.getProfile();
   }
+
+  @override
+  Future<Either<Fail, String?>> isEmailExists(String email) async {
+    return await datasource.isEmailExists(email);
+  }
 }

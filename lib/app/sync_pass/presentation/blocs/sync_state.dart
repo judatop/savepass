@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
-import 'package:savepass/app/sign_up/infrastructure/models/master_password_form.dart';
+import 'package:savepass/app/sync_pass/infrastructure/models/master_password_form.dart';
 
 abstract class SyncState extends Equatable {
   final SyncStateModel model;

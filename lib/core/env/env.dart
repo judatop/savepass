@@ -22,4 +22,7 @@ final class Env {
 
   @EnviedField(varName: 'GOOGLE_IOS_CLIENT_ID', obfuscate: true)
   static final String googleIosClientId = _Env.googleIosClientId;
+
+  @EnviedField(varName: 'SUPABASE_REDIRECT_URL', obfuscate: true)
+  static final String supabaseRedirectUrl = _Env.supabaseRedirectUrl;
 }

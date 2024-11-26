@@ -14,13 +14,11 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  Future<Either<Fail, Unit>> createProfile({
-    required String userId,
+  Future<Either<Fail, Unit>> updateProfile({
     String? displayName,
     String? avatarUuid,
   }) async {
-    return await datasource.createProfile(
-      userId: userId,
+    return await datasource.updateProfile(
       displayName: displayName,
       avatarUuid: avatarUuid,
     );

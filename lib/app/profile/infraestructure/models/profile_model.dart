@@ -5,14 +5,12 @@ class ProfileModel extends ProfileEntity with EquatableMixin {
   const ProfileModel({
     super.displayName,
     super.avatar,
-    super.masterPasswordUuid,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
-      displayName: json['display_name'],
-      avatar: json['avatar_uuid'],
-      masterPasswordUuid: json['master_password_uuid'],
+      displayName: json['full_name'],
+      avatar: json['avatar_url'],
     );
   }
 
@@ -20,19 +18,16 @@ class ProfileModel extends ProfileEntity with EquatableMixin {
     return {
       'displayName': displayName,
       'avatar': avatar,
-      'masterPasswordUuid': masterPasswordUuid,
     };
   }
 
   ProfileModel copyWith({
     String? displayName,
     String? avatar,
-    String? masterPasswordUuid,
   }) {
     return ProfileModel(
       displayName: displayName ?? this.displayName,
       avatar: avatar ?? this.avatar,
-      masterPasswordUuid: masterPasswordUuid ?? this.masterPasswordUuid,
     );
   }
 
@@ -40,6 +35,5 @@ class ProfileModel extends ProfileEntity with EquatableMixin {
   List<Object?> get props => [
         displayName,
         avatar,
-        masterPasswordUuid,
       ];
 }

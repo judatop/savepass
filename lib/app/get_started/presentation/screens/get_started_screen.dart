@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:lottie/lottie.dart';
+import 'package:savepass/app/auth/infrastructure/models/auth_type.dart';
 import 'package:savepass/app/get_started/presentation/blocs/get_started_bloc.dart';
 import 'package:savepass/app/get_started/presentation/blocs/get_started_event.dart';
 import 'package:savepass/app/get_started/presentation/blocs/get_started_state.dart';
@@ -29,11 +30,17 @@ class GetStartedScreen extends StatelessWidget {
 
 void _listener(context, state) {
   if (state is OpenSignInState) {
-    Modular.to.pushNamed(Routes.signInRoute);
+    Modular.to.pushNamed(
+      Routes.authRoute,
+      arguments: AuthType.signIn,
+    );
   }
 
   if (state is OpenSignUpState) {
-    Modular.to.pushNamed(Routes.signUpOptionsRoute);
+    Modular.to.pushNamed(
+      Routes.authRoute,
+      arguments: AuthType.signUp,
+    );
   }
 }
 

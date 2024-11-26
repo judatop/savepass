@@ -12,14 +12,12 @@ class SupabaseAuthInitDatasource implements AuthInitDatasource {
 
   @override
   Future<Either<Fail, bool>> checkMasterPassword({
-    required String secretUuid,
     required String inputPassword,
   }) async {
     try {
       final response = await supabase.rpc(
         DbUtils.checkMasterPasswordFunction,
         params: {
-          'secret_uuid': secretUuid,
           'input_secret': inputPassword,
         },
       );

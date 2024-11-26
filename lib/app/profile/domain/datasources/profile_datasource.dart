@@ -4,8 +4,7 @@ import 'package:savepass/app/profile/domain/entities/profile_entity.dart';
 abstract class ProfileDatasource {
   Future<Either<Fail, String>> uploadAvatar(String imgPath);
 
-  Future<Either<Fail, Unit>> createProfile({
-    required String userId,
+  Future<Either<Fail, Unit>> updateProfile({
     String? displayName,
     String? avatarUuid,
   });

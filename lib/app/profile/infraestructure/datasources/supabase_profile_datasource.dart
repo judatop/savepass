@@ -39,22 +39,26 @@ class SupabaseProfileDatasource implements ProfileDatasource {
   }
 
   @override
-  Future<Either<Fail, Unit>> createProfile({
-    required String userId,
+  Future<Either<Fail, Unit>> updateProfile({
     String? displayName,
     String? avatarUuid,
   }) async {
     try {
-      final profileUuid = const Uuid().v4();
-      await supabase.from('profiles').insert({
-        'id': profileUuid,
-        'user_uuid': userId,
-        'display_name': displayName,
-        'avatar_uuid': avatarUuid,
-        'active': true,
-        'created_at': DateTime.now().toIso8601String(),
-        'updated_at': DateTime.now().toIso8601String(),
-      });
+      final userMetaData = supabase.auth.currentUser!.userMetadata;
+
+      if (displayName != null) {
+        userMetaData?['full_name'] = displayName;
+      }
+
+      if (avatarUuid != null) {
+        userMetaData?['avatar_url'] = avatarUuid;
+      }
+
+      await supabase.auth.updateUser(
+        UserAttributes(
+          data: userMetaData,
+        ),
+      );
 
       return const Right(unit);
     } catch (e) {
@@ -70,23 +74,12 @@ class SupabaseProfileDatasource implements ProfileDatasource {
     required String uuid,
   }) async {
     try {
-      final userId = supabase.auth.currentUser!.id;
-      final getProfileRes = await getProfile();
-
-      if (getProfileRes.isLeft()) {
-        // Doesn't have profile, so we need to create one
-
-        final newProfileRes = await createProfile(userId: userId);
-        if (newProfileRes.isLeft()) {
-          return Left(
-            Fail(SnackBarErrors.generalErrorCode),
-          );
-        }
-      }
-
-      await supabase.from(DbUtils.profilesTable).update({
-        'master_password_uuid': uuid,
-      }).eq('user_uuid', supabase.auth.currentUser!.id);
+      await supabase.rpc(
+        DbUtils.updateMasterPassword,
+        params: {
+          'master_password_uuid': uuid,
+        },
+      );
 
       return const Right(unit);
     } catch (e) {
@@ -115,18 +108,16 @@ class SupabaseProfileDatasource implements ProfileDatasource {
   @override
   Future<Either<Fail, ProfileEntity>> getProfile() async {
     try {
-      final res = await supabase
-          .from(DbUtils.profilesTable)
-          .select('display_name, avatar_uuid, master_password_uuid')
-          .eq('user_uuid', supabase.auth.currentUser!.id);
 
-      if (res.isEmpty) {
+      final user = supabase.auth.currentUser;
+
+      if (user == null || user.userMetadata == null) {
         return Left(
           Fail('Profile not found'),
         );
       }
 
-      final profile = ProfileModel.fromJson(res[0]);
+      final profile = ProfileModel.fromJson(user.userMetadata!);
 
       String? url;
       if (profile.avatar != null && !(profile.avatar!.startsWith('http'))) {

@@ -86,21 +86,9 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
       return;
     }
 
-    final profile = state.model.profile;
-
-    if (profile == null || profile.masterPasswordUuid == null) {
-      emit(
-        GeneralErrorState(
-          state.model.copyWith(status: FormzSubmissionStatus.failure),
-        ),
-      );
-      return;
-    }
-
     final masterPassword = state.model.password.value;
 
     final response = await authInitRepository.checkMasterPassword(
-      secretUuid: profile.masterPasswordUuid!,
       inputPassword: masterPassword,
     );
 

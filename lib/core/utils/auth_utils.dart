@@ -8,4 +8,10 @@ class AuthUtils {
   ];
 
   static const Color facebookButtonColor = Color(0xFF136AFF);
+
+  static const imgWidth = 25.0;
+
+  static const githubProvider = 'github';
+  static const googleProvider = 'google';
+  static const appleProvider = 'apple';
 }

@@ -1,6 +1,13 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
+import 'package:savepass/app/auth/domain/datasources/auth_datasource.dart';
+import 'package:savepass/app/auth/domain/repositories/auth_repository.dart';
+import 'package:savepass/app/auth/infrastructure/datasources/supabase_auth_datasource.dart';
+import 'package:savepass/app/auth/infrastructure/repositories/auth_repository_impl.dart';
+import 'package:savepass/app/auth/presentation/blocs/auth_bloc.dart';
+import 'package:savepass/app/auth/presentation/screens/auth_email_screen.dart';
+import 'package:savepass/app/auth/presentation/screens/auth_screen.dart';
 import 'package:savepass/app/auth_init/domain/datasources/auth_init_datasource.dart';
 import 'package:savepass/app/auth_init/domain/repositories/auth_init_repository.dart';
 import 'package:savepass/app/auth_init/infrastructure/datasources/supabase_auth_init_datasource.dart';
@@ -15,20 +22,6 @@ import 'package:savepass/app/profile/domain/datasources/profile_datasource.dart'
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/app/profile/infraestructure/datasources/supabase_profile_datasource.dart';
 import 'package:savepass/app/profile/infraestructure/repositories_impl/profile_repository_impl.dart';
-import 'package:savepass/app/sign_in/domain/datasources/sign_in_datasource.dart';
-import 'package:savepass/app/sign_in/domain/repositories/sign_in_repository.dart';
-import 'package:savepass/app/sign_in/infrastructure/datasources/supabase_sign_in_datasource.dart';
-import 'package:savepass/app/sign_in/infrastructure/repositories/sign_in_repository_impl.dart';
-import 'package:savepass/app/sign_in/presentation/blocs/sign_in_bloc.dart';
-import 'package:savepass/app/sign_in/presentation/screens/sign_in_email_screen.dart';
-import 'package:savepass/app/sign_in/presentation/screens/sign_in_screen.dart';
-import 'package:savepass/app/sign_up/domain/datasources/sign_up_datasource.dart';
-import 'package:savepass/app/sign_up/domain/repositories/sign_up_repository.dart';
-import 'package:savepass/app/sign_up/infrastructure/datasources/supabase_sign_up_datasource.dart';
-import 'package:savepass/app/sign_up/infrastructure/repositories/sign_up_repository_impl.dart';
-import 'package:savepass/app/sign_up/presentation/blocs/sign_up_bloc.dart';
-import 'package:savepass/app/sign_up/presentation/screens/sign_up_options_screen.dart';
-import 'package:savepass/app/sign_up/presentation/screens/sign_up_email_screen.dart';
 import 'package:savepass/app/splash/presentation/blocs/splash_bloc.dart';
 import 'package:savepass/app/splash/presentation/splash_screen.dart';
 import 'package:savepass/app/sync_pass/presentation/blocs/sync_bloc.dart';
@@ -49,10 +42,6 @@ class AppModule extends Module {
     i.addSingleton(FlutterSecureStorage.new);
     i.addSingleton(ThemeBloc.new);
     i.addSingleton(Logger.new);
-    i.addSingleton<SignUpRepository>(SignUpRepositoryImpl.new);
-    i.addSingleton<SignUpDatasource>(SupabaseSignUpDatasource.new);
-    i.addSingleton<SignInRepository>(SignInRepositoryImpl.new);
-    i.addSingleton<SignInDatasource>(SupabaseSignInDatasource.new);
     i.addSingleton<ProfileRepository>(ProfileRepositoryImpl.new);
     i.addSingleton<ProfileDatasource>(SupabaseProfileDatasource.new);
     i.addSingleton<ThemeRepository>(ThemeIRepository.new);
@@ -60,12 +49,13 @@ class AppModule extends Module {
     i.addSingleton<SecretRepository>(SecretRepositoryImpl.new);
     i.addSingleton<AuthInitDatasource>(SupabaseAuthInitDatasource.new);
     i.addSingleton<AuthInitRepository>(AuthInitRepositoryImpl.new);
+    i.addSingleton<AuthDatasource>(SupabaseAuthDatasource.new);
+    i.addSingleton<AuthRepository>(AuthRepositoryImpl.new);
     i.addSingleton(GetStartedBloc.new);
-    i.addSingleton(SignUpBloc.new);
-    i.addSingleton(SignInBloc.new);
     i.addSingleton(AuthInitBloc.new);
     i.addSingleton(SyncBloc.new);
     i.addSingleton(SplashBloc.new);
+    i.addSingleton(AuthBloc.new);
   }
 
   @override
@@ -77,22 +67,6 @@ class AppModule extends Module {
     r.child(
       Routes.getStartedRoute,
       child: (context) => const GetStartedScreen(),
-    );
-    r.child(
-      Routes.signInRoute,
-      child: (context) => const SignInScreen(),
-    );
-    r.child(
-      Routes.signInEmail,
-      child: (context) => const SignInEmailScreen(),
-    );
-    r.child(
-      Routes.signUpOptionsRoute,
-      child: (context) => const SignUpOptionsScreen(),
-    );
-    r.child(
-      Routes.signUpEmailRoute,
-      child: (context) => const SignUpEmailScreen(),
     );
     r.child(
       Routes.privacyPolicyRoute,
@@ -113,6 +87,14 @@ class AppModule extends Module {
     r.child(
       Routes.syncMasterPasswordRoute,
       child: (context) => const SyncPassScreen(),
+    );
+    r.child(
+      Routes.authRoute,
+      child: (context) => AuthScreen(authType: r.args.data),
+    );
+    r.child(
+      Routes.authEmailRoute,
+      child: (context) => const AuthEmailScreen(),
     );
   }
 }

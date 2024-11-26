@@ -9,11 +9,9 @@ class AuthInitRepositoryImpl implements AuthInitRepository {
 
   @override
   Future<Either<Fail, bool>> checkMasterPassword({
-    required String secretUuid,
     required String inputPassword,
   }) async {
     return await datasource.checkMasterPassword(
-      secretUuid: secretUuid,
       inputPassword: inputPassword,
     );
   }

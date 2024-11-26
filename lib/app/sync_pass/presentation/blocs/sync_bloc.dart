@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
-import 'package:savepass/app/sign_up/infrastructure/models/master_password_form.dart';
+import 'package:savepass/app/sync_pass/infrastructure/models/master_password_form.dart';
 import 'package:savepass/app/sync_pass/presentation/blocs/sync_event.dart';
 import 'package:savepass/app/sync_pass/presentation/blocs/sync_state.dart';
 import 'package:savepass/core/global/domain/repositories/secret_repository.dart';
@@ -67,22 +67,18 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     }
 
     final masterPassword = state.model.masterPassword.value;
-    final name = '${const Uuid().v4()}-${SecretUtils.passwordKey}';
+    final name = '${const Uuid().v4()}-${SecretUtils.masterPasswordKey}';
 
     final secretResponse = await secretRepository.addSecret(
       secret: masterPassword,
       name: name,
     );
 
-    String? masterPasswordUuid;
+    late String? masterPasswordUuid;
 
     secretResponse.fold(
       (l) {
-        emit(
-          GeneralErrorState(
-            state.model.copyWith(status: FormzSubmissionStatus.failure),
-          ),
-        );
+        masterPasswordUuid = null;
       },
       (r) {
         masterPasswordUuid = r;

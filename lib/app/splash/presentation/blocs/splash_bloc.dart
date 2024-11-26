@@ -33,24 +33,42 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
       return;
     }
 
-    final response = await profileRepository.checkIfHasMasterPassword();
+    final checkMasterPasswordResponse =
+        await profileRepository.checkIfHasMasterPassword();
 
-    bool hasMasterPassword = false;
-
-    response.fold(
+    late bool? hasMasterPassword;
+    checkMasterPasswordResponse.fold(
       (l) {
-        hasMasterPassword = false;
+        hasMasterPassword = null;
       },
       (r) {
         hasMasterPassword = r;
       },
     );
 
-    if (!hasMasterPassword) {
-      emit(OpenSyncMasterPasswordState(state.model));
+    if (hasMasterPassword == null) {
+      emit(
+        OpenGetStartedState(
+          state.model,
+        ),
+      );
       return;
     }
 
-    emit(OpenAuthInitState(state.model));
+    if (hasMasterPassword!) {
+      emit(
+        OpenAuthInitState(
+          state.model,
+        ),
+      );
+
+      return;
+    }
+
+    emit(
+      OpenSyncMasterPasswordState(
+        state.model,
+      ),
+    );
   }
 }

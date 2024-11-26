@@ -60,6 +60,7 @@
 				<key>CFBundleURLSchemes</key>
 				<array>
 					<string>com.googleusercontent.apps.191323413292-kjaplj4sguueorab046kpb79bfvd83tj</string>
+					<string>savepass</string>
 				</array>
 			</dict>
 		</array>

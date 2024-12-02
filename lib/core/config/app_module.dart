@@ -14,9 +14,10 @@ import 'package:savepass/app/auth_init/infrastructure/datasources/supabase_auth_
 import 'package:savepass/app/auth_init/infrastructure/repositories/auth_init_repository_impl.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_bloc.dart';
 import 'package:savepass/app/auth_init/presentation/screens/auth_init_screen.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/get_started/presentation/blocs/get_started_bloc.dart';
 import 'package:savepass/app/get_started/presentation/screens/get_started_screen.dart';
-import 'package:savepass/app/home/presentation/screens/home_screen.dart';
+import 'package:savepass/app/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:savepass/app/privacy_policy/presentation/screens/privacy_policy_screen.dart';
 import 'package:savepass/app/profile/domain/datasources/profile_datasource.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
@@ -56,6 +57,7 @@ class AppModule extends Module {
     i.addSingleton(SyncBloc.new);
     i.addSingleton(SplashBloc.new);
     i.addSingleton(AuthBloc.new);
+    i.addSingleton(DashboardBloc.new);
   }
 
   @override
@@ -73,8 +75,8 @@ class AppModule extends Module {
       child: (context) => const PrivacyPolicyScreen(),
     );
     r.child(
-      Routes.homeRoute,
-      child: (context) => const HomeScreen(),
+      Routes.dashboardRoute,
+      child: (context) => const DashboardScreen(),
     );
     r.child(
       Routes.authInitRoute,

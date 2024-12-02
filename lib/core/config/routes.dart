@@ -2,7 +2,7 @@ class Routes {
   static const String splashRoute = '/';
   static const String getStartedRoute = '/getStarted';
   static const String introRoute = '/intro';
-  static const String homeRoute = '/home';
+  static const String dashboardRoute = '/dashboard';
   static const String authRoute = '/auth';
   static const String authEmailRoute = '/authEmail';
   static const String accountRoute = '/account';

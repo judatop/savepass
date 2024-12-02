@@ -2,7 +2,7 @@ import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_bloc.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_event.dart';
 import 'package:savepass/core/config/routes.dart';
@@ -103,8 +103,7 @@ class AuthOptions extends StatelessWidget {
         const Divider(),
         SizedBox(height: deviceHeight * 0.025),
         AdsOutlinedIconButton(
-          onPressedCallback: () =>
-              Modular.to.pushNamed(Routes.authEmailRoute),
+          onPressedCallback: () => Modular.to.pushNamed(Routes.authEmailRoute),
           text:
               '${appLocalizations.getStartedSingUp} ${appLocalizations.authEmail}',
           icon: Icons.email,

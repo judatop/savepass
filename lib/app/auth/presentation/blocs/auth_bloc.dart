@@ -37,6 +37,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<ProcessSignedInEvent>(_onProcessSignedInEvent);
     on<EmailChangedEvent>(_onEmailChangedEvent);
     on<PasswordChangedEvent>(_onPasswordChangedEvent);
+    on<ToggleMasterPasswordEvent>(_onToggleMasterPasswordEvent);
   }
 
   FutureOr<void> _onAuthInitialEvent(
@@ -312,5 +313,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       );
     }
+  }
+
+  FutureOr<void> _onToggleMasterPasswordEvent(
+    ToggleMasterPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) {
+    emit(
+      ChangeAuthState(
+        state.model.copyWith(
+          showPassword: !state.model.showPassword,
+        ),
+      ),
+    );
   }
 }

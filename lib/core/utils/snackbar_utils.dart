@@ -56,4 +56,5 @@ class SnackBarUtils {
 class SnackBarErrors {
   static const String generalErrorCode = 'general_error';
   static const String invalidCredentials = 'invalid_credentials';
+  static const String userAlreadyExists = 'user_already_exists';
 }

@@ -12,6 +12,7 @@ import 'package:savepass/app/profile/domain/repositories/profile_repository.dart
 import 'package:savepass/core/env/env.dart';
 import 'package:savepass/core/form/email_form.dart';
 import 'package:savepass/core/form/password_form.dart';
+import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:savepass/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabaseauth;
 
@@ -188,24 +189,55 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
     }
 
-    late supabaseauth.User? user;
+    // late supabaseauth.User? user;
     response.fold(
       (l) {
-        user = null;
+        if (l.failure is String) {
+          final code = l.failure;
+          if (code == SnackBarErrors.invalidCredentials) {
+            emit(
+              InvalidCredentialsState(
+                state.model.copyWith(
+                  status: FormzSubmissionStatus.failure,
+                ),
+              ),
+            );
+            return;
+          }
+
+          if (code == SnackBarErrors.userAlreadyExists) {
+            emit(
+              UserAlreadyExistsState(
+                state.model.copyWith(
+                  status: FormzSubmissionStatus.failure,
+                ),
+              ),
+            );
+            return;
+          }
+
+          emit(
+            GeneralErrorState(
+              state.model.copyWith(
+                status: FormzSubmissionStatus.failure,
+              ),
+            ),
+          );
+        }
       },
       (r) {
-        user = r.user;
+        // user = r.user;
       },
     );
 
-    if (user == null || user?.id == null) {
-      emit(
-        GeneralErrorState(
-          state.model.copyWith(status: FormzSubmissionStatus.failure),
-        ),
-      );
-      return;
-    }
+    // if (user == null || user?.id == null) {
+    //   emit(
+    //     GeneralErrorState(
+    //       state.model.copyWith(status: FormzSubmissionStatus.failure),
+    //     ),
+    //   );
+    //   return;
+    // }
   }
 
   FutureOr<void> _onOpenPrivacyEvent(

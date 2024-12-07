@@ -28,6 +28,11 @@ class SupabaseAuthDatasource implements AuthDatasource {
       return Right(response);
     } catch (e) {
       log.e('signUpWithEmailAndPassword: $e');
+
+      if (e is AuthApiException) {
+        return Left(Fail(e.code ?? SnackBarErrors.generalErrorCode));
+      }
+
       return Left(
         Fail('Error occurred while signing up with email and password'),
       );

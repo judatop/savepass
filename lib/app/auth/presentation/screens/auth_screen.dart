@@ -12,6 +12,7 @@ import 'package:savepass/app/auth/presentation/widgets/auth_options.dart';
 import 'package:savepass/app/auth/presentation/widgets/auth_terms.dart';
 import 'package:savepass/app/auth/presentation/widgets/no_account.dart';
 import 'package:savepass/core/config/routes.dart';
+import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:savepass/main.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabaseauth;
@@ -39,6 +40,8 @@ class AuthScreen extends StatelessWidget {
 }
 
 void _listener(context, state) {
+  final intl = AppLocalizations.of(context)!;
+
   if (state is OpenSignInState) {
     Modular.to.popAndPushNamed(Routes.authRoute, arguments: AuthType.signIn);
   }
@@ -57,6 +60,14 @@ void _listener(context, state) {
 
   if (state is OpenSyncPassState) {
     Modular.to.pushNamed(Routes.syncMasterPasswordRoute);
+  }
+
+  if (state is InvalidCredentialsState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.invalidCredentials);
+  }
+
+  if (state is UserAlreadyExistsState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.emailAlreadyInUse);
   }
 }
 

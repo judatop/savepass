@@ -9,6 +9,7 @@ import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/home_widget.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/settings_widget.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/tools_widget.dart';
+import 'package:savepass/core/config/routes.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -26,7 +27,17 @@ class DashboardScreen extends StatelessWidget {
   }
 }
 
-void _listener(context, state) {}
+void _listener(context, state) {
+  if (state is OpenPhotoPermissionState) {
+    Modular.to.pushNamed(
+      Routes.photoPermissionRoute,
+      arguments: () {
+        final bloc = Modular.get<DashboardBloc>();
+        bloc.add(const UploadPhotoEvent());
+      },
+    );
+  }
+}
 
 class _Body extends StatelessWidget {
   const _Body();

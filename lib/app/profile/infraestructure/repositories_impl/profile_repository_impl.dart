@@ -25,10 +25,14 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  Future<Either<Fail, Unit>> updateMasterPasswordUuid({
-    required String uuid,
+  Future<Either<Fail, Unit>> insertMasterPassword({
+    required String masterPassword,
+    required String name,
   }) async {
-    return await datasource.updateMasterPasswordUuid(uuid: uuid);
+    return await datasource.insertMasterPassword(
+      masterPassword: masterPassword,
+      name: name,
+    );
   }
 
   @override

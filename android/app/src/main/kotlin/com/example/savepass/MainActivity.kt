@@ -1,4 +1,4 @@
-package com.judatop.savepass
+package com.juda.savepass
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

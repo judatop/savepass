@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 import 'package:savepass/app/auth/domain/repositories/auth_repository.dart';
 import 'package:savepass/app/auth/infrastructure/models/auth_type.dart';
@@ -83,14 +82,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
 
     try {
-      final webClientId = Env.googleWebClientId;
-      final iosClientId = Env.googleIosClientId;
-
-      final GoogleSignIn googleSignIn = GoogleSignIn(
-        clientId: iosClientId,
-        serverClientId: webClientId,
-      );
-
       final googleUser = await googleSignIn.signIn();
       final googleAuth = await googleUser!.authentication;
       final accessToken = googleAuth.accessToken;

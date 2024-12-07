@@ -70,22 +70,24 @@ class SupabaseProfileDatasource implements ProfileDatasource {
   }
 
   @override
-  Future<Either<Fail, Unit>> updateMasterPasswordUuid({
-    required String uuid,
+  Future<Either<Fail, Unit>> insertMasterPassword({
+    required String masterPassword,
+    required String name,
   }) async {
     try {
       await supabase.rpc(
-        DbUtils.updateMasterPassword,
+        DbUtils.insertMasterPassword,
         params: {
-          'master_password_uuid': uuid,
+          'secret': masterPassword,
+          'name': name,
         },
       );
 
       return const Right(unit);
     } catch (e) {
-      log.e('updateMasterPasswordUuid: $e');
+      log.e('insertMasterPassword: $e');
       return Left(
-        Fail('Error occurred while updating your master password'),
+        Fail('Error occurred while inserting your master password'),
       );
     }
   }
@@ -108,7 +110,6 @@ class SupabaseProfileDatasource implements ProfileDatasource {
   @override
   Future<Either<Fail, ProfileEntity>> getProfile() async {
     try {
-
       final user = supabase.auth.currentUser;
 
       if (user == null || user.userMetadata == null) {

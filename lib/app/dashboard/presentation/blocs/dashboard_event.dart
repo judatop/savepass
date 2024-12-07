@@ -22,3 +22,11 @@ class ChangeDisplayNameEvent extends DashboardEvent {
 
   const ChangeDisplayNameEvent({required this.displayName}) : super();
 }
+
+class ChangeAvatarEvent extends DashboardEvent {
+  const ChangeAvatarEvent() : super();
+}
+
+class UploadPhotoEvent extends DashboardEvent {
+  const UploadPhotoEvent() : super();
+}

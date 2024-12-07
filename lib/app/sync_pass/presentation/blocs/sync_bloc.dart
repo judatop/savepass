@@ -69,33 +69,10 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     final masterPassword = state.model.masterPassword.value;
     final name = '${const Uuid().v4()}-${SecretUtils.masterPasswordKey}';
 
-    final secretResponse = await secretRepository.addSecret(
-      secret: masterPassword,
+    final updateProfileResponse = await profileRepository.insertMasterPassword(
+      masterPassword: masterPassword,
       name: name,
     );
-
-    late String? masterPasswordUuid;
-
-    secretResponse.fold(
-      (l) {
-        masterPasswordUuid = null;
-      },
-      (r) {
-        masterPasswordUuid = r;
-      },
-    );
-
-    if (masterPasswordUuid == null) {
-      emit(
-        GeneralErrorState(
-          state.model.copyWith(status: FormzSubmissionStatus.failure),
-        ),
-      );
-      return;
-    }
-
-    final updateProfileResponse = await profileRepository
-        .updateMasterPasswordUuid(uuid: masterPasswordUuid!);
 
     updateProfileResponse.fold(
       (l) {

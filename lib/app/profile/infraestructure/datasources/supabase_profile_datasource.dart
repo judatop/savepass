@@ -51,7 +51,7 @@ class SupabaseProfileDatasource implements ProfileDatasource {
       }
 
       if (avatarUuid != null) {
-        userMetaData?['avatar_url'] = avatarUuid;
+        userMetaData?['custom_avatar'] = avatarUuid;
       }
 
       await supabase.auth.updateUser(

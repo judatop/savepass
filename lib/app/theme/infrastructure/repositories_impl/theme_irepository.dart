@@ -14,15 +14,32 @@ class ThemeIRepository implements ThemeRepository {
     try {
       final brightnessValue =
           await storage.read(key: StoragePreferences.brightnessKey);
+
       return Right(
         ThemeModel(
-          brightness: brightnessValue == 'light'
+          brightness: brightnessValue == BrightnessType.light.toString()
               ? BrightnessType.light
-              : BrightnessType.dark,
+              : brightnessValue == BrightnessType.dark.toString()
+                  ? BrightnessType.dark
+                  : BrightnessType.system,
         ),
       );
     } catch (e) {
       return Left(Fail('Error getting theme'));
+    }
+  }
+
+  @override
+  Future<Either<Fail, ThemeModel>> setTheme(BrightnessType brightness) async {
+    try {
+      await storage.write(
+        key: StoragePreferences.brightnessKey,
+        value: brightness.toString(),
+      );
+
+      return Right(ThemeModel(brightness: brightness));
+    } catch (e) {
+      return Left(Fail('Error setting theme'));
     }
   }
 }

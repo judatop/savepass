@@ -8,11 +8,30 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   final ThemeRepository repository;
 
   ThemeBloc(this.repository) : super(ThemeInitialState()) {
+    on<GetThemeEvent>(_onGetThemeEvent);
     on<ToggleBrightnessEvent>(onToggleBrightness);
   }
 
   FutureOr<void> onToggleBrightness(
     ToggleBrightnessEvent event,
+    Emitter<ThemeState> emit,
+  ) async {
+    final theme = await repository.setTheme(event.brightness);
+
+    theme.fold(
+      (fail) => emit(ThemeInitialState()),
+      (themeModel) => emit(
+        ChangeThemeState(
+          ThemeStateModel(
+            theme: themeModel,
+          ),
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onGetThemeEvent(
+    GetThemeEvent event,
     Emitter<ThemeState> emit,
   ) async {
     final theme = await repository.getTheme();

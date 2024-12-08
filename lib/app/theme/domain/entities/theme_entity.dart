@@ -6,4 +6,4 @@ class ThemeEntity {
   });
 }
 
-enum BrightnessType { light, dark }
+enum BrightnessType { system, light, dark }

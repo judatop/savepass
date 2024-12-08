@@ -101,5 +101,19 @@
     "enterMasterPassword": "Coloca tu contraseña maestra",
     "@enterMasterPassword": {},
     "signInDesc": "Ingresa a SavePass con tu correo y contraseña",
-    "@signInDesc": {}
+    "@signInDesc": {},
+    "avatar": "Avatar",
+    "@avatar": {},
+    "avatarDesc": "Haz clic para cambiar tu avatar",
+    "@avatarDesc": {},
+    "accountSettings": "Configuración de la cuenta",
+    "@accountSettings": {},
+    "displayName": "Nombre de usuario",
+    "@displayName": {},
+    "displayNameDesc": "Opcional: Tu nombre será mostrado en la aplicación",
+    "@displayNameDesc": {},
+    "theme": "Tema",
+    "@theme": {},
+    "themeDesc": "Elige el tema que mejor se adapte a ti",
+    "@themeDesc": {}
 }

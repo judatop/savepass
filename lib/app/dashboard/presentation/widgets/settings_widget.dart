@@ -9,12 +9,14 @@ import 'package:savepass/app/dashboard/presentation/widgets/settings/log_out_set
 import 'package:savepass/app/dashboard/presentation/widgets/settings/policy_settings_widget.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/settings/terms_settings_widget.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/settings/theme_settings_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingsWidget extends StatelessWidget {
   const SettingsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final intl = AppLocalizations.of(context)!;
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
 
@@ -28,8 +30,8 @@ class SettingsWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const AdsHeadline(
-              text: 'Account Settings',
+            AdsHeadline(
+              text: intl.accountSettings,
               textAlign: TextAlign.start,
             ),
             SizedBox(height: deviceHeight * 0.015),

@@ -6,8 +6,8 @@ import 'package:formz/formz.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
-import 'package:savepass/main.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum SampleItem { itemOne, itemTwo, itemThree }
 
@@ -16,17 +16,22 @@ class AvatarSettingsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = supabase.auth.currentUser;
-    final avatarURL = user?.appMetadata['avatar_url'];
+    final intl = AppLocalizations.of(context)!;
 
     return BlocBuilder<DashboardBloc, DashboardState>(
       buildWhen: (previous, current) =>
-          previous.model.status != current.model.status,
+          (previous.model.status != current.model.status) ||
+          (previous.model.profile?.avatar != current.model.profile?.avatar),
       builder: (context, state) {
-        final status = state.model.status;
+        final profile = state.model.profile;
+        String? photoURL;
+
+        if (profile != null) {
+          photoURL = profile.avatar;
+        }
 
         return Skeletonizer(
-          enabled: status.isInProgress,
+          enabled: state.model.status.isInProgress,
           child: AdsCard(
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -34,16 +39,16 @@ class AvatarSettingsWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Column(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       AdsTitle(
-                        text: 'Avatar',
+                        text: intl.avatar,
                         textAlign: TextAlign.start,
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Text(
-                        'Click to change your avatar',
+                        intl.avatarDesc,
                         textAlign: TextAlign.start,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -58,7 +63,7 @@ class AvatarSettingsWidget extends StatelessWidget {
                           bloc.add(const ChangeAvatarEvent());
                         },
                         child: AdsAvatar(
-                          imageUrl: avatarURL,
+                          imageUrl: photoURL,
                           iconSize: 45,
                           radius: 40,
                         ),

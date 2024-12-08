@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:savepass/app/theme/domain/entities/theme_entity.dart';
 
 abstract class ThemeEvent extends Equatable {
   const ThemeEvent();
@@ -12,5 +13,7 @@ class GetThemeEvent extends ThemeEvent {
 }
 
 class ToggleBrightnessEvent extends ThemeEvent {
-  const ToggleBrightnessEvent() : super();
+  final BrightnessType brightness;
+
+  const ToggleBrightnessEvent({required this.brightness}) : super();
 }

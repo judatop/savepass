@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 import 'package:savepass/app/auth/domain/repositories/auth_repository.dart';
 import 'package:savepass/app/auth/infrastructure/models/auth_type.dart';
@@ -13,6 +12,7 @@ import 'package:savepass/app/profile/domain/repositories/profile_repository.dart
 import 'package:savepass/core/env/env.dart';
 import 'package:savepass/core/form/email_form.dart';
 import 'package:savepass/core/form/password_form.dart';
+import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:savepass/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabaseauth;
 
@@ -37,6 +37,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<ProcessSignedInEvent>(_onProcessSignedInEvent);
     on<EmailChangedEvent>(_onEmailChangedEvent);
     on<PasswordChangedEvent>(_onPasswordChangedEvent);
+    on<ToggleMasterPasswordEvent>(_onToggleMasterPasswordEvent);
   }
 
   FutureOr<void> _onAuthInitialEvent(
@@ -82,14 +83,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
 
     try {
-      final webClientId = Env.googleWebClientId;
-      final iosClientId = Env.googleIosClientId;
-
-      final GoogleSignIn googleSignIn = GoogleSignIn(
-        clientId: iosClientId,
-        serverClientId: webClientId,
-      );
-
       final googleUser = await googleSignIn.signIn();
       final googleAuth = await googleUser!.authentication;
       final accessToken = googleAuth.accessToken;
@@ -196,24 +189,55 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
     }
 
-    late supabaseauth.User? user;
+    // late supabaseauth.User? user;
     response.fold(
       (l) {
-        user = null;
+        if (l.failure is String) {
+          final code = l.failure;
+          if (code == SnackBarErrors.invalidCredentials) {
+            emit(
+              InvalidCredentialsState(
+                state.model.copyWith(
+                  status: FormzSubmissionStatus.failure,
+                ),
+              ),
+            );
+            return;
+          }
+
+          if (code == SnackBarErrors.userAlreadyExists) {
+            emit(
+              UserAlreadyExistsState(
+                state.model.copyWith(
+                  status: FormzSubmissionStatus.failure,
+                ),
+              ),
+            );
+            return;
+          }
+
+          emit(
+            GeneralErrorState(
+              state.model.copyWith(
+                status: FormzSubmissionStatus.failure,
+              ),
+            ),
+          );
+        }
       },
       (r) {
-        user = r.user;
+        // user = r.user;
       },
     );
 
-    if (user == null || user?.id == null) {
-      emit(
-        GeneralErrorState(
-          state.model.copyWith(status: FormzSubmissionStatus.failure),
-        ),
-      );
-      return;
-    }
+    // if (user == null || user?.id == null) {
+    //   emit(
+    //     GeneralErrorState(
+    //       state.model.copyWith(status: FormzSubmissionStatus.failure),
+    //     ),
+    //   );
+    //   return;
+    // }
   }
 
   FutureOr<void> _onOpenPrivacyEvent(
@@ -312,5 +336,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       );
     }
+  }
+
+  FutureOr<void> _onToggleMasterPasswordEvent(
+    ToggleMasterPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) {
+    emit(
+      ChangeAuthState(
+        state.model.copyWith(
+          showPassword: !state.model.showPassword,
+        ),
+      ),
+    );
   }
 }

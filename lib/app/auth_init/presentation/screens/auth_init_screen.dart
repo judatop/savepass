@@ -37,7 +37,7 @@ void _listener(context, state) {
   final intl = AppLocalizations.of(context)!;
 
   if (state is OpenHomeState) {
-    Modular.to.pushNamedAndRemoveUntil(Routes.homeRoute, (_) => false);
+    Modular.to.pushNamedAndRemoveUntil(Routes.dashboardRoute, (_) => false);
   }
 
   if (state is InvalidMasterPasswordState) {
@@ -87,7 +87,7 @@ class _Body extends StatelessWidget {
       }
 
       if (isAuthenticated) {
-        Modular.to.navigate(Routes.homeRoute);
+        Modular.to.navigate(Routes.dashboardRoute);
       }
     } catch (error) {
       if (error is PlatformException) {

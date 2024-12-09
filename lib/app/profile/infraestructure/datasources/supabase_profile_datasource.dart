@@ -51,7 +51,7 @@ class SupabaseProfileDatasource implements ProfileDatasource {
       }
 
       if (avatarUuid != null) {
-        userMetaData?['avatar_url'] = avatarUuid;
+        userMetaData?['custom_avatar'] = avatarUuid;
       }
 
       await supabase.auth.updateUser(
@@ -70,22 +70,24 @@ class SupabaseProfileDatasource implements ProfileDatasource {
   }
 
   @override
-  Future<Either<Fail, Unit>> updateMasterPasswordUuid({
-    required String uuid,
+  Future<Either<Fail, Unit>> insertMasterPassword({
+    required String masterPassword,
+    required String name,
   }) async {
     try {
       await supabase.rpc(
-        DbUtils.updateMasterPassword,
+        DbUtils.insertMasterPassword,
         params: {
-          'master_password_uuid': uuid,
+          'secret': masterPassword,
+          'name': name,
         },
       );
 
       return const Right(unit);
     } catch (e) {
-      log.e('updateMasterPasswordUuid: $e');
+      log.e('insertMasterPassword: $e');
       return Left(
-        Fail('Error occurred while updating your master password'),
+        Fail('Error occurred while inserting your master password'),
       );
     }
   }
@@ -108,7 +110,6 @@ class SupabaseProfileDatasource implements ProfileDatasource {
   @override
   Future<Either<Fail, ProfileEntity>> getProfile() async {
     try {
-
       final user = supabase.auth.currentUser;
 
       if (user == null || user.userMetadata == null) {
@@ -161,6 +162,19 @@ class SupabaseProfileDatasource implements ProfileDatasource {
       log.e('isEmailExists: $e');
       return Left(
         Fail('Error occurred while checking if email already exists'),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Fail, Unit>> deleteAccount() async {
+    try {
+      await supabase.rpc(DbUtils.deleteAccountFunction);
+      return const Right(unit);
+    } catch (e) {
+      log.e('deleteAccount: $e');
+      return Left(
+        Fail('Error occurred while deleting account'),
       );
     }
   }

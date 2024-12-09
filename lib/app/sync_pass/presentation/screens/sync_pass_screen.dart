@@ -32,7 +32,7 @@ void _listener(context, state) {
   final intl = AppLocalizations.of(context)!;
 
   if (state is OpenHomeState) {
-    Modular.to.pushNamedAndRemoveUntil(Routes.homeRoute, (route) => false);
+    Modular.to.pushNamedAndRemoveUntil(Routes.dashboardRoute, (route) => false);
   }
 
   if (state is GeneralErrorState) {

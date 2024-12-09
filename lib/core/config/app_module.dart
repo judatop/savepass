@@ -14,9 +14,14 @@ import 'package:savepass/app/auth_init/infrastructure/datasources/supabase_auth_
 import 'package:savepass/app/auth_init/infrastructure/repositories/auth_init_repository_impl.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_bloc.dart';
 import 'package:savepass/app/auth_init/presentation/screens/auth_init_screen.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/get_started/presentation/blocs/get_started_bloc.dart';
 import 'package:savepass/app/get_started/presentation/screens/get_started_screen.dart';
-import 'package:savepass/app/home/presentation/screens/home_screen.dart';
+import 'package:savepass/app/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:savepass/app/preferences/domain/datasources/parameters_datasource.dart';
+import 'package:savepass/app/preferences/domain/datasources/preferences_datasource.dart';
+import 'package:savepass/app/preferences/infrastructure/datasources/local_parameters_datasource.dart';
+import 'package:savepass/app/preferences/infrastructure/datasources/supabase_parameters_datasource.dart';
 import 'package:savepass/app/privacy_policy/presentation/screens/privacy_policy_screen.dart';
 import 'package:savepass/app/profile/domain/datasources/profile_datasource.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
@@ -26,9 +31,9 @@ import 'package:savepass/app/splash/presentation/blocs/splash_bloc.dart';
 import 'package:savepass/app/splash/presentation/splash_screen.dart';
 import 'package:savepass/app/sync_pass/presentation/blocs/sync_bloc.dart';
 import 'package:savepass/app/sync_pass/presentation/screens/sync_pass_screen.dart';
-import 'package:savepass/app/theme/domain/repositories/theme_repository.dart';
-import 'package:savepass/app/theme/infrastructure/repositories_impl/theme_irepository.dart';
-import 'package:savepass/app/theme/presentation/blocs/theme_bloc.dart';
+import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
+import 'package:savepass/app/preferences/infrastructure/repositories_impl/preferences_irepository.dart';
+import 'package:savepass/app/preferences/presentation/blocs/preferences_bloc.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/global/domain/datasources/secret_datasource.dart';
 import 'package:savepass/core/global/domain/repositories/secret_repository.dart';
@@ -40,11 +45,13 @@ class AppModule extends Module {
   @override
   void binds(i) {
     i.addSingleton(FlutterSecureStorage.new);
-    i.addSingleton(ThemeBloc.new);
+    i.addSingleton(PreferencesBloc.new);
     i.addSingleton(Logger.new);
     i.addSingleton<ProfileRepository>(ProfileRepositoryImpl.new);
     i.addSingleton<ProfileDatasource>(SupabaseProfileDatasource.new);
-    i.addSingleton<ThemeRepository>(ThemeIRepository.new);
+    i.addSingleton<PreferencesRepository>(PreferencesIRepository.new);
+    i.addSingleton<PreferencesDatasource>(LocalPreferencesDatasource.new);
+    i.addSingleton<ParametersDatasource>(SupabaseParametersDatasource.new);
     i.addSingleton<SecretDatasource>(SupabaseSecretDatasource.new);
     i.addSingleton<SecretRepository>(SecretRepositoryImpl.new);
     i.addSingleton<AuthInitDatasource>(SupabaseAuthInitDatasource.new);
@@ -56,6 +63,7 @@ class AppModule extends Module {
     i.addSingleton(SyncBloc.new);
     i.addSingleton(SplashBloc.new);
     i.addSingleton(AuthBloc.new);
+    i.addSingleton(DashboardBloc.new);
   }
 
   @override
@@ -73,8 +81,8 @@ class AppModule extends Module {
       child: (context) => const PrivacyPolicyScreen(),
     );
     r.child(
-      Routes.homeRoute,
-      child: (context) => const HomeScreen(),
+      Routes.dashboardRoute,
+      child: (context) => const DashboardScreen(),
     );
     r.child(
       Routes.authInitRoute,

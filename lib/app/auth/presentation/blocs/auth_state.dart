@@ -63,6 +63,14 @@ class OpenAuthScreenState extends AuthState {
   const OpenAuthScreenState(super.model);
 }
 
+class InvalidCredentialsState extends AuthState {
+  const InvalidCredentialsState(super.model);
+}
+
+class UserAlreadyExistsState extends AuthState {
+  const UserAlreadyExistsState(super.model);
+}
+
 class AuthStateModel extends Equatable {
   final AuthType authType;
   final TextForm name;

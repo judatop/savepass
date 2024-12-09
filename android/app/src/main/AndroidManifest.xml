@@ -36,7 +36,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:scheme="savepass"
-                    android:host="com.judatop.savepass">
+                    android:host="com.juda.savepass">
 
                 </data>
             </intent-filter>

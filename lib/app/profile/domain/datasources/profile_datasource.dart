@@ -9,8 +9,9 @@ abstract class ProfileDatasource {
     String? avatarUuid,
   });
 
-  Future<Either<Fail, Unit>> updateMasterPasswordUuid({
-    required String uuid,
+  Future<Either<Fail, Unit>> insertMasterPassword({
+    required String masterPassword,
+    required String name,
   });
 
   Future<Either<Fail, bool>> checkIfHasMasterPassword();
@@ -18,4 +19,6 @@ abstract class ProfileDatasource {
   Future<Either<Fail, ProfileEntity>> getProfile();
 
   Future<Either<Fail, String?>> isEmailExists(String email);
+
+  Future<Either<Fail, Unit>> deleteAccount();
 }

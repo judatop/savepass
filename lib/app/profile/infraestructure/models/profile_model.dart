@@ -10,7 +10,7 @@ class ProfileModel extends ProfileEntity with EquatableMixin {
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
       displayName: json['full_name'],
-      avatar: json['avatar_url'],
+      avatar: json['custom_avatar'] ?? json['avatar_url'],
     );
   }
 

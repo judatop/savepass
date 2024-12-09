@@ -8,21 +8,30 @@ import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
+import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
+import 'package:savepass/main.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final Logger log;
   final ProfileRepository profileRepository;
+  final PreferencesRepository preferencesRepository;
 
   DashboardBloc({
     required this.log,
     required this.profileRepository,
+    required this.preferencesRepository,
   }) : super(const DashboardInitialState()) {
     on<DashboardInitialEvent>(_onDashboardInitialEvent);
     on<ChangeIndexEvent>(_onChangeIndexEvent);
     on<ChangeDisplayNameEvent>(_onChangeDisplayNameEvent);
     on<ChangeAvatarEvent>(_onChangeAvatarEvent);
     on<UploadPhotoEvent>(_onUploadPhotoEvent);
+    on<OpenPrivacyPolicyEvent>(_onOpenPrivacyPolicy);
+    on<OpenTermsEvent>(_onOpenTermsEvent);
+    on<DeleteAccountEvent>(_onDeleteAccountEvent);
+    on<LogOutEvent>(_onLogOutEvent);
   }
 
   FutureOr<void> _onDashboardInitialEvent(
@@ -329,5 +338,88 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       },
     );
     return;
+  }
+
+  FutureOr<void> _onOpenPrivacyPolicy(
+    OpenPrivacyPolicyEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    final response = await preferencesRepository.getPrivacyUrl();
+
+    response.fold(
+      (l) {
+        emit(GeneralErrorState(state.model));
+      },
+      (r) async {
+        final Uri url = Uri.parse(r);
+
+        if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+          emit(GeneralErrorState(state.model));
+        }
+      },
+    );
+  }
+
+  FutureOr<void> _onOpenTermsEvent(
+    OpenTermsEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    final response = await preferencesRepository.getTermsUrl();
+
+    response.fold(
+      (l) {
+        emit(GeneralErrorState(state.model));
+      },
+      (r) async {
+        final Uri url = Uri.parse(r);
+
+        if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+          emit(GeneralErrorState(state.model));
+        }
+      },
+    );
+  }
+
+  FutureOr<void> _onDeleteAccountEvent(
+    DeleteAccountEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(deleteStatus: FormzSubmissionStatus.inProgress),
+      ),
+    );
+
+    final response = await profileRepository.deleteAccount();
+
+    response.fold(
+      (l) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(
+              deleteStatus: FormzSubmissionStatus.failure,
+            ),
+          ),
+        );
+      },
+      (r) async {
+        supabase.auth.signOut();
+        emit(
+          LogOutState(
+            state.model.copyWith(
+              deleteStatus: FormzSubmissionStatus.success,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  FutureOr<void> _onLogOutEvent(
+    LogOutEvent event,
+    Emitter<DashboardState> emit,
+  ) {
+    supabase.auth.signOut();
+    emit(LogOutState(state.model));
   }
 }

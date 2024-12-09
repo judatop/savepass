@@ -19,4 +19,6 @@ abstract class ProfileRepository {
   Future<Either<Fail, ProfileEntity>> getProfile();
 
   Future<Either<Fail, String?>> isEmailExists(String email);
+
+  Future<Either<Fail, Unit>> deleteAccount();
 }

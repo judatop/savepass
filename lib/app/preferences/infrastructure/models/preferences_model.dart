@@ -1,15 +1,15 @@
 import 'package:equatable/equatable.dart';
-import 'package:savepass/app/theme/domain/entities/theme_entity.dart';
+import 'package:savepass/app/preferences/domain/entities/preferences_entity.dart';
 
-class ThemeModel extends ThemeEntity with EquatableMixin {
-  ThemeModel({
+class PreferencesModel extends PreferencesEntity with EquatableMixin {
+  PreferencesModel({
     required super.brightness,
   });
 
-  ThemeModel copyWith({
+  PreferencesModel copyWith({
     BrightnessType? brightness,
   }) {
-    return ThemeModel(
+    return PreferencesModel(
       brightness: brightness ?? this.brightness,
     );
   }

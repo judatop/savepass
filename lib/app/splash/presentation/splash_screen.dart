@@ -7,8 +7,8 @@ import 'package:savepass/app/splash/presentation/blocs/splash_bloc.dart';
 import 'package:savepass/app/splash/presentation/blocs/splash_event.dart';
 import 'package:savepass/app/splash/presentation/blocs/splash_state.dart';
 import 'package:savepass/app/splash/utils/splash_utils.dart';
-import 'package:savepass/app/theme/presentation/blocs/theme_bloc.dart';
-import 'package:savepass/app/theme/presentation/blocs/theme_event.dart';
+import 'package:savepass/app/preferences/presentation/blocs/preferences_bloc.dart';
+import 'package:savepass/app/preferences/presentation/blocs/preferences_event.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/image/image_paths.dart';
 
@@ -60,8 +60,10 @@ class _BodyState extends State<_Body> {
   }
 
   void _initTheme() {
-    final themeBloc = Modular.get<ThemeBloc>();
+    final themeBloc = Modular.get<PreferencesBloc>();
     themeBloc.add(const GetThemeEvent());
+    themeBloc.add(const GetLanguageEvent());
+    themeBloc.add(const GetAppVersion());
   }
 
   void _timerSplash() {

@@ -39,11 +39,16 @@ class UploadAvatarSuccessState extends DashboardState {
   const UploadAvatarSuccessState(super.model);
 }
 
+class LogOutState extends DashboardState {
+  const LogOutState(super.model);
+}
+
 class DashboardStateModel extends Equatable {
   final int currentIndex;
   final String displayName;
   final FormzSubmissionStatus status;
   final FormzSubmissionStatus displayNameStatus;
+  final FormzSubmissionStatus deleteStatus;
   final ProfileEntity? profile;
 
   const DashboardStateModel({
@@ -52,6 +57,7 @@ class DashboardStateModel extends Equatable {
     this.status = FormzSubmissionStatus.initial,
     this.displayNameStatus = FormzSubmissionStatus.initial,
     this.profile,
+    this.deleteStatus = FormzSubmissionStatus.initial,
   });
 
   DashboardStateModel copyWith({
@@ -60,6 +66,7 @@ class DashboardStateModel extends Equatable {
     FormzSubmissionStatus? status,
     FormzSubmissionStatus? displayNameStatus,
     ProfileEntity? profile,
+    FormzSubmissionStatus? deleteStatus,
   }) {
     return DashboardStateModel(
       currentIndex: currentIndex ?? this.currentIndex,
@@ -67,6 +74,7 @@ class DashboardStateModel extends Equatable {
       status: status ?? this.status,
       displayNameStatus: displayNameStatus ?? this.displayNameStatus,
       profile: profile ?? this.profile,
+      deleteStatus: deleteStatus ?? this.deleteStatus,
     );
   }
 
@@ -77,5 +85,6 @@ class DashboardStateModel extends Equatable {
         status,
         displayNameStatus,
         profile,
+        deleteStatus,
       ];
 }

@@ -39,20 +39,21 @@ class AvatarSettingsWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AdsTitle(
-                        text: intl.avatar,
-                        textAlign: TextAlign.start,
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        intl.avatarDesc,
-                        textAlign: TextAlign.start,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AdsTitle(
+                          text: intl.avatar,
+                          textAlign: TextAlign.start,
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          intl.avatarDesc,
+                          textAlign: TextAlign.start,
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(width: 10),
                   Stack(

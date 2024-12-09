@@ -49,4 +49,9 @@ class ProfileRepositoryImpl implements ProfileRepository {
   Future<Either<Fail, String?>> isEmailExists(String email) async {
     return await datasource.isEmailExists(email);
   }
+
+  @override
+  Future<Either<Fail, Unit>> deleteAccount() async {
+    return await datasource.deleteAccount();
+  }
 }

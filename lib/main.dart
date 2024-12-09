@@ -43,4 +43,3 @@ void main() async {
 }
 
 final supabase = Supabase.instance.client;
-  

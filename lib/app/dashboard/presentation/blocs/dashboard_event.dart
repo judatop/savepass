@@ -30,3 +30,19 @@ class ChangeAvatarEvent extends DashboardEvent {
 class UploadPhotoEvent extends DashboardEvent {
   const UploadPhotoEvent() : super();
 }
+
+class OpenPrivacyPolicyEvent extends DashboardEvent {
+  const OpenPrivacyPolicyEvent() : super();
+}
+
+class OpenTermsEvent extends DashboardEvent {
+  const OpenTermsEvent() : super();
+}
+
+class DeleteAccountEvent extends DashboardEvent {
+  const DeleteAccountEvent() : super();
+}
+
+class LogOutEvent extends DashboardEvent {
+  const LogOutEvent() : super();
+}

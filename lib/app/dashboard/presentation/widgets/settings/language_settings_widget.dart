@@ -1,27 +1,32 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/app/dashboard/presentation/widgets/settings/language_dropdown_widget.dart';
 
 class LanguageSettingsWidget extends StatelessWidget {
   const LanguageSettingsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const AdsCard(
+    final intl = AppLocalizations.of(context)!;
+
+    return AdsCard(
       child: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             AdsTitle(
-              text: 'App Language',
+              text: intl.appLanguage,
               textAlign: TextAlign.start,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
-              'You can change the language of the app here.',
+              intl.appLanguageDesc,
               textAlign: TextAlign.start,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
+            LanguageDropdownWidget(),
           ],
         ),
       ),

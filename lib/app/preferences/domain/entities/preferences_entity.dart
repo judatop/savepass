@@ -1,7 +1,7 @@
-class ThemeEntity {
+class PreferencesEntity {
   final BrightnessType brightness;
 
-  ThemeEntity({
+  PreferencesEntity({
     required this.brightness,
   });
 }

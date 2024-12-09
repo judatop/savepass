@@ -165,4 +165,17 @@ class SupabaseProfileDatasource implements ProfileDatasource {
       );
     }
   }
+
+  @override
+  Future<Either<Fail, Unit>> deleteAccount() async {
+    try {
+      await supabase.rpc(DbUtils.deleteAccountFunction);
+      return const Right(unit);
+    } catch (e) {
+      log.e('deleteAccount: $e');
+      return Left(
+        Fail('Error occurred while deleting account'),
+      );
+    }
+  }
 }

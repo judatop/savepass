@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:savepass/app/theme/domain/entities/theme_entity.dart';
-import 'package:savepass/app/theme/presentation/blocs/theme_bloc.dart';
-import 'package:savepass/app/theme/presentation/blocs/theme_event.dart';
-import 'package:savepass/app/theme/presentation/blocs/theme_state.dart';
+import 'package:savepass/app/preferences/domain/entities/preferences_entity.dart';
+import 'package:savepass/app/preferences/presentation/blocs/preferences_bloc.dart';
+import 'package:savepass/app/preferences/presentation/blocs/preferences_event.dart';
+import 'package:savepass/app/preferences/presentation/blocs/preferences_state.dart';
 
 class ThemeSettingsWidget extends StatelessWidget {
   const ThemeSettingsWidget({super.key});
@@ -14,7 +14,7 @@ class ThemeSettingsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final intl = AppLocalizations.of(context)!;
-    final bloc = Modular.get<ThemeBloc>();
+    final bloc = Modular.get<PreferencesBloc>();
 
     return AdsCard(
       child: Padding(
@@ -29,7 +29,7 @@ class ThemeSettingsWidget extends StatelessWidget {
             const SizedBox(height: 10),
             Text(intl.themeDesc),
             const SizedBox(height: 10),
-            BlocBuilder<ThemeBloc, ThemeState>(
+            BlocBuilder<PreferencesBloc, PreferencesState>(
               buildWhen: (previous, current) =>
                   previous.model.theme.brightness !=
                   current.model.theme.brightness,

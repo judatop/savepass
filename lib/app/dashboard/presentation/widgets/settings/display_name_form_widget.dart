@@ -55,8 +55,7 @@ class _DisplayNameFormWidgetState extends State<DisplayNameFormWidget> {
         final displayName = state.model.displayName;
         _controller.text = displayName;
 
-        return AdsFormField(
-          formField: AdsTextField(
+        return AdsTextField(
             focusNode: _focusNode,
             controller: _controller,
             hintText: intl.optionalForm,
@@ -70,8 +69,7 @@ class _DisplayNameFormWidgetState extends State<DisplayNameFormWidget> {
               ),
             ],
             textInputAction: TextInputAction.done,
-          ),
-        );
+          );
       },
     );
   }

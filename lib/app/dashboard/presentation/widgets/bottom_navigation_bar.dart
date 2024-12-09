@@ -14,6 +14,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
     final blockSizeHorizontal = deviceWidth / 100;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Positioned(
       bottom: 0,
@@ -34,7 +35,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
             width: deviceWidth,
             height: blockSizeHorizontal * (Platform.isAndroid ? 18 : 17),
             decoration: BoxDecoration(
-              color: Colors.grey[900],
+              color: colorScheme.brightness == Brightness.light
+                  ? Colors.black
+                  : Colors.grey[900],
               borderRadius:
                   BorderRadius.circular(ADSFoundationSizes.radiusCard),
             ),

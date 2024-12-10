@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:savepass/app/preferences/domain/entities/preferences_entity.dart';
 import 'package:savepass/app/preferences/infrastructure/models/preferences_model.dart';
 import 'package:savepass/app/preferences/utils/preferences_utils.dart';
 
@@ -16,8 +17,8 @@ class ThemeInitialState extends PreferencesState {
   ThemeInitialState() : super(PreferencesUtils.defaultAccountPreferencesModel);
 }
 
-class ChangeThemeState extends PreferencesState {
-  const ChangeThemeState(super.model);
+class ChangePreferencesState extends PreferencesState {
+  const ChangePreferencesState(super.model);
 }
 
 class ThemeStateModel extends Equatable {
@@ -26,7 +27,7 @@ class ThemeStateModel extends Equatable {
   final String appVersion;
 
   const ThemeStateModel({
-    required this.theme,
+    this.theme = const PreferencesModel(brightness: BrightnessType.dark),
     this.locale = const Locale('es'),
     this.appVersion = '',
   });

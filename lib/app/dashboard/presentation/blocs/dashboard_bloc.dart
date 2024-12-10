@@ -10,6 +10,7 @@ import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
 import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
+import 'package:savepass/core/form/text_form.dart';
 import 'package:savepass/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -26,6 +27,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<DashboardInitialEvent>(_onDashboardInitialEvent);
     on<ChangeIndexEvent>(_onChangeIndexEvent);
     on<ChangeDisplayNameEvent>(_onChangeDisplayNameEvent);
+    on<SaveDisplayNameEvent>(_onSaveDisplayNameEvent);
     on<ChangeAvatarEvent>(_onChangeAvatarEvent);
     on<UploadPhotoEvent>(_onUploadPhotoEvent);
     on<OpenPrivacyPolicyEvent>(_onOpenPrivacyPolicy);
@@ -47,7 +49,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           ChangeDashboardState(
             state.model.copyWith(
               profile: r,
-              displayName: r.displayName,
+              displayName: TextForm.dirty(r.displayName ?? ''),
             ),
           ),
         );
@@ -65,54 +67,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   FutureOr<void> _onChangeDisplayNameEvent(
     ChangeDisplayNameEvent event,
     Emitter<DashboardState> emit,
-  ) async {
+  ) {
+    final displayName = event.displayName;
+
     emit(
       ChangeDashboardState(
-        state.model
-            .copyWith(displayNameStatus: FormzSubmissionStatus.inProgress),
+        state.model.copyWith(displayName: TextForm.dirty(displayName)),
       ),
-    );
-
-    final newDisplayName = event.displayName;
-
-    final updateProfileResponse =
-        await profileRepository.updateProfile(displayName: newDisplayName);
-
-    late bool profileUpdated;
-    updateProfileResponse.fold(
-      (l) {
-        profileUpdated = false;
-      },
-      (r) {
-        profileUpdated = true;
-      },
-    );
-
-    if (!profileUpdated) {
-      emit(
-        ChangeDashboardState(
-          state.model
-              .copyWith(displayNameStatus: FormzSubmissionStatus.failure),
-        ),
-      );
-      return;
-    }
-
-    final res = await profileRepository.getProfile();
-
-    res.fold(
-      (l) {},
-      (r) {
-        emit(
-          ChangeDashboardState(
-            state.model.copyWith(
-              profile: r,
-              displayNameStatus: FormzSubmissionStatus.success,
-              displayName: r.displayName,
-            ),
-          ),
-        );
-      },
     );
   }
 
@@ -421,5 +382,58 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   ) {
     supabase.auth.signOut();
     emit(LogOutState(state.model));
+  }
+
+  FutureOr<void> _onSaveDisplayNameEvent(
+    SaveDisplayNameEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    emit(
+      ChangeDashboardState(
+        state.model
+            .copyWith(displayNameStatus: FormzSubmissionStatus.inProgress),
+      ),
+    );
+
+    final newDisplayName = state.model.displayName.value;
+
+    final updateProfileResponse =
+        await profileRepository.updateProfile(displayName: newDisplayName);
+
+    late bool profileUpdated;
+    updateProfileResponse.fold(
+      (l) {
+        profileUpdated = false;
+      },
+      (r) {
+        profileUpdated = true;
+      },
+    );
+
+    if (!profileUpdated) {
+      emit(
+        ChangeDashboardState(
+          state.model
+              .copyWith(displayNameStatus: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
+    final res = await profileRepository.getProfile();
+
+    res.fold(
+      (l) {},
+      (r) {
+        emit(
+          ChangeDashboardState(
+            state.model.copyWith(
+              profile: r,
+              displayNameStatus: FormzSubmissionStatus.success,
+            ),
+          ),
+        );
+      },
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:savepass/app/profile/domain/entities/profile_entity.dart';
+import 'package:savepass/core/form/text_form.dart';
 
 abstract class DashboardState extends Equatable {
   final DashboardStateModel model;
@@ -45,7 +46,7 @@ class LogOutState extends DashboardState {
 
 class DashboardStateModel extends Equatable {
   final int currentIndex;
-  final String displayName;
+  final TextForm displayName;
   final FormzSubmissionStatus status;
   final FormzSubmissionStatus displayNameStatus;
   final FormzSubmissionStatus deleteStatus;
@@ -53,7 +54,7 @@ class DashboardStateModel extends Equatable {
 
   const DashboardStateModel({
     this.currentIndex = 0,
-    this.displayName = '',
+    this.displayName = const TextForm.pure(),
     this.status = FormzSubmissionStatus.initial,
     this.displayNameStatus = FormzSubmissionStatus.initial,
     this.profile,
@@ -62,7 +63,7 @@ class DashboardStateModel extends Equatable {
 
   DashboardStateModel copyWith({
     int? currentIndex,
-    String? displayName,
+    TextForm? displayName,
     FormzSubmissionStatus? status,
     FormzSubmissionStatus? displayNameStatus,
     ProfileEntity? profile,

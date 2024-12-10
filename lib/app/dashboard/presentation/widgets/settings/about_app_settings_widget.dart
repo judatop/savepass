@@ -33,7 +33,7 @@ class AboutAppSettingsWidget extends StatelessWidget {
                     Row(
                       children: [
                         const Icon(Icons.star_outlined),
-                        const SizedBox(width: 5),
+                        const SizedBox(width: 10),
                         Text(intl.rateIt),
                       ],
                     ),
@@ -53,7 +53,7 @@ class AboutAppSettingsWidget extends StatelessWidget {
                     Row(
                       children: [
                         const Icon(Icons.feedback_outlined),
-                        const SizedBox(width: 5),
+                        const SizedBox(width: 10),
                         Text(intl.feedback),
                       ],
                     ),

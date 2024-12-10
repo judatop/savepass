@@ -153,5 +153,13 @@
     "homeTitle": "Home",
     "@homeTitle": {},
     "toolsTitle": "Tools",
-    "@toolsTitle": {}
+    "@toolsTitle": {},
+    "attentionTitle": "Attention",
+    "@attentionTitle": {},
+    "attentionText": "By accepting, your account will be deleted and you will not be able to recover it.",
+    "@attentionText": {},
+    "acceptButton": "Accept",
+    "@acceptButton": {},
+    "cancelButton": "Cancel",
+    "@cancelButton": {}
 }

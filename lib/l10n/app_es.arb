@@ -108,7 +108,7 @@
     "@avatarDesc": {},
     "accountSettings": "Ajustes",
     "@accountSettings": {},
-    "displayName": "Nombre de usuario",
+    "displayName": "Nombre para mostrar",
     "@displayName": {},
     "displayNameDesc": "Opcional: Tu nombre será mostrado en la aplicación",
     "@displayNameDesc": {},
@@ -153,5 +153,13 @@
     "homeTitle": "Inicio",
     "@homeTitle": {},
     "toolsTitle": "Herramientas",
-    "@toolsTitle": {}
+    "@toolsTitle": {},
+    "attentionTitle": "Atención",
+    "@attentionTitle": {},
+    "attentionText": "Al aceptar, se eliminará tu cuenta y no podrás recuperarla",
+    "@attentionText": {},
+    "acceptButton": "Aceptar",
+    "@acceptButton": {},
+    "cancelButton": "Cancelar",
+    "@cancelButton": {}
 }

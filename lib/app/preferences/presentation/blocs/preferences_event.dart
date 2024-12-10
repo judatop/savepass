@@ -9,10 +9,6 @@ abstract class PreferencesEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetThemeEvent extends PreferencesEvent {
-  const GetThemeEvent() : super();
-}
-
 class ToggleBrightnessEvent extends PreferencesEvent {
   final BrightnessType brightness;
 
@@ -25,10 +21,6 @@ class ChangeLocaleEvent extends PreferencesEvent {
   const ChangeLocaleEvent({required this.locale}) : super();
 }
 
-class GetLanguageEvent extends PreferencesEvent {
-  const GetLanguageEvent() : super();
-}
-
-class GetAppVersion extends PreferencesEvent {
-  const GetAppVersion() : super();
+class GetPreferencesEvent extends PreferencesEvent {
+  const GetPreferencesEvent() : super();
 }

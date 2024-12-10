@@ -1,8 +1,10 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/settings/display_name_form_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -13,6 +15,7 @@ class DisplayNameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Modular.get<DashboardBloc>();
     final intl = AppLocalizations.of(context)!;
 
     return BlocBuilder<DashboardBloc, DashboardState>(
@@ -37,7 +40,20 @@ class DisplayNameWidget extends StatelessWidget {
                     textAlign: TextAlign.start,
                   ),
                   const SizedBox(height: 10),
-                  const DisplayNameFormWidget(),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: DisplayNameFormWidget(),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      AdsFilledButton(
+                        onPressedCallback: () => bloc.add(const SaveDisplayNameEvent()),
+                        text: 'Save',
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

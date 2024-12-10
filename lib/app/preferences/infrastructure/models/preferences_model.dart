@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:savepass/app/preferences/domain/entities/preferences_entity.dart';
 
 class PreferencesModel extends PreferencesEntity with EquatableMixin {
-  PreferencesModel({
+  const PreferencesModel({
     required super.brightness,
   });
 

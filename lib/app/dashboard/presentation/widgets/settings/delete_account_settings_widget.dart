@@ -40,8 +40,46 @@ class DeleteAccountSettingsWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   AdsFilledButton(
-                    onPressedCallback: () =>
-                        bloc.add(const DeleteAccountEvent()),
+                    onPressedCallback: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text(intl.attentionTitle),
+                            content: SingleChildScrollView(
+                              child: ListBody(
+                                children: <Widget>[
+                                  Text(
+                                    intl.attentionText,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            actions: <Widget>[
+                              AdsFilledIconButton(
+                                onPressedCallback: () {
+                                  Modular.to.pop();
+                                  bloc.add(const DeleteAccountEvent());
+                                },
+                                text: intl.acceptButton,
+                                icon: Icons.check,
+                              ),
+                              TextButton(
+                                child: Text(
+                                  intl.cancelButton,
+                                  style: const TextStyle(
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Modular.to.pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                     text: intl.deleteButton,
                     buttonStyle: ButtonStyle(
                       backgroundColor: WidgetStateProperty.all<Color>(

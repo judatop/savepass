@@ -12,7 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 enum SampleItem { itemOne, itemTwo, itemThree }
 
 class AvatarSettingsWidget extends StatelessWidget {
-  const AvatarSettingsWidget({super.key});
+  const AvatarSettingsWidget({super.key}); 
 
   @override
   Widget build(BuildContext context) {
@@ -55,21 +55,17 @@ class AvatarSettingsWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  Stack(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          final bloc = Modular.get<DashboardBloc>();
-                          bloc.add(const ChangeAvatarEvent());
-                        },
-                        child: AdsAvatar(
-                          imageUrl: photoURL,
-                          iconSize: 45,
-                          radius: 40,
-                        ),
-                      ),
-                    ],
+                  const SizedBox(width: 15),
+                  InkWell(
+                    onTap: () {
+                      final bloc = Modular.get<DashboardBloc>();
+                      bloc.add(const ChangeAvatarEvent());
+                    },
+                    child: AdsAvatar(
+                      imageUrl: photoURL,
+                      iconSize: 45,
+                      radius: 40,
+                    ),
                   ),
                 ],
               ),

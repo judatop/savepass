@@ -61,9 +61,7 @@ class _BodyState extends State<_Body> {
 
   void _initTheme() {
     final themeBloc = Modular.get<PreferencesBloc>();
-    themeBloc.add(const GetThemeEvent());
-    themeBloc.add(const GetLanguageEvent());
-    themeBloc.add(const GetAppVersion());
+    themeBloc.add(const GetPreferencesEvent());
   }
 
   void _timerSplash() {

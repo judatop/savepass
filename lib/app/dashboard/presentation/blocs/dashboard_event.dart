@@ -23,6 +23,10 @@ class ChangeDisplayNameEvent extends DashboardEvent {
   const ChangeDisplayNameEvent({required this.displayName}) : super();
 }
 
+class SaveDisplayNameEvent extends DashboardEvent {
+  const SaveDisplayNameEvent() : super();
+}
+
 class ChangeAvatarEvent extends DashboardEvent {
   const ChangeAvatarEvent() : super();
 }

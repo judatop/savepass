@@ -50,10 +50,6 @@ void _listener(context, state) {
     Modular.to.popAndPushNamed(Routes.authRoute, arguments: AuthType.signUp);
   }
 
-  if (state is OpenPolicyState) {
-    Modular.to.pushNamed(Routes.privacyPolicyRoute);
-  }
-
   if (state is OpenAuthScreenState) {
     Modular.to.pushNamed(Routes.authInitRoute);
   }

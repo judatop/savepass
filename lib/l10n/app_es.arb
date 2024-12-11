@@ -124,6 +124,8 @@
     "@chooseOption": {},
     "privacyTitle": "Política de privacidad",
     "@privacyTitle": {},
+    "termsAuthTitle": "Términos",
+    "@termsAuthTitle": {},
     "privacyText": "Revisa nuestra política de privacidad",
     "@privacyText": {},
     "openPrivacy": "Revisar politica",
@@ -161,5 +163,7 @@
     "acceptButton": "Aceptar",
     "@acceptButton": {},
     "cancelButton": "Cancelar",
-    "@cancelButton": {}
+    "@cancelButton": {},
+    "and": "y",
+    "@and": {}
 }

@@ -35,10 +35,6 @@ class OpenSignUpState extends AuthState {
   const OpenSignUpState(super.model);
 }
 
-class OpenPolicyState extends AuthState {
-  const OpenPolicyState(super.model);
-}
-
 class OpenAuthEmailState extends AuthState {
   const OpenAuthEmailState(super.model);
 }

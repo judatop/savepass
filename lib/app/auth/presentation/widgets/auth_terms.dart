@@ -30,6 +30,19 @@ class AuthTerms extends StatelessWidget {
                 decoration: TextDecoration.underline,
               ),
               recognizer: TapGestureRecognizer()
+                ..onTap = () => bloc.add(const OpenPrivacyEvent()),
+            ),
+            TextSpan(
+              text: ' ${appLocalizations.and} ',
+              style: textTheme.bodyMedium,
+            ),
+            TextSpan(
+              text: appLocalizations.termsTitle,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.underline,
+              ),
+              recognizer: TapGestureRecognizer()
                 ..onTap = () => bloc.add(const OpenTermsEvent()),
             ),
           ],

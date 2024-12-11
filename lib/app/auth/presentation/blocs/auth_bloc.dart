@@ -8,6 +8,7 @@ import 'package:savepass/app/auth/infrastructure/models/auth_type.dart';
 import 'package:savepass/app/auth/infrastructure/models/sign_up_password_form.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_event.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_state.dart';
+import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/core/env/env.dart';
 import 'package:savepass/core/form/email_form.dart';
@@ -15,15 +16,18 @@ import 'package:savepass/core/form/password_form.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:savepass/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabaseauth;
+import 'package:url_launcher/url_launcher.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final ProfileRepository profileRepository;
   final AuthRepository authRepository;
+  final PreferencesRepository preferencesRepository;
   final Logger log;
 
   AuthBloc({
     required this.profileRepository,
     required this.authRepository,
+    required this.preferencesRepository,
     required this.log,
   }) : super(const AuthInitialState()) {
     on<AuthInitialEvent>(_onAuthInitialEvent);
@@ -243,14 +247,105 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> _onOpenPrivacyEvent(
     OpenPrivacyEvent event,
     Emitter<AuthState> emit,
-  ) {}
+  ) async {
+    emit(
+      AuthLoadingState(
+        state.model.copyWith(
+          status: FormzSubmissionStatus.inProgress,
+        ),
+      ),
+    );
+
+    final response = await preferencesRepository.getPrivacyUrl();
+
+    response.fold(
+      (l) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.failure,
+            ),
+          ),
+        );
+      },
+      (r) async {
+        emit(
+          ChangeAuthState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.success,
+            ),
+          ),
+        );
+
+        final Uri url = Uri.parse(r);
+
+        if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+          emit(
+            GeneralErrorState(
+              state.model.copyWith(
+                status: FormzSubmissionStatus.failure,
+              ),
+            ),
+          );
+        }
+      },
+    );
+  }
 
   FutureOr<void> _onOpenTermsEvent(
     OpenTermsEvent event,
     Emitter<AuthState> emit,
-  ) {
-    emit(AuthLoadingState(state.model));
-    emit(OpenPolicyState(state.model));
+  ) async {
+    emit(
+      AuthLoadingState(
+        state.model.copyWith(
+          status: FormzSubmissionStatus.inProgress,
+        ),
+      ),
+    );
+
+    final response = await preferencesRepository.getTermsUrl();
+
+    response.fold(
+      (l) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.failure,
+            ),
+          ),
+        );
+      },
+      (r) async {
+        emit(
+          ChangeAuthState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.success,
+            ),
+          ),
+        );
+
+        final Uri url = Uri.parse(r);
+
+        if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+          emit(
+            GeneralErrorState(
+              state.model.copyWith(
+                status: FormzSubmissionStatus.failure,
+              ),
+            ),
+          );
+        }
+
+        emit(
+          ChangeAuthState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.success,
+            ),
+          ),
+        );
+      },
+    );
   }
 
   FutureOr<void> _onProcessSignedInEvent(

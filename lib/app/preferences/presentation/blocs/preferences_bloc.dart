@@ -26,7 +26,7 @@ class PreferencesBloc extends Bloc<PreferencesEvent, PreferencesState> {
       (fail) => emit(ThemeInitialState()),
       (right) => emit(
         ChangePreferencesState(
-          ThemeStateModel(
+          state.model.copyWith(
             theme: right,
           ),
         ),

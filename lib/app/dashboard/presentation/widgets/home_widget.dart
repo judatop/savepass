@@ -1,13 +1,14 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/app/dashboard/presentation/widgets/home/home_search_widget.dart';
+import 'package:savepass/app/dashboard/presentation/widgets/home/last_cards_widget.dart';
+import 'package:savepass/app/dashboard/presentation/widgets/home/last_passwords_widget.dart';
 
 class HomeWidget extends StatelessWidget {
   const HomeWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final intl = AppLocalizations.of(context)!;
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
 
@@ -19,15 +20,40 @@ class HomeWidget extends StatelessWidget {
           right: ADSFoundationSizes.defaultHorizontalPadding * deviceWidth,
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            AdsHeadline(
-              text: intl.homeTitle,
-              textAlign: TextAlign.start,
+            Row(
+              children: [
+                Flexible(child: HomeSearchWidget()),
+                const SizedBox(
+                  width: 10,
+                ),
+                InkWell(
+                  onTap: () {},
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 5,
+                    ),
+                    child: Icon(
+                      Icons.notifications,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: deviceHeight * 0.015),
-            const Divider(),
-            SizedBox(height: deviceHeight * 0.03),
+            SizedBox(
+              height: deviceHeight * 0.03,
+            ),
+            const Text('Tip: Press and hold a card to copy its password'),
+            SizedBox(
+              height: deviceHeight * 0.03,
+            ),
+            const LastPasswordsWidget(),
+            SizedBox(
+              height: deviceHeight * 0.05,
+            ),
+            const LastCardsWidget(),
           ],
         ),
       ),

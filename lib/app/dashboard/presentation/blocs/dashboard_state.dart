@@ -51,6 +51,8 @@ class DashboardStateModel extends Equatable {
   final FormzSubmissionStatus displayNameStatus;
   final FormzSubmissionStatus deleteStatus;
   final ProfileEntity? profile;
+  final TextForm homeSearch;
+
 
   const DashboardStateModel({
     this.currentIndex = 0,
@@ -59,6 +61,7 @@ class DashboardStateModel extends Equatable {
     this.displayNameStatus = FormzSubmissionStatus.initial,
     this.profile,
     this.deleteStatus = FormzSubmissionStatus.initial,
+    this.homeSearch = const TextForm.pure(),
   });
 
   DashboardStateModel copyWith({
@@ -68,6 +71,7 @@ class DashboardStateModel extends Equatable {
     FormzSubmissionStatus? displayNameStatus,
     ProfileEntity? profile,
     FormzSubmissionStatus? deleteStatus,
+    TextForm? homeSearch,
   }) {
     return DashboardStateModel(
       currentIndex: currentIndex ?? this.currentIndex,
@@ -76,6 +80,7 @@ class DashboardStateModel extends Equatable {
       displayNameStatus: displayNameStatus ?? this.displayNameStatus,
       profile: profile ?? this.profile,
       deleteStatus: deleteStatus ?? this.deleteStatus,
+      homeSearch: homeSearch ?? this.homeSearch,
     );
   }
 
@@ -87,5 +92,6 @@ class DashboardStateModel extends Equatable {
         displayNameStatus,
         profile,
         deleteStatus,
+        homeSearch,
       ];
 }

@@ -50,3 +50,9 @@ class DeleteAccountEvent extends DashboardEvent {
 class LogOutEvent extends DashboardEvent {
   const LogOutEvent() : super();
 }
+
+class ChangeHomeSearchEvent extends DashboardEvent {
+  final String search;
+
+  const ChangeHomeSearchEvent({required this.search}) : super();
+}

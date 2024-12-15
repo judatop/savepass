@@ -165,5 +165,7 @@
     "cancelButton": "Cancelar",
     "@cancelButton": {},
     "and": "y",
-    "@and": {}
+    "@and": {},
+    "homeSearch": "Busque por contraseña o tarjeta",
+    "@homeSearch": {}
 }

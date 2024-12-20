@@ -56,3 +56,11 @@ class ChangeHomeSearchEvent extends DashboardEvent {
 
   const ChangeHomeSearchEvent({required this.search}) : super();
 }
+
+class OnClickNewPassword extends DashboardEvent {
+  const OnClickNewPassword() : super();
+}
+
+class OnClickNewCard extends DashboardEvent {
+  const OnClickNewCard() : super();
+}

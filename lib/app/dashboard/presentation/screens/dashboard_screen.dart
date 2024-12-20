@@ -53,6 +53,10 @@ void _listener(context, state) {
     Modular.to
         .pushNamedAndRemoveUntil(Routes.getStartedRoute, (route) => false);
   }
+
+  if (state is OpenPasswordState) {
+    Modular.to.pushNamed(Routes.passwordRoute);
+  }
 }
 
 class _Body extends StatelessWidget {

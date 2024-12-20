@@ -1,8 +1,9 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:savepass/core/image/image_paths.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
 
 class LastPasswordsWidget extends StatelessWidget {
@@ -10,6 +11,7 @@ class LastPasswordsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Modular.get<DashboardBloc>();
     final colorScheme = Theme.of(context).colorScheme;
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
@@ -26,7 +28,7 @@ class LastPasswordsWidget extends StatelessWidget {
                 Icons.add,
                 color: Colors.white,
               ),
-              onPressedCallback: () {},
+              onPressedCallback: () => bloc.add(const OnClickNewPassword()),
             ),
             const SizedBox(
               width: 10,

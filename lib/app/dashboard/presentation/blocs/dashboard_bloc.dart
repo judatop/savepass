@@ -35,6 +35,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<DeleteAccountEvent>(_onDeleteAccountEvent);
     on<LogOutEvent>(_onLogOutEvent);
     on<ChangeHomeSearchEvent>(_onChangeHomeSearchEvent);
+    on<OnClickNewPassword>(_onOnClickNewPassword);
+    on<OnClickNewCard>(_onOnClickNewCard);
   }
 
   FutureOr<void> _onDashboardInitialEvent(
@@ -448,4 +450,17 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       ),
     );
   }
+
+  FutureOr<void> _onOnClickNewPassword(
+    OnClickNewPassword event,
+    Emitter<DashboardState> emit,
+  ) {
+    emit(LoadingDashboardState(state.model));
+    emit(OpenPasswordState(state.model));
+  }
+
+  FutureOr<void> _onOnClickNewCard(
+    OnClickNewCard event,
+    Emitter<DashboardState> emit,
+  ) {}
 }

@@ -3,6 +3,7 @@ import 'package:savepass/app/preferences/domain/datasources/parameters_datasourc
 import 'package:savepass/app/preferences/domain/datasources/preferences_datasource.dart';
 import 'package:savepass/app/preferences/domain/entities/preferences_entity.dart';
 import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
+import 'package:savepass/app/preferences/infrastructure/models/pass_image_model.dart';
 import 'package:savepass/app/preferences/infrastructure/models/preferences_model.dart';
 
 class PreferencesIRepository implements PreferencesRepository {
@@ -44,5 +45,10 @@ class PreferencesIRepository implements PreferencesRepository {
   @override
   Future<Either<Fail, String>> getTermsUrl() async {
     return await supabaseDatasource.getTermsUrl();
+  }
+
+  @override
+  Future<Either<Fail, List<PassImageModel>>> getPassImages() async {
+    return await supabaseDatasource.getPassImages();
   }
 }

@@ -44,6 +44,10 @@ class LogOutState extends DashboardState {
   const LogOutState(super.model);
 }
 
+class OpenPasswordState extends DashboardState {
+  const OpenPasswordState(super.model);
+}
+
 class DashboardStateModel extends Equatable {
   final int currentIndex;
   final TextForm displayName;

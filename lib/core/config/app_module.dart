@@ -18,6 +18,8 @@ import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/get_started/presentation/blocs/get_started_bloc.dart';
 import 'package:savepass/app/get_started/presentation/screens/get_started_screen.dart';
 import 'package:savepass/app/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:savepass/app/password/presentation/blocs/password_bloc.dart';
+import 'package:savepass/app/password/presentation/screens/password_screen.dart';
 import 'package:savepass/app/preferences/domain/datasources/parameters_datasource.dart';
 import 'package:savepass/app/preferences/domain/datasources/preferences_datasource.dart';
 import 'package:savepass/app/preferences/infrastructure/datasources/local_parameters_datasource.dart';
@@ -64,6 +66,7 @@ class AppModule extends Module {
     i.addSingleton(SplashBloc.new);
     i.addSingleton(AuthBloc.new);
     i.addSingleton(DashboardBloc.new);
+    i.addSingleton(PasswordBloc.new);
   }
 
   @override
@@ -103,6 +106,10 @@ class AppModule extends Module {
     r.child(
       Routes.authEmailRoute,
       child: (context) => const AuthEmailScreen(),
+    );
+    r.child(
+      Routes.passwordRoute,
+      child: (context) => const PasswordScreen(),
     );
   }
 }

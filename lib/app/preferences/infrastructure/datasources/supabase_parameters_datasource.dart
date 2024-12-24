@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:logger/logger.dart';
 import 'package:savepass/app/preferences/domain/datasources/parameters_datasource.dart';
 import 'package:savepass/app/preferences/infrastructure/models/pass_image_model.dart';
-import 'package:savepass/core/env/env.dart';
 import 'package:savepass/core/utils/db_utils.dart';
 import 'package:savepass/main.dart';
 
@@ -52,14 +51,24 @@ class SupabaseParametersDatasource implements ParametersDatasource {
           .select()
           .ilike('key', 'pass%');
 
-      final passImages = response.map((e) {
+      List<PassImageModel> passImages = response.map((e) {
         PassImageModel model = PassImageModel.fromJson(e);
-        final url =
-            supabase.storage.from(Env.supabaseParametersBucket).getPublicUrl(
-                  '${model.value}.png',
-                );
-        return model.copyWith(url: url);
+        return model;
       }).toList();
+
+      final passwordIndex =
+          passImages.indexWhere((element) => element.key.contains('password'));
+      if (passwordIndex != -1) {
+        final password = passImages.removeAt(passwordIndex);
+        passImages.insert(0, password);
+      }
+
+      for (int i = 0; i < passImages.length; i++) {
+        if (i == 0) {
+          passImages[i] = passImages[i].copyWith(selected: true);
+          break;
+        }
+      }
 
       return Right(passImages);
     } catch (e) {

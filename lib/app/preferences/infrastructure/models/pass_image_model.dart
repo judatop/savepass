@@ -2,11 +2,13 @@ import 'package:equatable/equatable.dart';
 import 'package:savepass/app/preferences/domain/entities/pass_image_entity.dart';
 
 class PassImageModel extends PassImageEntity with EquatableMixin {
+  final bool selected;
+
   const PassImageModel({
     required super.id,
     required super.key,
     required super.value,
-    super.url,
+    this.selected = false,
   });
 
   factory PassImageModel.fromJson(Map<String, dynamic> json) {
@@ -21,13 +23,13 @@ class PassImageModel extends PassImageEntity with EquatableMixin {
     String? id,
     String? key,
     String? value,
-    String? url,
+    bool? selected,
   }) {
     return PassImageModel(
       id: id ?? this.id,
       key: key ?? this.key,
       value: value ?? this.value,
-      url: url ?? this.url,
+      selected: selected ?? this.selected,
     );
   }
 
@@ -36,6 +38,6 @@ class PassImageModel extends PassImageEntity with EquatableMixin {
         id,
         key,
         value,
-        url,
+        selected,
       ];
 }

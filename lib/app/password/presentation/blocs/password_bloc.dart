@@ -23,6 +23,8 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     on<ChangeTagEvent>(_onChangeTagEvent);
     on<ChangeDescEvent>(_onChangeDescEvent);
     on<TogglePasswordEvent>(_onTogglePasswordEvent);
+    on<ToggleAutoTypeEvent>(_onToggleAutoTypeEvent);
+    on<OnChangeTypeEvent>(_onOnChangeTypeEvent);
   }
 
   FutureOr<void> _onPasswordInitialEvent(
@@ -102,6 +104,36 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
       ChangePasswordState(
         state.model.copyWith(
           showPassword: !state.model.showPassword,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onToggleAutoTypeEvent(
+    ToggleAutoTypeEvent event,
+    Emitter<PasswordState> emit,
+  ) {
+    emit(
+      ChangePasswordState(
+        state.model.copyWith(
+          typeAuto: !state.model.typeAuto,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onOnChangeTypeEvent(
+    OnChangeTypeEvent event,
+    Emitter<PasswordState> emit,
+  ) {
+    final newIndex = event.newIndex;
+    final images = state.model.images;
+
+    emit(
+      ChangePasswordState(
+        state.model.copyWith(
+          images: images.map((e) => e.copyWith(selected: false)).toList()
+            ..[newIndex] = images[newIndex].copyWith(selected: true),
         ),
       ),
     );

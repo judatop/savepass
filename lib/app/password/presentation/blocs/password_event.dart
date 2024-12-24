@@ -44,3 +44,13 @@ class ChangeDescEvent extends PasswordEvent {
 class TogglePasswordEvent extends PasswordEvent {
   const TogglePasswordEvent() : super();
 }
+
+class ToggleAutoTypeEvent extends PasswordEvent {
+  const ToggleAutoTypeEvent() : super();
+}
+
+class OnChangeTypeEvent extends PasswordEvent {
+  final int newIndex;
+
+  const OnChangeTypeEvent({required this.newIndex}) : super();
+}

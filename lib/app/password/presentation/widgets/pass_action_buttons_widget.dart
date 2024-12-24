@@ -16,41 +16,45 @@ class PassActionButtonsWidget extends StatelessWidget {
       bottom: 0,
       left: 0,
       right: 0,
-      child: Container(
-        color: colorScheme.brightness == Brightness.light
-            ? Colors.transparent
-            : Colors.black,
-        child: Padding(
-          padding: EdgeInsets.only(
-            top: screenHeight * 0.02,
-            bottom: screenHeight * (Platform.isAndroid ? 0.01 : 0.05),
-            right: screenWidth * ADSFoundationSizes.defaultHorizontalPadding,
-            left: screenWidth * ADSFoundationSizes.defaultHorizontalPadding,
-          ),
-          child: Column(
-            children: [
-              if (colorScheme.brightness == Brightness.light) const Divider(),
-              if (colorScheme.brightness == Brightness.light)
-                SizedBox(
-                  height: screenHeight * 0.01,
-                ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+      child: Column(
+        children: [
+          if (colorScheme.brightness == Brightness.light) const Divider(),
+          Container(
+            color: colorScheme.brightness == Brightness.light
+                ? Colors.transparent
+                : Colors.black,
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: screenHeight * (Platform.isAndroid ? 0.01 : 0.05),
+                right:
+                    screenWidth * ADSFoundationSizes.defaultHorizontalPadding,
+                left: screenWidth * ADSFoundationSizes.defaultHorizontalPadding,
+              ),
+              child: Column(
                 children: [
-                  Expanded(
-                    child: AdsFilledIconButton(
-                      text: 'Save',
-                      onPressedCallback: () => {},
-                      icon: Icons.save,
-                      iconSize: 20,
+                  if (colorScheme.brightness == Brightness.light)
+                    SizedBox(
+                      height: screenHeight * 0.01,
                     ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: AdsFilledIconButton(
+                          text: 'Save',
+                          onPressedCallback: () => {},
+                          icon: Icons.save,
+                          iconSize: 20,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

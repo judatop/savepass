@@ -1,3 +1,5 @@
+import 'dart:math';
+
 class PasswordUtils {
   static bool atLeast8Characters(String password) {
     return password.length >= 8;
@@ -36,5 +38,48 @@ class PasswordUtils {
       }
     }
     return true;
+  }
+
+  static String generateRandomPassword({
+    int length = 16,
+    bool includeLetters = true,
+    bool includeNumbers = true,
+    bool includeSpecialCharacters = true,
+  }) {
+    const String letters =
+        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const String numbers = '0123456789';
+    const String specialCharacters = '!@#\$%^&*(),.?":{}|<>';
+
+    String allowedChars = '';
+    if (includeLetters) allowedChars += letters;
+    if (includeNumbers) allowedChars += numbers;
+    if (includeSpecialCharacters) allowedChars += specialCharacters;
+
+    if (allowedChars.isEmpty) {
+      throw ArgumentError('At least one character set must be included.');
+    }
+
+    Random random = Random.secure();
+    String password = List.generate(length, (index) {
+      return allowedChars[random.nextInt(allowedChars.length)];
+    }).join();
+
+     if (!containsLowerCase(password) ||
+        !containsUpperCase(password) ||
+        !containsNumber(password) ||
+        !containsSpecialCharacter(password) ||
+        !atLeast8Characters(password) ||
+        !notContains3RepeatedCharacters(password) ||
+        !notContains3ConsecutiveCharacters(password)) {
+      return generateRandomPassword(
+        length: length,
+        includeLetters: includeLetters,
+        includeNumbers: includeNumbers,
+        includeSpecialCharacters: includeSpecialCharacters,
+      );
+    }
+
+    return password;
   }
 }

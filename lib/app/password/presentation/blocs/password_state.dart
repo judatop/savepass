@@ -41,6 +41,7 @@ class PasswordStateModel extends Equatable {
   final FormzSubmissionStatus status;
   final bool showPassword;
   final List<PassImageModel> images;
+  final bool typeAuto;
 
   const PasswordStateModel({
     this.name = const TextForm.pure(),
@@ -54,6 +55,7 @@ class PasswordStateModel extends Equatable {
     this.status = FormzSubmissionStatus.initial,
     this.showPassword = false,
     this.images = const [],
+    this.typeAuto = true,
   });
 
   PasswordStateModel copyWith({
@@ -68,6 +70,7 @@ class PasswordStateModel extends Equatable {
     FormzSubmissionStatus? status,
     bool? showPassword,
     List<PassImageModel>? images,
+    bool? typeAuto,
   }) {
     return PasswordStateModel(
       name: name ?? this.name,
@@ -81,6 +84,7 @@ class PasswordStateModel extends Equatable {
       status: status ?? this.status,
       showPassword: showPassword ?? this.showPassword,
       images: images ?? this.images,
+      typeAuto: typeAuto ?? this.typeAuto,
     );
   }
 
@@ -97,5 +101,6 @@ class PasswordStateModel extends Equatable {
         status,
         showPassword,
         images,
+        typeAuto,
       ];
 }

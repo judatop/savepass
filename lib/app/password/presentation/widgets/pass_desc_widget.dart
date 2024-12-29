@@ -28,7 +28,7 @@ class PassDescWidget extends StatelessWidget {
         _controller.text = desc;
 
         return AdsFormField(
-          label: 'Description',
+          label: intl.passDesc,
           formField: AdsTextField(
             controller: _controller,
             key: const Key('password_desc_textField'),
@@ -46,7 +46,7 @@ class PassDescWidget extends StatelessWidget {
               bloc.add(ChangeDescEvent(desc: value));
             },
             textInputAction: TextInputAction.next,
-            maxLines: 5,
+            maxLines: 3,
             hintText: intl.optionalForm,
           ),
         );

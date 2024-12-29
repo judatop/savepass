@@ -5,8 +5,10 @@ import 'package:logger/logger.dart';
 import 'package:savepass/app/password/presentation/blocs/password_event.dart';
 import 'package:savepass/app/password/presentation/blocs/password_state.dart';
 import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
+import 'package:savepass/app/preferences/infrastructure/models/pass_image_model.dart';
 import 'package:savepass/core/form/password_form.dart';
 import 'package:savepass/core/form/text_form.dart';
+import 'package:savepass/core/utils/password_utils.dart';
 
 class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
   final Logger log;
@@ -25,6 +27,8 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     on<TogglePasswordEvent>(_onTogglePasswordEvent);
     on<ToggleAutoTypeEvent>(_onToggleAutoTypeEvent);
     on<OnChangeTypeEvent>(_onOnChangeTypeEvent);
+    on<OnClickGeneratePasswordEvent>(_onOnClickGeneratePasswordEvent);
+    on<SelectNamePasswordEvent>(_onSelectNamePasswordEvent);
   }
 
   FutureOr<void> _onPasswordInitialEvent(
@@ -42,7 +46,11 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     response.fold(
       (l) {},
       (r) {
-        emit(ChangePasswordState(state.model.copyWith(images: r)));
+        emit(
+          ChangePasswordState(
+            state.model.copyWith(images: r, imgUrl: r[0].type),
+          ),
+        );
       },
     );
   }
@@ -89,12 +97,28 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
   FutureOr<void> _onChangeTagEvent(
     ChangeTagEvent event,
     Emitter<PasswordState> emit,
-  ) {}
+  ) {
+    emit(
+      ChangePasswordState(
+        state.model.copyWith(
+          singleTag: TextForm.dirty(event.tag),
+        ),
+      ),
+    );
+  }
 
   FutureOr<void> _onChangeDescEvent(
     ChangeDescEvent event,
     Emitter<PasswordState> emit,
-  ) {}
+  ) {
+    emit(
+      ChangePasswordState(
+        state.model.copyWith(
+          desc: TextForm.dirty(event.desc),
+        ),
+      ),
+    );
+  }
 
   FutureOr<void> _onTogglePasswordEvent(
     TogglePasswordEvent event,
@@ -137,5 +161,55 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
         ),
       ),
     );
+  }
+
+  FutureOr<void> _onOnClickGeneratePasswordEvent(
+    OnClickGeneratePasswordEvent event,
+    Emitter<PasswordState> emit,
+  ) {
+    final generatedPassword = PasswordUtils.generateRandomPassword();
+    emit(
+      GeneratedPasswordState(
+        state.model.copyWith(
+          password: PasswordForm.dirty(generatedPassword),
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onSelectNamePasswordEvent(
+    SelectNamePasswordEvent event,
+    Emitter<PasswordState> emit,
+  ) {
+    if (state.model.typeAuto) {
+      String name = event.name;
+      final types = state.model.images;
+
+      PassImageModel? passImgModel;
+
+      for (var i = 0; i < types.length; i++) {
+        if (types[i].key == name) {
+          passImgModel = types[i];
+          break;
+        }
+      }
+
+      if (passImgModel != null) {
+        final images = types.map((e) => e.copyWith(selected: false)).toList()
+          ..[types.indexOf(passImgModel)] =
+              passImgModel.copyWith(selected: true);
+
+        emit(
+          ChangePasswordState(
+            state.model.copyWith(
+              name: TextForm.dirty(name),
+              images: images,
+              singleTag: TextForm.dirty(passImgModel.domain ?? ''),
+              imgUrl: passImgModel.type,
+            ),
+          ),
+        );
+      }
+    }
   }
 }

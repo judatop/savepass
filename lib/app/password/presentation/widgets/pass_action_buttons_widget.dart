@@ -25,6 +25,7 @@ class PassActionButtonsWidget extends StatelessWidget {
                 : Colors.black,
             child: Padding(
               padding: EdgeInsets.only(
+                top: screenHeight * (Platform.isAndroid ? 0 : 0.02),
                 bottom: screenHeight * (Platform.isAndroid ? 0.01 : 0.05),
                 right:
                     screenWidth * ADSFoundationSizes.defaultHorizontalPadding,

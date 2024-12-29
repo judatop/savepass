@@ -7,7 +7,8 @@ class PassImageModel extends PassImageEntity with EquatableMixin {
   const PassImageModel({
     required super.id,
     required super.key,
-    required super.value,
+    required super.type,
+    super.domain,
     this.selected = false,
   });
 
@@ -15,20 +16,23 @@ class PassImageModel extends PassImageEntity with EquatableMixin {
     return PassImageModel(
       id: json['id'],
       key: json['key'],
-      value: json['value'],
+      type: json['type'],
+      domain: json['domain'],
     );
   }
 
   PassImageModel copyWith({
     String? id,
     String? key,
-    String? value,
+    String? type,
+    String? domain,
     bool? selected,
   }) {
     return PassImageModel(
       id: id ?? this.id,
       key: key ?? this.key,
-      value: value ?? this.value,
+      type: type ?? this.type,
+      domain: domain ?? this.domain,
       selected: selected ?? this.selected,
     );
   }
@@ -37,7 +41,8 @@ class PassImageModel extends PassImageEntity with EquatableMixin {
   List<Object?> get props => [
         id,
         key,
-        value,
+        type,
+        domain,
         selected,
       ];
 }

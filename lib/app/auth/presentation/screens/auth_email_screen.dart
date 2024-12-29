@@ -8,6 +8,7 @@ import 'package:savepass/app/auth/presentation/blocs/auth_bloc.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:savepass/app/auth/presentation/widgets/auth_email.dart';
+import 'package:savepass/app/auth/presentation/widgets/auth_header_widget.dart';
 import 'package:savepass/app/auth/presentation/widgets/auth_sign_in_password.dart';
 import 'package:savepass/app/auth/presentation/widgets/auth_sign_up_password.dart';
 import 'package:savepass/app/auth/presentation/widgets/auth_submit.dart';
@@ -61,10 +62,9 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceHeight = MediaQuery.of(context).size.height;
-    final intl = AppLocalizations.of(context)!;
 
     return AdsScreenTemplate(
-      goBack: true,
+      goBack: false,
       wrapScroll: true,
       child: BlocBuilder<AuthBloc, AuthState>(
         buildWhen: (previous, current) =>
@@ -78,12 +78,8 @@ class _Body extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                AdsHeadline(
-                  text: authType == AuthType.signUp
-                      ? intl.getStartedSingUp
-                      : intl.getStartedSingIn,
-                ),
-                SizedBox(height: deviceHeight * 0.08),
+                const AuthHeaderWidget(),
+                SizedBox(height: deviceHeight * 0.06),
                 const AuthEmail(),
                 SizedBox(height: deviceHeight * 0.02),
                 if (authType == AuthType.signUp) const AuthSignUpPassword(),

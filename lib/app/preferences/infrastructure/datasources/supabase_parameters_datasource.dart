@@ -46,28 +46,21 @@ class SupabaseParametersDatasource implements ParametersDatasource {
   @override
   Future<Either<Fail, List<PassImageModel>>> getPassImages() async {
     try {
-      final response = await supabase
-          .from(DbUtils.publicParameters)
-          .select()
-          .ilike('key', 'pass%');
+      final response =
+          await supabase.from(DbUtils.passwordsParameters).select();
 
       List<PassImageModel> passImages = response.map((e) {
         PassImageModel model = PassImageModel.fromJson(e);
         return model;
       }).toList();
 
-      final passwordIndex =
-          passImages.indexWhere((element) => element.key.contains('password'));
+      final passwordIndex = passImages.indexWhere(
+        (element) => element.key.toLowerCase().contains('password'),
+      );
+
       if (passwordIndex != -1) {
         final password = passImages.removeAt(passwordIndex);
-        passImages.insert(0, password);
-      }
-
-      for (int i = 0; i < passImages.length; i++) {
-        if (i == 0) {
-          passImages[i] = passImages[i].copyWith(selected: true);
-          break;
-        }
+        passImages.insert(0, password.copyWith(selected: true));
       }
 
       return Right(passImages);

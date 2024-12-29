@@ -29,11 +29,14 @@ class LoadingPasswordState extends PasswordState {
   const LoadingPasswordState(super.model);
 }
 
+class GeneratedPasswordState extends PasswordState {
+  const GeneratedPasswordState(super.model);
+}
+
 class PasswordStateModel extends Equatable {
   final TextForm name;
   final TextForm email;
   final PasswordForm password;
-  final List<TextForm> tags;
   final TextForm singleTag;
   final String workspace;
   final TextForm desc;
@@ -42,12 +45,12 @@ class PasswordStateModel extends Equatable {
   final bool showPassword;
   final List<PassImageModel> images;
   final bool typeAuto;
+  final String? imgUrl;
 
   const PasswordStateModel({
     this.name = const TextForm.pure(),
     this.email = const TextForm.pure(),
     this.password = const PasswordForm.pure(),
-    this.tags = const [],
     this.singleTag = const TextForm.pure(),
     this.workspace = '',
     this.desc = const TextForm.pure(),
@@ -56,13 +59,13 @@ class PasswordStateModel extends Equatable {
     this.showPassword = false,
     this.images = const [],
     this.typeAuto = true,
+    this.imgUrl,
   });
 
   PasswordStateModel copyWith({
     TextForm? name,
     TextForm? email,
     PasswordForm? password,
-    List<TextForm>? tags,
     TextForm? singleTag,
     String? workspace,
     TextForm? desc,
@@ -71,12 +74,12 @@ class PasswordStateModel extends Equatable {
     bool? showPassword,
     List<PassImageModel>? images,
     bool? typeAuto,
+    String? imgUrl,
   }) {
     return PasswordStateModel(
       name: name ?? this.name,
       email: email ?? this.email,
       password: password ?? this.password,
-      tags: tags ?? this.tags,
       singleTag: singleTag ?? this.singleTag,
       workspace: workspace ?? this.workspace,
       desc: desc ?? this.desc,
@@ -85,6 +88,7 @@ class PasswordStateModel extends Equatable {
       showPassword: showPassword ?? this.showPassword,
       images: images ?? this.images,
       typeAuto: typeAuto ?? this.typeAuto,
+      imgUrl: imgUrl ?? this.imgUrl,
     );
   }
 
@@ -93,7 +97,6 @@ class PasswordStateModel extends Equatable {
         name,
         email,
         password,
-        tags,
         singleTag,
         workspace,
         desc,
@@ -102,5 +105,6 @@ class PasswordStateModel extends Equatable {
         showPassword,
         images,
         typeAuto,
+        imgUrl,
       ];
 }

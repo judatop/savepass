@@ -28,7 +28,7 @@ class PassDomainWidget extends StatelessWidget {
         _controller.text = singleTag;
 
         return AdsFormField(
-          label: 'Domain',
+          label: intl.domain,
           formField: AdsTextField(
             controller: _controller,
             key: const Key('password_domain_textField'),
@@ -39,14 +39,14 @@ class PassDomainWidget extends StatelessWidget {
             enableSuggestions: false,
             inputFormatters: [
               FilteringTextInputFormatter.allow(
-                RegexUtils.numbersAndLettersWithSpace,
+                RegexUtils.regexDomain,
               ),
             ],
             onChanged: (value) {
               bloc.add(ChangeTagEvent(tag: value));
             },
-            textInputAction: TextInputAction.next,
-            hintText: 'https://instagram.com',
+            textInputAction: TextInputAction.done,
+            hintText: intl.domainHint,
           ),
         );
       },

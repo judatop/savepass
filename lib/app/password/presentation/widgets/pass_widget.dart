@@ -17,6 +17,7 @@ class PassWidget extends StatelessWidget {
     final intl = AppLocalizations.of(context)!;
     final bloc = Modular.get<PasswordBloc>();
     final textTheme = Theme.of(context).textTheme;
+    final deviceWidth = MediaQuery.of(context).size.width;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,13 +31,18 @@ class PassWidget extends StatelessWidget {
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Flexible(child: _Password()),
-            const SizedBox(width: 10),
+            SizedBox(
+              width: deviceWidth * 0.03,
+            ),
             AdsFilledRoundIconButton(
               icon: const Icon(Icons.refresh),
-              onPressedCallback: () =>
-                  bloc.add(const OnClickGeneratePasswordEvent()),
+              onPressedCallback: () {
+                FocusManager.instance.primaryFocus?.unfocus();
+                bloc.add(const OnClickGeneratePasswordEvent());
+              },
             ),
           ],
         ),
@@ -80,7 +86,7 @@ class _Password extends StatelessWidget {
               RegexUtils.password,
             ),
           ],
-          textInputAction: TextInputAction.done,
+          textInputAction: TextInputAction.next,
           suffixIcon:
               model.showPassword ? Icons.visibility_off : Icons.visibility,
           onTapSuffixIcon: () => bloc.add(const TogglePasswordEvent()),

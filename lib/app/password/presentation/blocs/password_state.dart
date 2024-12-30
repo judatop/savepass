@@ -33,6 +33,10 @@ class GeneratedPasswordState extends PasswordState {
   const GeneratedPasswordState(super.model);
 }
 
+class PasswordCreatedState extends PasswordState {
+  const PasswordCreatedState(super.model);
+}
+
 class PasswordStateModel extends Equatable {
   final TextForm name;
   final TextForm email;

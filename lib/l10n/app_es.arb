@@ -94,7 +94,7 @@
     "@authInitText": {},
     "useBiometrics": "Usar biometría",
     "@useBiometrics": {},
-    "passwordTitle": "Contraseña",
+    "passwordTitle": "Nueva contraseña",
     "@passwordTitle": {},
     "registerMasterPassword": "Registra tu contraseña maestra",
     "@registerMasterPassword": {},
@@ -192,6 +192,6 @@
     "@domain": {},
     "domainHint": "instagram.com",
     "@domainHint": {},
-    "passSave": "Guardar",
-    "@passSave": {}
+    "passwordCreated": "Contraseña guardada",
+    "@passwordCreated": {}
 }

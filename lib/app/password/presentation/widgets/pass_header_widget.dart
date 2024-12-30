@@ -21,7 +21,7 @@ class PassHeaderWidget extends StatelessWidget {
               (ADSFoundationSizes.defaultVerticalPadding / 2) * screenHeight,
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             AdsFilledRoundIconButton(
               icon: const Icon(
@@ -31,17 +31,8 @@ class PassHeaderWidget extends StatelessWidget {
                 Modular.to.pop();
               },
             ),
-            SizedBox(width: screenWidth * 0.01),
-            AdsHeadline(text: intl.passwordTitle),
-            SizedBox(width: screenWidth * 0.01),
-            AdsFilledRoundIconButton(
-              icon: const Icon(
-                Icons.check,
-              ),
-              onPressedCallback: () {
-                Modular.to.pop();
-              },
-            ),
+            SizedBox(width: screenWidth * 0.05),
+            Flexible(child: AdsHeadline(text: intl.passwordTitle)),
           ],
         ),
       ],

@@ -10,4 +10,5 @@ class DbUtils {
   static const publicParameters = 'public_parameters';
   static const passwordsParameters = 'passwords_parameters';
   static const deleteAccountFunction = 'delete_account';
+  static const passwordsTable = 'passwords';
 }

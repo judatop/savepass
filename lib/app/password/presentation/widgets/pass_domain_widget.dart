@@ -33,9 +33,6 @@ class PassDomainWidget extends StatelessWidget {
             controller: _controller,
             key: const Key('password_domain_textField'),
             keyboardType: TextInputType.text,
-            errorText: model.alreadySubmitted
-                ? model.singleTag.getError(intl, model.singleTag.error)
-                : null,
             enableSuggestions: false,
             inputFormatters: [
               FilteringTextInputFormatter.allow(
@@ -45,7 +42,7 @@ class PassDomainWidget extends StatelessWidget {
             onChanged: (value) {
               bloc.add(ChangeTagEvent(tag: value));
             },
-            textInputAction: TextInputAction.done,
+            textInputAction: TextInputAction.next,
             hintText: intl.domainHint,
           ),
         );

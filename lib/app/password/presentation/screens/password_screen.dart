@@ -2,9 +2,11 @@ import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:formz/formz.dart';
 import 'package:savepass/app/password/presentation/blocs/password_bloc.dart';
 import 'package:savepass/app/password/presentation/blocs/password_event.dart';
 import 'package:savepass/app/password/presentation/blocs/password_state.dart';
+import 'package:savepass/app/password/presentation/widgets/pass_action_buttons_widget.dart';
 import 'package:savepass/app/password/presentation/widgets/pass_desc_widget.dart';
 import 'package:savepass/app/password/presentation/widgets/pass_domain_widget.dart';
 import 'package:savepass/app/password/presentation/widgets/pass_header_widget.dart';
@@ -13,6 +15,7 @@ import 'package:savepass/app/password/presentation/widgets/pass_user_widget.dart
 import 'package:savepass/app/password/presentation/widgets/pass_widget.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class PasswordScreen extends StatelessWidget {
   const PasswordScreen({super.key});
@@ -36,6 +39,11 @@ void _listener(context, state) {
   if (state is GeneratedPasswordState) {
     SnackBarUtils.showSuccessSnackBar(context, intl.passwordGenerated);
   }
+
+  if (state is PasswordCreatedState) {
+    SnackBarUtils.showSuccessSnackBar(context, intl.passwordCreated);
+    Modular.to.pop();
+  }
 }
 
 class _Body extends StatelessWidget {
@@ -44,29 +52,62 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+    final deviceWidth = MediaQuery.of(context).size.width;
 
     return AdsScreenTemplate(
+      resizeToAvoidBottomInset: false,
       goBack: false,
       safeAreaBottom: false,
       safeAreaTop: true,
       wrapScroll: false,
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const PassHeaderWidget(),
-            SizedBox(height: screenHeight * 0.03),
-            PassUserWidget(),
-            SizedBox(height: screenHeight * 0.02),
-            const PassWidget(),
-            SizedBox(height: screenHeight * 0.02),
-            const PassNameWidget(),
-            SizedBox(height: screenHeight * 0.02),
-            PassDomainWidget(),
-            SizedBox(height: screenHeight * 0.02),
-            PassDescWidget(),
-          ],
-        ),
+      padding: EdgeInsets.zero,
+      child: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: deviceWidth * ADSFoundationSizes.defaultHorizontalPadding,
+                right:
+                    deviceWidth * ADSFoundationSizes.defaultHorizontalPadding,
+                bottom:
+                    screenHeight * ADSFoundationSizes.defaultVerticalPadding,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const PassHeaderWidget(),
+                  SizedBox(height: screenHeight * 0.05),
+                  BlocBuilder<PasswordBloc, PasswordState>(
+                    buildWhen: (previous, current) =>
+                        previous.model.status != current.model.status,
+                    builder: (context, state) {
+                      final status = state.model.status;
+
+                      return Skeletonizer(
+                        enabled: status.isInProgress,
+                        child: Column(
+                          children: [
+                            const PassNameWidget(),
+                            SizedBox(height: screenHeight * 0.02),
+                            PassUserWidget(),
+                            SizedBox(height: screenHeight * 0.02),
+                            const PassWidget(),
+                            SizedBox(height: screenHeight * 0.02),
+                            PassDomainWidget(),
+                            SizedBox(height: screenHeight * 0.02),
+                            PassDescWidget(),
+                            SizedBox(height: screenHeight * 0.4),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const PassActionButtonsWidget(),
+        ],
       ),
     );
   }

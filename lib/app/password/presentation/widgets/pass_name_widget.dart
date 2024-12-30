@@ -1,4 +1,3 @@
-import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,69 +23,84 @@ class PassNameWidget extends StatelessWidget {
           (previous.model.images != current.model.images),
       builder: (context, state) {
         final model = state.model;
+        final textTheme = Theme.of(context).textTheme;
 
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Flexible(
-              child: AdsFormField(
-                label: intl.passName,
-                formField: Autocomplete<String>(
-                  optionsBuilder: (TextEditingValue textEditingValue) {
-                    if (textEditingValue.text == '') {
-                      return const Iterable<String>.empty();
-                    }
-
-                    return model.images
-                        .where(
-                          (item) => item.key
-                              .toLowerCase()
-                              .contains(textEditingValue.text.toLowerCase()),
-                        )
-                        .map((item) => item.key);
-                  },
-                  onSelected: (String selection) {
-                    bloc.add(SelectNamePasswordEvent(name: selection));
-                  },
-                  fieldViewBuilder: (
-                    context,
-                    textEditingController,
-                    focusNode,
-                    onFieldSubmitted,
-                  ) {
-                    return TextFormField(
-                      controller: textEditingController,
-                      focusNode: focusNode,
-                      onFieldSubmitted: (String value) {
-                        onFieldSubmitted();
-                      },
-                      onChanged: (value) =>
-                          bloc.add(ChangeNameEvent(name: value)),
-                      decoration: InputDecoration(
-                        hintText: intl.passNameHint,
+            Text(
+              intl.passName,
+              style:
+                  textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (model.imgUrl != null)
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: CachedNetworkImage(
+                      imageUrl: model.imgUrl!,
+                      width: 20,
+                      placeholder: (context, url) => Skeletonizer(
+                        child: Container(
+                          width: 20,
+                        ),
                       ),
-                    );
-                  },
-                ),
-              ),
-            ),
-            SizedBox(
-              width: deviceWidth * 0.03,
-            ),
-            if (model.imgUrl != null)
-              AdsCard(
-                child: CachedNetworkImage(
-                  imageUrl: model.imgUrl!,
-                  width: 50,
-                  placeholder: (context, url) => Skeletonizer(
-                    child: Container(
-                      width: 50,
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                     ),
                   ),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                SizedBox(
+                  width: deviceWidth * 0.03,
                 ),
-              ),
+                Flexible(
+                  child: Autocomplete<String>(
+                    optionsBuilder: (TextEditingValue textEditingValue) {
+                      if (textEditingValue.text == '') {
+                        return const Iterable<String>.empty();
+                      }
+
+                      return model.images
+                          .where(
+                            (item) => item.key
+                                .toLowerCase()
+                                .contains(textEditingValue.text.toLowerCase()),
+                          )
+                          .map((item) => item.key);
+                    },
+                    onSelected: (String selection) {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      bloc.add(SelectNamePasswordEvent(name: selection));
+                    },
+                    fieldViewBuilder: (
+                      context,
+                      textEditingController,
+                      focusNode,
+                      onFieldSubmitted,
+                    ) {
+                      return TextFormField(
+                        controller: textEditingController,
+                        focusNode: focusNode,
+                        onFieldSubmitted: (String value) {
+                          onFieldSubmitted();
+                        },
+                        onChanged: (value) =>
+                            bloc.add(ChangeNameEvent(name: value)),
+                        decoration: InputDecoration(
+                          hintText: intl.passNameHint,
+                        ),
+                        textInputAction: TextInputAction.next,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ],
         );
       },

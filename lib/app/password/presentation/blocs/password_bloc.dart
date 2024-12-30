@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formz/formz.dart';
 import 'package:logger/logger.dart';
+import 'package:savepass/app/password/domain/repositories/password_repository.dart';
+import 'package:savepass/app/password/infrastructure/models/password_model.dart';
 import 'package:savepass/app/password/presentation/blocs/password_event.dart';
 import 'package:savepass/app/password/presentation/blocs/password_state.dart';
 import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
@@ -13,10 +16,12 @@ import 'package:savepass/core/utils/password_utils.dart';
 class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
   final Logger log;
   final PreferencesRepository preferencesRepository;
+  final PasswordRepository passwordRepository;
 
   PasswordBloc({
     required this.log,
     required this.preferencesRepository,
+    required this.passwordRepository,
   }) : super(const PasswordInitialState()) {
     on<PasswordInitialEvent>(_onPasswordInitialEvent);
     on<ChangeNameEvent>(_onChangeNameEvent);
@@ -29,6 +34,7 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     on<OnChangeTypeEvent>(_onOnChangeTypeEvent);
     on<OnClickGeneratePasswordEvent>(_onOnClickGeneratePasswordEvent);
     on<SelectNamePasswordEvent>(_onSelectNamePasswordEvent);
+    on<SubmitPasswordEvent>(_onSavePasswordEvent);
   }
 
   FutureOr<void> _onPasswordInitialEvent(
@@ -211,5 +217,65 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
         );
       }
     }
+  }
+
+  FutureOr<void> _onSavePasswordEvent(
+    SubmitPasswordEvent event,
+    Emitter<PasswordState> emit,
+  ) async {
+    emit(
+      ChangePasswordState(
+        state.model.copyWith(
+          alreadySubmitted: true,
+          status: FormzSubmissionStatus.inProgress,
+        ),
+      ),
+    );
+
+    if (!Formz.validate([
+      state.model.email,
+      state.model.password,
+    ])) {
+      emit(
+        ChangePasswordState(
+          state.model.copyWith(
+            status: FormzSubmissionStatus.failure,
+          ),
+        ),
+      );
+      return;
+    }
+
+    final response = await passwordRepository.insertPassword(
+      PasswordModel(
+        passImg: state.model.imgUrl,
+        passName: state.model.name.value,
+        passUser: state.model.email.value,
+        passPassword: state.model.password.value,
+        passDesc: state.model.desc.value,
+        passDomain: state.model.singleTag.value,
+      ),
+    );
+
+    response.fold(
+      (l) {
+        emit(
+          ChangePasswordState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.failure,
+            ),
+          ),
+        );
+      },
+      (r) {
+        emit(
+          PasswordCreatedState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.success,
+            ),
+          ),
+        );
+      },
+    );
   }
 }

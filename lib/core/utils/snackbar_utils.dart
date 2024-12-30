@@ -13,6 +13,7 @@ class SnackBarUtils {
         message,
         style: const TextStyle(
           color: ADSFoundationsColors.whiteColor,
+          fontWeight: FontWeight.w600,
         ),
       ),
       action: SnackBarAction(
@@ -37,6 +38,10 @@ class SnackBarUtils {
       backgroundColor: ADSFoundationsColors.successBackground,
       content: Text(
         message,
+        style: const TextStyle(
+          color: ADSFoundationsColors.whiteColor,
+          fontWeight: FontWeight.w600,
+        ),
       ),
       action: SnackBarAction(
         label: intl.close,

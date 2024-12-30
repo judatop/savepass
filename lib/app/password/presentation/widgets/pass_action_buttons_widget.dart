@@ -2,60 +2,69 @@ import 'dart:io';
 
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:formz/formz.dart';
+import 'package:savepass/app/password/presentation/blocs/password_bloc.dart';
+import 'package:savepass/app/password/presentation/blocs/password_event.dart';
+import 'package:savepass/app/password/presentation/blocs/password_state.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class PassActionButtonsWidget extends StatelessWidget {
   const PassActionButtonsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Modular.get<PasswordBloc>();
     final colorScheme = Theme.of(context).colorScheme;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
 
     return Positioned(
       bottom: 0,
       left: 0,
       right: 0,
-      child: Column(
-        children: [
-          if (colorScheme.brightness == Brightness.light) const Divider(),
-          Container(
-            color: colorScheme.brightness == Brightness.light
-                ? Colors.transparent
-                : Colors.black,
-            child: Padding(
+      child: Container(
+        color: colorScheme.brightness == Brightness.light
+            ? Colors.transparent
+            : Colors.grey[900],
+        child: Column(
+          children: [
+            if (colorScheme.brightness == Brightness.light) const Divider(),
+            Padding(
               padding: EdgeInsets.only(
-                top: screenHeight * (Platform.isAndroid ? 0 : 0.02),
-                bottom: screenHeight * (Platform.isAndroid ? 0.01 : 0.05),
+                left: deviceWidth * ADSFoundationSizes.defaultHorizontalPadding,
                 right:
-                    screenWidth * ADSFoundationSizes.defaultHorizontalPadding,
-                left: screenWidth * ADSFoundationSizes.defaultHorizontalPadding,
+                    deviceWidth * ADSFoundationSizes.defaultHorizontalPadding,
+                top: colorScheme.brightness == Brightness.dark
+                    ? deviceHeight * 0.02
+                    : deviceHeight * 0.01,
+                bottom: deviceHeight * (Platform.isAndroid ? 0.01 : 0.04),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  if (colorScheme.brightness == Brightness.light)
-                    SizedBox(
-                      height: screenHeight * 0.01,
-                    ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: AdsFilledIconButton(
+                  BlocBuilder<PasswordBloc, PasswordState>(
+                    buildWhen: (previous, current) =>
+                        previous.model.status != current.model.status,
+                    builder: (context, state) {
+                      final status = state.model.status;
+
+                      return Skeletonizer(
+                        enabled: status.isInProgress,
+                        child: AdsFilledButton(
+                          onPressedCallback: () =>
+                              bloc.add(const SubmitPasswordEvent()),
                           text: 'Save',
-                          onPressedCallback: () => {},
-                          icon: Icons.save,
-                          iconSize: 20,
                         ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

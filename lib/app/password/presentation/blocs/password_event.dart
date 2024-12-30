@@ -64,3 +64,7 @@ class SelectNamePasswordEvent extends PasswordEvent {
 
   const SelectNamePasswordEvent({required this.name}) : super();
 }
+
+class SubmitPasswordEvent extends PasswordEvent {
+  const SubmitPasswordEvent() : super();
+}

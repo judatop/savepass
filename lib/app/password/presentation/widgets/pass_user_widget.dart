@@ -19,6 +19,7 @@ class PassUserWidget extends StatelessWidget {
 
     return BlocBuilder<PasswordBloc, PasswordState>(
       buildWhen: (previous, current) =>
+          (previous.model.alreadySubmitted != current.model.alreadySubmitted) ||
           (previous.model.email != current.model.email),
       builder: (context, state) {
         final model = state.model;

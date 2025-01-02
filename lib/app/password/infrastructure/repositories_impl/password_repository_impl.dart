@@ -12,4 +12,14 @@ class PasswordRepositoryImpl implements PasswordRepository {
   Future<Either<Fail, Unit>> insertPassword(PasswordModel model) async {
     return await datasource.insertPassword(model);
   }
+
+  @override
+  Future<Either<Fail, List<PasswordModel>>> getPasswords() async {
+    return await datasource.getPasswords();
+  }
+
+  @override
+  Future<Either<Fail, String>> getPassword(String passwordId) async {
+    return await datasource.getPassword(passwordId);
+  }
 }

@@ -28,9 +28,7 @@ class LastCardsWidget extends StatelessWidget {
               ),
               onPressedCallback: () {},
             ),
-            const SizedBox(
-              width: 10,
-            ),
+            SizedBox(width: deviceWidth * 0.04),
             const AdsTitle(
               text: 'Cards',
               textAlign: TextAlign.start,

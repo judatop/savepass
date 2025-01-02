@@ -4,66 +4,66 @@ import 'package:savepass/app/password/domain/entities/password_entity.dart';
 class PasswordModel extends PasswordEntity with EquatableMixin {
   PasswordModel({
     super.id,
-    super.passImg,
-    super.passName,
-    required super.passUser,
-    required super.passPassword,
-    super.passDesc,
-    super.passDomain,
+    super.typeImg,
+    super.name,
+    required super.username,
+    required super.password,
+    super.description,
+    super.domain,
   });
 
   factory PasswordModel.fromJson(Map<String, dynamic> json) {
     return PasswordModel(
       id: json['id'],
-      passImg: json['pass_img'],
-      passName: json['pass_name'],
-      passUser: json['pass_user'],
-      passPassword: json['pass_password'],
-      passDesc: json['pass_desc'],
-      passDomain: json['pass_domain'],
+      typeImg: json['type_img'],
+      name: json['name'],
+      username: json['username'],
+      password: json['password'],
+      description: json['description'],
+      domain: json['domain'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'passImg': passImg,
-      'passName': passName,
-      'passUser': passUser,
-      'passPassword': passPassword,
-      'passDesc': passDesc,
-      'passDomain': passDomain,
+      'type_img': typeImg,
+      'name': name,
+      'username': username,
+      'password': password,
+      'description': description,
+      'domain': domain,
     };
   }
 
   PasswordModel copyWith({
     String? id,
-    String? passImg,
-    String? passName,
-    String? passUser,
-    String? passPassword,
-    String? passDesc,
-    String? passDomain,
+    String? typeImg,
+    String? name,
+    String? username,
+    String? password,
+    String? description,
+    String? domain,
   }) {
     return PasswordModel(
       id: id ?? this.id,
-      passImg: passImg ?? this.passImg,
-      passName: passName ?? this.passName,
-      passUser: passUser ?? this.passUser,
-      passPassword: passPassword ?? this.passPassword,
-      passDesc: passDesc ?? this.passDesc,
-      passDomain: passDomain ?? this.passDomain,
+      typeImg: typeImg ?? this.typeImg,
+      name: name ?? this.name,
+      username: username ?? this.username,
+      password: password ?? this.password,
+      description: description ?? this.description,
+      domain: domain ?? this.domain,
     );
   }
 
   @override
   List<Object?> get props => [
         id,
-        passImg,
-        passName,
-        passUser,
-        passPassword,
-        passDesc,
-        passDomain,
+        typeImg,
+        name,
+        username,
+        password,
+        description,
+        domain,
       ];
 }

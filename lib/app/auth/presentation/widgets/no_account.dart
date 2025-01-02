@@ -23,7 +23,7 @@ class NoAccount extends StatelessWidget {
       child: Container(
         color: colorScheme.brightness == Brightness.light
             ? Colors.transparent
-            : Colors.black,
+            : Colors.grey[900],
         child: Padding(
           padding: EdgeInsets.only(
             top: screenHeight * 0.01,

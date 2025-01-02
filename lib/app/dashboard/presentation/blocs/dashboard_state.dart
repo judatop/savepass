@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:savepass/app/password/infrastructure/models/password_model.dart';
 import 'package:savepass/app/profile/domain/entities/profile_entity.dart';
 import 'package:savepass/core/form/text_form.dart';
 
@@ -48,6 +49,10 @@ class OpenPasswordState extends DashboardState {
   const OpenPasswordState(super.model);
 }
 
+class PasswordObtainedState extends DashboardState {
+  const PasswordObtainedState(super.model);
+}
+
 class DashboardStateModel extends Equatable {
   final int currentIndex;
   final TextForm displayName;
@@ -56,7 +61,8 @@ class DashboardStateModel extends Equatable {
   final FormzSubmissionStatus deleteStatus;
   final ProfileEntity? profile;
   final TextForm homeSearch;
-
+  final List<PasswordModel> passwords;
+  final FormzSubmissionStatus passwordStatus;
 
   const DashboardStateModel({
     this.currentIndex = 0,
@@ -66,6 +72,8 @@ class DashboardStateModel extends Equatable {
     this.profile,
     this.deleteStatus = FormzSubmissionStatus.initial,
     this.homeSearch = const TextForm.pure(),
+    this.passwords = const [],
+    this.passwordStatus = FormzSubmissionStatus.initial,
   });
 
   DashboardStateModel copyWith({
@@ -76,6 +84,8 @@ class DashboardStateModel extends Equatable {
     ProfileEntity? profile,
     FormzSubmissionStatus? deleteStatus,
     TextForm? homeSearch,
+    List<PasswordModel>? passwords,
+    FormzSubmissionStatus? passwordStatus,
   }) {
     return DashboardStateModel(
       currentIndex: currentIndex ?? this.currentIndex,
@@ -85,6 +95,8 @@ class DashboardStateModel extends Equatable {
       profile: profile ?? this.profile,
       deleteStatus: deleteStatus ?? this.deleteStatus,
       homeSearch: homeSearch ?? this.homeSearch,
+      passwords: passwords ?? this.passwords,
+      passwordStatus: passwordStatus ?? this.passwordStatus,
     );
   }
 
@@ -97,5 +109,7 @@ class DashboardStateModel extends Equatable {
         profile,
         deleteStatus,
         homeSearch,
+        passwords,
+        passwordStatus,
       ];
 }

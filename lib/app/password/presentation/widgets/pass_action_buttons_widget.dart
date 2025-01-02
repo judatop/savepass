@@ -9,12 +9,14 @@ import 'package:savepass/app/password/presentation/blocs/password_bloc.dart';
 import 'package:savepass/app/password/presentation/blocs/password_event.dart';
 import 'package:savepass/app/password/presentation/blocs/password_state.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PassActionButtonsWidget extends StatelessWidget {
   const PassActionButtonsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final intl = AppLocalizations.of(context)!;
     final bloc = Modular.get<PasswordBloc>();
     final colorScheme = Theme.of(context).colorScheme;
     final deviceWidth = MediaQuery.of(context).size.width;
@@ -39,7 +41,7 @@ class PassActionButtonsWidget extends StatelessWidget {
                 top: colorScheme.brightness == Brightness.dark
                     ? deviceHeight * 0.02
                     : deviceHeight * 0.01,
-                bottom: deviceHeight * (Platform.isAndroid ? 0.01 : 0.04),
+                bottom: deviceHeight * (Platform.isAndroid ? 0.025 : 0.04),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -55,7 +57,7 @@ class PassActionButtonsWidget extends StatelessWidget {
                         child: AdsFilledButton(
                           onPressedCallback: () =>
                               bloc.add(const SubmitPasswordEvent()),
-                          text: 'Save',
+                          text: intl.saveText,
                         ),
                       );
                     },

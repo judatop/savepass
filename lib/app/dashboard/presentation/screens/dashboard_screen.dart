@@ -57,6 +57,13 @@ void _listener(context, state) {
   if (state is OpenPasswordState) {
     Modular.to.pushNamed(Routes.passwordRoute);
   }
+
+  if (state is PasswordObtainedState) {
+    SnackBarUtils.showSuccessSnackBar(
+      context,
+      intl.passwordCopiedClipboard,
+    );
+  }
 }
 
 class _Body extends StatelessWidget {

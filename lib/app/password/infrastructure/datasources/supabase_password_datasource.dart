@@ -13,21 +13,69 @@ class SupabasePasswordDatasource implements PasswordDatasource {
   @override
   Future<Either<Fail, Unit>> insertPassword(PasswordModel model) async {
     try {
-      await supabase.from(DbUtils.passwordsTable).insert({
-        'user_id': supabase.auth.currentUser!.id,
-        'type_img': model.passImg,
-        'name': model.passName,
-        'username': model.passUser,
-        'password': model.passPassword,
-        'description': model.passDesc,
-        'domain': model.passDomain,
-      });
+      await supabase.rpc(
+        DbUtils.insertPasswordFunction,
+        params: {
+          'type_img': model.typeImg,
+          'name': model.name,
+          'username': model.username,
+          'password': model.password,
+          'description': model.description,
+          'domain': model.domain,
+        },
+      );
 
       return const Right(unit);
     } catch (e) {
       log.e('insertPassword: $e');
       return Left(
         Fail('Error occurred while inserting password'),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Fail, List<PasswordModel>>> getPasswords() async {
+    try {
+      final response =
+          await supabase.from(DbUtils.passwordsTable).select().order(
+                'created_at',
+                ascending: false,
+              );
+
+      List<PasswordModel> passwords = response.map((e) {
+        PasswordModel model = PasswordModel.fromJson(e);
+        return model;
+      }).toList();
+
+      return Right(passwords);
+    } catch (e) {
+      log.e('getPasswords: $e');
+      return Left(
+        Fail('Error occurred while gettings passwords'),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Fail, String>> getPassword(String passwordId) async {
+    try {
+      final response = await supabase.rpc(
+        DbUtils.getPasswordFunction,
+        params: {
+          'secret_uuid': passwordId,
+        },
+      );
+
+      if (response == null) {
+        return Left(Fail('Password not found'));
+      }
+
+      return Right(response as String);
+    } catch (e) {
+      log.e('getPassword: $e');
+      return Left(
+        Fail('Error occurred while getting the password'),
       );
     }
   }

@@ -1,8 +1,9 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/home/home_search_widget.dart';
-import 'package:savepass/app/dashboard/presentation/widgets/home/last_cards_widget.dart';
+// import 'package:savepass/app/dashboard/presentation/widgets/home/last_cards_widget.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/home/last_passwords_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeWidget extends StatelessWidget {
   const HomeWidget({super.key});
@@ -11,6 +12,7 @@ class HomeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
+    final intl = AppLocalizations.of(context)!;
 
     return SingleChildScrollView(
       child: Padding(
@@ -45,7 +47,7 @@ class HomeWidget extends StatelessWidget {
             SizedBox(
               height: deviceHeight * 0.03,
             ),
-            const Text('Tip: Press and hold a card to copy its password'),
+            Text(intl.tipDashboard),
             SizedBox(
               height: deviceHeight * 0.03,
             ),
@@ -53,7 +55,7 @@ class HomeWidget extends StatelessWidget {
             SizedBox(
               height: deviceHeight * 0.05,
             ),
-            const LastCardsWidget(),
+            // const LastCardsWidget(),
           ],
         ),
       ),

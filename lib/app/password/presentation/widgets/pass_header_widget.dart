@@ -32,7 +32,12 @@ class PassHeaderWidget extends StatelessWidget {
               },
             ),
             SizedBox(width: screenWidth * 0.05),
-            Flexible(child: AdsHeadline(text: intl.passwordTitle)),
+            Flexible(
+              child: AdsHeadline(
+                text: intl.passwordTitle,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         ),
       ],

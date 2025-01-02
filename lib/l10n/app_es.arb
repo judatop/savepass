@@ -193,5 +193,15 @@
     "domainHint": "instagram.com",
     "@domainHint": {},
     "passwordCreated": "Contraseña guardada",
-    "@passwordCreated": {}
+    "@passwordCreated": {},
+    "tipDashboard": "Mantén presionada una tarjeta para copiar su contraseña",
+    "@tipDashboard": {},
+    "passwordsTitleDashboard": "Contraseñas",
+    "@passwordsTitleDashboard": {},
+    "toolTipAddPassword": "Agregar una nueva contraseña",
+    "@toolTipAddPassword": {},
+    "saveText": "Guardar",
+    "@saveText": {},
+    "passwordCopiedClipboard": "Contraseña copiada al portapapeles",
+    "@passwordCopiedClipboard": {}
 }

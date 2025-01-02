@@ -193,5 +193,15 @@
     "domainHint": "instagram.com",
     "@domainHint": {},
     "passwordCreated": "Password saved",
-    "@passwordCreated": {}
+    "@passwordCreated": {},
+    "tipDashboard": "Press and hold a card to copy its password",
+    "@tipDashboard": {},
+    "passwordsTitleDashboard": "Passwords",
+    "@passwordsTitleDashboard": {},
+    "toolTipAddPassword": "Add a new password",
+    "@toolTipAddPassword": {},
+    "saveText": "Save",
+    "@saveText": {},
+    "passwordCopiedClipboard": "Password copied to clipboard",
+    "@passwordCopiedClipboard": {}
 }

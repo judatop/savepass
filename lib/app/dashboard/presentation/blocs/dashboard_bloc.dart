@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:formz/formz.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -8,6 +9,8 @@ import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
+import 'package:savepass/app/password/domain/repositories/password_repository.dart';
+import 'package:savepass/app/password/infrastructure/models/password_model.dart';
 import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/core/form/text_form.dart';
@@ -18,11 +21,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final Logger log;
   final ProfileRepository profileRepository;
   final PreferencesRepository preferencesRepository;
+  final PasswordRepository passwordRepository;
 
   DashboardBloc({
     required this.log,
     required this.profileRepository,
     required this.preferencesRepository,
+    required this.passwordRepository,
   }) : super(const DashboardInitialState()) {
     on<DashboardInitialEvent>(_onDashboardInitialEvent);
     on<ChangeIndexEvent>(_onChangeIndexEvent);
@@ -37,6 +42,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<ChangeHomeSearchEvent>(_onChangeHomeSearchEvent);
     on<OnClickNewPassword>(_onOnClickNewPassword);
     on<OnClickNewCard>(_onOnClickNewCard);
+    on<CopyPasswordEvent>(_onCopyPasswordEvent);
   }
 
   FutureOr<void> _onDashboardInitialEvent(
@@ -53,6 +59,45 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             state.model.copyWith(
               profile: r,
               displayName: TextForm.dirty(r.displayName ?? ''),
+            ),
+          ),
+        );
+      },
+    );
+
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(passwordStatus: FormzSubmissionStatus.inProgress),
+      ),
+    );
+
+    final res2 = await passwordRepository.getPasswords();
+
+    res2.fold(
+      (l) {
+        emit(
+          ChangeDashboardState(
+            state.model.copyWith(passwordStatus: FormzSubmissionStatus.failure),
+          ),
+        );
+      },
+      (r) {
+        if (r.isEmpty) {
+          r.add(
+            PasswordModel(
+              id: '0',
+              name: 'No passwords found',
+              username: 'Add a new password',
+              password: '********',
+            ),
+          );
+        }
+
+        emit(
+          ChangeDashboardState(
+            state.model.copyWith(
+              passwordStatus: FormzSubmissionStatus.success,
+              passwords: r,
             ),
           ),
         );
@@ -463,4 +508,50 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     OnClickNewCard event,
     Emitter<DashboardState> emit,
   ) {}
+
+  FutureOr<void> _onCopyPasswordEvent(
+    CopyPasswordEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(
+          status: FormzSubmissionStatus.inProgress,
+        ),
+      ),
+    );
+  
+    final response = await passwordRepository.getPassword(event.passwordUuid);
+
+    String? cleanPassword;
+
+    response.fold(
+      (l) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.failure,
+            ),
+          ),
+        );
+      },
+      (r) {
+        cleanPassword = r;
+      },
+    );
+
+    if (cleanPassword == null) {
+      return;
+    }
+
+    await Clipboard.setData(ClipboardData(text: cleanPassword!));
+
+    emit(
+      PasswordObtainedState(
+        state.model.copyWith(
+          status: FormzSubmissionStatus.success,
+        ),
+      ),
+    );
+  }
 }

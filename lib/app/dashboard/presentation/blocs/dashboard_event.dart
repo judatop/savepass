@@ -64,3 +64,9 @@ class OnClickNewPassword extends DashboardEvent {
 class OnClickNewCard extends DashboardEvent {
   const OnClickNewCard() : super();
 }
+
+class CopyPasswordEvent extends DashboardEvent {
+  final String passwordUuid;
+
+  const CopyPasswordEvent({required this.passwordUuid}) : super();
+}

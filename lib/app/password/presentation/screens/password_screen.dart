@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/password/presentation/blocs/password_bloc.dart';
 import 'package:savepass/app/password/presentation/blocs/password_event.dart';
 import 'package:savepass/app/password/presentation/blocs/password_state.dart';
@@ -41,8 +43,14 @@ void _listener(context, state) {
   }
 
   if (state is PasswordCreatedState) {
+    final bloc = Modular.get<DashboardBloc>();
+    bloc.add(const DashboardInitialEvent());
     SnackBarUtils.showSuccessSnackBar(context, intl.passwordCreated);
     Modular.to.pop();
+  }
+
+  if (state is GeneralErrorState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.genericError);
   }
 }
 

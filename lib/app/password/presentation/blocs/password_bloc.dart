@@ -248,19 +248,19 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
 
     final response = await passwordRepository.insertPassword(
       PasswordModel(
-        passImg: state.model.imgUrl,
-        passName: state.model.name.value,
-        passUser: state.model.email.value,
-        passPassword: state.model.password.value,
-        passDesc: state.model.desc.value,
-        passDomain: state.model.singleTag.value,
+        typeImg: state.model.imgUrl,
+        name: state.model.name.value,
+        username: state.model.email.value,
+        password: state.model.password.value,
+        description: state.model.desc.value,
+        domain: state.model.singleTag.value,
       ),
     );
 
     response.fold(
       (l) {
         emit(
-          ChangePasswordState(
+          GeneralErrorState(
             state.model.copyWith(
               status: FormzSubmissionStatus.failure,
             ),

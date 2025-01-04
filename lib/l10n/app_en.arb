@@ -203,5 +203,9 @@
     "saveText": "Save",
     "@saveText": {},
     "passwordCopiedClipboard": "Password copied to clipboard",
-    "@passwordCopiedClipboard": {}
+    "@passwordCopiedClipboard": {},
+    "noPasswordsCreatedTitle": "No passwords created",
+    "@noPasswordsCreatedTitle": {},
+    "noPasswordsCreatedText": "Tap to add a new password",
+    "@noPasswordsCreatedText": {}
 }

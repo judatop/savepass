@@ -203,5 +203,9 @@
     "saveText": "Guardar",
     "@saveText": {},
     "passwordCopiedClipboard": "Contraseña copiada al portapapeles",
-    "@passwordCopiedClipboard": {}
+    "@passwordCopiedClipboard": {},
+    "noPasswordsCreatedTitle": "No existen contraseñas",
+    "@noPasswordsCreatedTitle": {},
+    "noPasswordsCreatedText": "Presiona para agregar una nueva contraseña",
+    "@noPasswordsCreatedText": {}
 }

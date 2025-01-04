@@ -29,7 +29,7 @@ class PassActionButtonsWidget extends StatelessWidget {
       child: Container(
         color: colorScheme.brightness == Brightness.light
             ? Colors.transparent
-            : Colors.grey[900],
+            : Colors.black,
         child: Column(
           children: [
             if (colorScheme.brightness == Brightness.light) const Divider(),

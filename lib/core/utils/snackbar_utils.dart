@@ -23,7 +23,7 @@ class SnackBarUtils {
       //   },
       // ),
       duration: const Duration(
-        seconds: 2,
+        milliseconds: 1500,
       ),
     );
 
@@ -50,7 +50,7 @@ class SnackBarUtils {
       //   },
       // ),
       duration: const Duration(
-        seconds: 2,
+        milliseconds: 1500,
       ),
     );
 

@@ -10,7 +10,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
 import 'package:savepass/app/password/domain/repositories/password_repository.dart';
-import 'package:savepass/app/password/infrastructure/models/password_model.dart';
 import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/core/form/text_form.dart';
@@ -82,17 +81,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         );
       },
       (r) {
-        if (r.isEmpty) {
-          r.add(
-            PasswordModel(
-              id: '0',
-              name: 'No passwords found',
-              username: 'Add a new password',
-              password: '********',
-            ),
-          );
-        }
-
         emit(
           ChangeDashboardState(
             state.model.copyWith(
@@ -520,7 +508,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         ),
       ),
     );
-  
+
     final response = await passwordRepository.getPassword(event.passwordUuid);
 
     String? cleanPassword;

@@ -24,7 +24,7 @@ class AlreadyHaveAccount extends StatelessWidget {
       child: Container(
         color: colorScheme.brightness == Brightness.light
             ? Colors.transparent
-            : Colors.grey[900],
+            : Colors.black,
         child: Padding(
           padding: EdgeInsets.only(
             top: deviceHeight * 0.01,

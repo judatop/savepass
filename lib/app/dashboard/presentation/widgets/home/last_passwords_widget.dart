@@ -7,6 +7,7 @@ import 'package:formz/formz.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
+import 'package:savepass/app/dashboard/presentation/widgets/home/no_passwords_widget.dart';
 import 'package:savepass/core/image/image_paths.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -63,6 +64,10 @@ class LastPasswordsWidget extends StatelessWidget {
                 builder: (context, state) {
                   final list = state.model.passwords;
 
+                  if (list.isEmpty) {
+                    return const NoPasswordsWidget();
+                  }
+
                   return CarouselSlider(
                     options: CarouselOptions(
                       autoPlay: false,
@@ -76,9 +81,13 @@ class LastPasswordsWidget extends StatelessWidget {
                         builder: (BuildContext context) {
                           return AdsCard(
                             onLongPress: () {
-                              bloc.add(
-                                CopyPasswordEvent(passwordUuid: item.password),
-                              );
+                              if (item.id != '0') {
+                                bloc.add(
+                                  CopyPasswordEvent(
+                                    passwordUuid: item.password,
+                                  ),
+                                );
+                              }
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(

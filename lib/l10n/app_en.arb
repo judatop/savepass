@@ -96,6 +96,8 @@
     "@useBiometrics": {},
     "passwordTitle": "New password",
     "@passwordTitle": {},
+    "passwordEditTitle": "Edit password",
+    "@passwordEditTitle": {},
     "registerMasterPassword": "Register your master password",
     "@registerMasterPassword": {},
     "enterMasterPassword": "Enter your master password",
@@ -202,10 +204,14 @@
     "@toolTipAddPassword": {},
     "saveText": "Save",
     "@saveText": {},
+    "editText": "Edit",
+    "@editText": {},
     "passwordCopiedClipboard": "Password copied to clipboard",
     "@passwordCopiedClipboard": {},
     "noPasswordsCreatedTitle": "No passwords created",
     "@noPasswordsCreatedTitle": {},
     "noPasswordsCreatedText": "Tap to add a new password",
-    "@noPasswordsCreatedText": {}
+    "@noPasswordsCreatedText": {},
+    "userCopiedClipboard": "User copied to clipboard",
+    "@userCopiedClipboard": {}
 }

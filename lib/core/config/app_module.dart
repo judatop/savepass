@@ -115,7 +115,7 @@ class AppModule extends Module {
     );
     r.child(
       Routes.passwordRoute,
-      child: (context) => const PasswordScreen(),
+      child: (context) => PasswordScreen(selectedPassId: r.args.data),
     );
   }
 }

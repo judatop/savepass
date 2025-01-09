@@ -8,9 +8,65 @@ import 'package:savepass/app/password/presentation/blocs/password_event.dart';
 import 'package:savepass/app/password/presentation/blocs/password_state.dart';
 
 class PassUserWidget extends StatelessWidget {
+  const PassUserWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final intl = AppLocalizations.of(context)!;
+    final bloc = Modular.get<PasswordBloc>();
+    final textTheme = Theme.of(context).textTheme;
+    final deviceWidth = MediaQuery.of(context).size.width;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          intl.username,
+          style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Flexible(child: _User()),
+            BlocBuilder<PasswordBloc, PasswordState>(
+              buildWhen: (previous, current) =>
+                  previous.model.isUpdating != current.model.isUpdating,
+              builder: (context, state) {
+                if (!state.model.isUpdating) {
+                  return Container();
+                }
+
+                return Row(
+                  children: [
+                    SizedBox(
+                      width: deviceWidth * 0.03,
+                    ),
+                    AdsFilledRoundIconButton(
+                      icon: const Icon(Icons.copy),
+                      onPressedCallback: () {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        bloc.add(const CopyUserToClipboardEvent());
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _User extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
 
-  PassUserWidget({super.key});
+  _User();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +83,6 @@ class PassUserWidget extends StatelessWidget {
         _controller.text = email;
 
         return AdsFormField(
-          label: intl.username,
           formField: AdsTextField(
             controller: _controller,
             key: const Key('password_user_textField'),

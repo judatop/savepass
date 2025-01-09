@@ -8,7 +8,9 @@ abstract class PasswordEvent extends Equatable {
 }
 
 class PasswordInitialEvent extends PasswordEvent {
-  const PasswordInitialEvent() : super();
+  final String? selectedPassId;
+
+  const PasswordInitialEvent({this.selectedPassId}) : super();
 }
 
 class ChangeNameEvent extends PasswordEvent {
@@ -45,10 +47,6 @@ class TogglePasswordEvent extends PasswordEvent {
   const TogglePasswordEvent() : super();
 }
 
-class ToggleAutoTypeEvent extends PasswordEvent {
-  const ToggleAutoTypeEvent() : super();
-}
-
 class OnChangeTypeEvent extends PasswordEvent {
   final int newIndex;
 
@@ -67,4 +65,12 @@ class SelectNamePasswordEvent extends PasswordEvent {
 
 class SubmitPasswordEvent extends PasswordEvent {
   const SubmitPasswordEvent() : super();
+}
+
+class CopyPassToClipboardEvent extends PasswordEvent{
+  const CopyPassToClipboardEvent() : super();
+}
+
+class CopyUserToClipboardEvent extends PasswordEvent{
+  const CopyUserToClipboardEvent() : super();
 }

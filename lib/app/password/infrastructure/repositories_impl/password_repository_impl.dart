@@ -22,4 +22,19 @@ class PasswordRepositoryImpl implements PasswordRepository {
   Future<Either<Fail, String>> getPassword(String passwordId) async {
     return await datasource.getPassword(passwordId);
   }
+
+  @override
+  Future<Either<Fail, PasswordModel>> getPasswordModel(
+    String passwordId,
+  ) async {
+    return await datasource.getPasswordModel(passwordId);
+  }
+
+  @override
+  Future<Either<Fail, Unit>> editPassword(
+    PasswordModel model,
+    String clearPassword,
+  ) async {
+    return await datasource.editPassword(model, clearPassword);
+  }
 }

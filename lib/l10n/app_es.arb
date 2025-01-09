@@ -96,6 +96,8 @@
     "@useBiometrics": {},
     "passwordTitle": "Nueva contraseña",
     "@passwordTitle": {},
+    "passwordEditTitle": "Editar contraseña",
+    "@passwordEditTitle": {},
     "registerMasterPassword": "Registra tu contraseña maestra",
     "@registerMasterPassword": {},
     "enterMasterPassword": "Coloca tu contraseña maestra",
@@ -202,10 +204,14 @@
     "@toolTipAddPassword": {},
     "saveText": "Guardar",
     "@saveText": {},
+    "editText": "Editar",
+    "@editText": {},
     "passwordCopiedClipboard": "Contraseña copiada al portapapeles",
     "@passwordCopiedClipboard": {},
     "noPasswordsCreatedTitle": "No existen contraseñas",
     "@noPasswordsCreatedTitle": {},
     "noPasswordsCreatedText": "Presiona para agregar una nueva contraseña",
-    "@noPasswordsCreatedText": {}
+    "@noPasswordsCreatedText": {},
+    "userCopiedClipboard": "Usuario copiado al portapapeles",
+    "@userCopiedClipboard": {}
 }

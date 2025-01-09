@@ -48,16 +48,18 @@ class PassActionButtonsWidget extends StatelessWidget {
                 children: [
                   BlocBuilder<PasswordBloc, PasswordState>(
                     buildWhen: (previous, current) =>
-                        previous.model.status != current.model.status,
+                        (previous.model.status != current.model.status) ||
+                        (previous.model.isUpdating != current.model.isUpdating),
                     builder: (context, state) {
                       final status = state.model.status;
+                      final isUpdating = state.model.isUpdating;
 
                       return Skeletonizer(
                         enabled: status.isInProgress,
                         child: AdsFilledButton(
                           onPressedCallback: () =>
                               bloc.add(const SubmitPasswordEvent()),
-                          text: intl.saveText,
+                          text: isUpdating ? intl.editText : intl.saveText,
                         ),
                       );
                     },

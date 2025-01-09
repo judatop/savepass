@@ -79,4 +79,54 @@ class SupabasePasswordDatasource implements PasswordDatasource {
       );
     }
   }
+
+  @override
+  Future<Either<Fail, PasswordModel>> getPasswordModel(
+    String passwordId,
+  ) async {
+    try {
+      final response = await supabase
+          .from(DbUtils.passwordsTable)
+          .select()
+          .eq('id', passwordId);
+
+      PasswordModel password = PasswordModel.fromJson(response.first);
+
+      return Right(password);
+    } catch (e) {
+      log.e('getPasswordModel: $e');
+      return Left(
+        Fail('Error occurred while getting your password model'),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Fail, Unit>> editPassword(
+    PasswordModel model,
+    String clearPassword,
+  ) async {
+    try {
+      await supabase.rpc(
+        DbUtils.editPasswordFunction,
+        params: {
+          'type_img_param': model.typeImg,
+          'name_param': model.name,
+          'username_param': model.username,
+          'clear_password_param': clearPassword,
+          'description_param': model.description,
+          'domain_param': model.domain,
+          'password_id_param': model.id,
+          'vault_id_param': model.password,
+        },
+      );
+
+      return const Right(unit);
+    } catch (e) {
+      log.e('editPassword: $e');
+      return Left(
+        Fail('Error occurred while editing password'),
+      );
+    }
+  }
 }

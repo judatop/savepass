@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:savepass/app/password/infrastructure/models/password_model.dart';
 import 'package:savepass/app/preferences/infrastructure/models/pass_image_model.dart';
 import 'package:savepass/core/form/password_form.dart';
 import 'package:savepass/core/form/text_form.dart';
@@ -37,6 +38,18 @@ class PasswordCreatedState extends PasswordState {
   const PasswordCreatedState(super.model);
 }
 
+class ErrorLoadingPasswordState extends PasswordState {
+  const ErrorLoadingPasswordState(super.model);
+}
+
+class PassCopiedState extends PasswordState {
+  const PassCopiedState(super.model);
+}
+
+class UserCopiedState extends PasswordState {
+  const UserCopiedState(super.model);
+}
+
 class PasswordStateModel extends Equatable {
   final TextForm name;
   final TextForm email;
@@ -48,8 +61,9 @@ class PasswordStateModel extends Equatable {
   final FormzSubmissionStatus status;
   final bool showPassword;
   final List<PassImageModel> images;
-  final bool typeAuto;
   final String? imgUrl;
+  final PasswordModel? passwordSelected;
+  final bool isUpdating;
 
   const PasswordStateModel({
     this.name = const TextForm.pure(),
@@ -62,8 +76,9 @@ class PasswordStateModel extends Equatable {
     this.status = FormzSubmissionStatus.initial,
     this.showPassword = false,
     this.images = const [],
-    this.typeAuto = true,
     this.imgUrl,
+    this.passwordSelected,
+    this.isUpdating = false,
   });
 
   PasswordStateModel copyWith({
@@ -77,8 +92,9 @@ class PasswordStateModel extends Equatable {
     FormzSubmissionStatus? status,
     bool? showPassword,
     List<PassImageModel>? images,
-    bool? typeAuto,
     String? imgUrl,
+    PasswordModel? passwordSelected,
+    bool? isUpdating,
   }) {
     return PasswordStateModel(
       name: name ?? this.name,
@@ -91,8 +107,9 @@ class PasswordStateModel extends Equatable {
       status: status ?? this.status,
       showPassword: showPassword ?? this.showPassword,
       images: images ?? this.images,
-      typeAuto: typeAuto ?? this.typeAuto,
       imgUrl: imgUrl ?? this.imgUrl,
+      passwordSelected: passwordSelected ?? this.passwordSelected,
+      isUpdating: isUpdating ?? this.isUpdating,
     );
   }
 
@@ -108,7 +125,8 @@ class PasswordStateModel extends Equatable {
         status,
         showPassword,
         images,
-        typeAuto,
         imgUrl,
+        passwordSelected,
+        isUpdating,
       ];
 }

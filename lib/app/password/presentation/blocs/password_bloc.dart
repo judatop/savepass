@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:dartz/dartz.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:logger/logger.dart';
@@ -30,11 +32,12 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     on<ChangeTagEvent>(_onChangeTagEvent);
     on<ChangeDescEvent>(_onChangeDescEvent);
     on<TogglePasswordEvent>(_onTogglePasswordEvent);
-    on<ToggleAutoTypeEvent>(_onToggleAutoTypeEvent);
     on<OnChangeTypeEvent>(_onOnChangeTypeEvent);
     on<OnClickGeneratePasswordEvent>(_onOnClickGeneratePasswordEvent);
     on<SelectNamePasswordEvent>(_onSelectNamePasswordEvent);
     on<SubmitPasswordEvent>(_onSavePasswordEvent);
+    on<CopyUserToClipboardEvent>(_onCopyUserToClipboardEvent);
+    on<CopyPassToClipboardEvent>(_onCopyPassToClipboardEvent);
   }
 
   FutureOr<void> _onPasswordInitialEvent(
@@ -47,6 +50,82 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
       ),
     );
 
+    final isUpdating = event.selectedPassId != null;
+
+    if (isUpdating) {
+      emit(
+        ChangePasswordState(
+          state.model.copyWith(
+            status: FormzSubmissionStatus.inProgress,
+          ),
+        ),
+      );
+
+      final response =
+          await passwordRepository.getPasswordModel(event.selectedPassId!);
+
+      late PasswordModel? passModel;
+      response.fold(
+        (l) {
+          passModel = null;
+        },
+        (r) {
+          passModel = r;
+        },
+      );
+
+      if (passModel == null) {
+        emit(
+          ErrorLoadingPasswordState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.failure,
+            ),
+          ),
+        );
+        return;
+      }
+
+      final passRes = await passwordRepository.getPassword(passModel!.password);
+
+      late String? clearPassword;
+
+      passRes.fold(
+        (l) {
+          clearPassword = null;
+        },
+        (r) {
+          clearPassword = r;
+        },
+      );
+
+      if (clearPassword == null) {
+        emit(
+          ErrorLoadingPasswordState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.failure,
+            ),
+          ),
+        );
+        return;
+      }
+
+      emit(
+        ChangePasswordState(
+          state.model.copyWith(
+            status: FormzSubmissionStatus.success,
+            passwordSelected: passModel,
+            name: TextForm.dirty(passModel!.name ?? ''),
+            email: TextForm.dirty(passModel!.username),
+            password: PasswordForm.dirty(clearPassword!),
+            singleTag: TextForm.dirty(passModel!.domain ?? ''),
+            desc: TextForm.dirty(passModel!.description ?? ''),
+            imgUrl: passModel!.typeImg,
+            isUpdating: isUpdating,
+          ),
+        ),
+      );
+    }
+
     final response = await preferencesRepository.getPassImages();
 
     response.fold(
@@ -54,7 +133,10 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
       (r) {
         emit(
           ChangePasswordState(
-            state.model.copyWith(images: r, imgUrl: r[0].type),
+            state.model.copyWith(
+              images: r,
+              imgUrl: isUpdating ? null : r[0].type,
+            ),
           ),
         );
       },
@@ -139,19 +221,6 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     );
   }
 
-  FutureOr<void> _onToggleAutoTypeEvent(
-    ToggleAutoTypeEvent event,
-    Emitter<PasswordState> emit,
-  ) {
-    emit(
-      ChangePasswordState(
-        state.model.copyWith(
-          typeAuto: !state.model.typeAuto,
-        ),
-      ),
-    );
-  }
-
   FutureOr<void> _onOnChangeTypeEvent(
     OnChangeTypeEvent event,
     Emitter<PasswordState> emit,
@@ -187,35 +256,32 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     SelectNamePasswordEvent event,
     Emitter<PasswordState> emit,
   ) {
-    if (state.model.typeAuto) {
-      String name = event.name;
-      final types = state.model.images;
+    String name = event.name;
+    final types = state.model.images;
 
-      PassImageModel? passImgModel;
+    PassImageModel? passImgModel;
 
-      for (var i = 0; i < types.length; i++) {
-        if (types[i].key == name) {
-          passImgModel = types[i];
-          break;
-        }
+    for (var i = 0; i < types.length; i++) {
+      if (types[i].key == name) {
+        passImgModel = types[i];
+        break;
       }
+    }
 
-      if (passImgModel != null) {
-        final images = types.map((e) => e.copyWith(selected: false)).toList()
-          ..[types.indexOf(passImgModel)] =
-              passImgModel.copyWith(selected: true);
+    if (passImgModel != null) {
+      final images = types.map((e) => e.copyWith(selected: false)).toList()
+        ..[types.indexOf(passImgModel)] = passImgModel.copyWith(selected: true);
 
-        emit(
-          ChangePasswordState(
-            state.model.copyWith(
-              name: TextForm.dirty(name),
-              images: images,
-              singleTag: TextForm.dirty(passImgModel.domain ?? ''),
-              imgUrl: passImgModel.type,
-            ),
+      emit(
+        ChangePasswordState(
+          state.model.copyWith(
+            name: TextForm.dirty(name),
+            images: images,
+            singleTag: TextForm.dirty(passImgModel.domain ?? ''),
+            imgUrl: passImgModel.type,
           ),
-        );
-      }
+        ),
+      );
     }
   }
 
@@ -246,16 +312,34 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
       return;
     }
 
-    final response = await passwordRepository.insertPassword(
-      PasswordModel(
-        typeImg: state.model.imgUrl,
-        name: state.model.name.value,
-        username: state.model.email.value,
-        password: state.model.password.value,
-        description: state.model.desc.value,
-        domain: state.model.singleTag.value,
-      ),
-    );
+    final isUpdating = state.model.isUpdating;
+
+    late final Either<Fail, Unit> response;
+    if (isUpdating && state.model.passwordSelected != null) {
+      response = await passwordRepository.editPassword(
+        PasswordModel(
+          id: state.model.passwordSelected!.id,
+          typeImg: state.model.imgUrl,
+          name: state.model.name.value,
+          username: state.model.email.value,
+          password: state.model.passwordSelected!.password,
+          description: state.model.desc.value,
+          domain: state.model.singleTag.value,
+        ),
+        state.model.password.value,
+      );
+    } else {
+      response = await passwordRepository.insertPassword(
+        PasswordModel(
+          typeImg: state.model.imgUrl,
+          name: state.model.name.value,
+          username: state.model.email.value,
+          password: state.model.password.value,
+          description: state.model.desc.value,
+          domain: state.model.singleTag.value,
+        ),
+      );
+    }
 
     response.fold(
       (l) {
@@ -276,6 +360,40 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
           ),
         );
       },
+    );
+  }
+
+  FutureOr<void> _onCopyUserToClipboardEvent(
+    CopyUserToClipboardEvent event,
+    Emitter<PasswordState> emit,
+  ) async {
+    final user = state.model.email.value;
+
+    await Clipboard.setData(ClipboardData(text: user));
+
+    emit(
+      UserCopiedState(
+        state.model.copyWith(
+          status: FormzSubmissionStatus.success,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onCopyPassToClipboardEvent(
+    CopyPassToClipboardEvent event,
+    Emitter<PasswordState> emit,
+  ) async {
+    final password = state.model.password.value;
+
+    await Clipboard.setData(ClipboardData(text: password));
+
+    emit(
+      PassCopiedState(
+        state.model.copyWith(
+          status: FormzSubmissionStatus.success,
+        ),
+      ),
     );
   }
 }

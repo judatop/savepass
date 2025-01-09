@@ -34,14 +34,30 @@ class PassWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Flexible(child: _Password()),
-            SizedBox(
-              width: deviceWidth * 0.03,
-            ),
-            AdsFilledRoundIconButton(
-              icon: const Icon(Icons.refresh),
-              onPressedCallback: () {
-                FocusManager.instance.primaryFocus?.unfocus();
-                bloc.add(const OnClickGeneratePasswordEvent());
+            BlocBuilder<PasswordBloc, PasswordState>(
+              buildWhen: (previous, current) =>
+                  previous.model.isUpdating != current.model.isUpdating,
+              builder: (context, state) {
+                final isUpdating = state.model.isUpdating;
+
+                return Row(
+                  children: [
+                    SizedBox(
+                      width: deviceWidth * 0.03,
+                    ),
+                    AdsFilledRoundIconButton(
+                      icon: Icon(isUpdating ? Icons.copy : Icons.refresh),
+                      onPressedCallback: () {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        if (isUpdating) {
+                          bloc.add(const CopyPassToClipboardEvent());
+                        } else {
+                          bloc.add(const OnClickGeneratePasswordEvent());
+                        }
+                      },
+                    ),
+                  ],
+                );
               },
             ),
           ],

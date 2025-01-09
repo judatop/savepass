@@ -8,6 +8,7 @@ import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/home/no_passwords_widget.dart';
+import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/image/image_paths.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -81,13 +82,17 @@ class LastPasswordsWidget extends StatelessWidget {
                         builder: (BuildContext context) {
                           return AdsCard(
                             onLongPress: () {
-                              if (item.id != '0') {
-                                bloc.add(
-                                  CopyPasswordEvent(
-                                    passwordUuid: item.password,
-                                  ),
-                                );
-                              }
+                              bloc.add(
+                                CopyPasswordEvent(
+                                  passwordUuid: item.password,
+                                ),
+                              );
+                            },
+                            onTap: () {
+                              Modular.to.pushNamed(
+                                Routes.passwordRoute,
+                                arguments: item.id,
+                              );
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(

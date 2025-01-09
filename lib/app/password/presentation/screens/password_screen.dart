@@ -20,13 +20,18 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class PasswordScreen extends StatelessWidget {
-  const PasswordScreen({super.key});
+  final String? selectedPassId;
+
+  const PasswordScreen({
+    this.selectedPassId,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     final bloc = Modular.get<PasswordBloc>();
     return BlocProvider.value(
-      value: bloc..add(const PasswordInitialEvent()),
+      value: bloc..add(PasswordInitialEvent(selectedPassId: selectedPassId)),
       child: const BlocListener<PasswordBloc, PasswordState>(
         listener: _listener,
         child: _Body(),
@@ -51,6 +56,19 @@ void _listener(context, state) {
 
   if (state is GeneralErrorState) {
     SnackBarUtils.showErrroSnackBar(context, intl.genericError);
+  }
+
+  if (state is ErrorLoadingPasswordState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.genericError);
+    Modular.to.pop();
+  }
+
+  if (state is PassCopiedState) {
+    SnackBarUtils.showSuccessSnackBar(context, intl.passwordCopiedClipboard);
+  }
+
+  if (state is UserCopiedState) {
+    SnackBarUtils.showSuccessSnackBar(context, intl.userCopiedClipboard);
   }
 }
 
@@ -80,37 +98,32 @@ class _Body extends StatelessWidget {
                 bottom:
                     screenHeight * ADSFoundationSizes.defaultVerticalPadding,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const PassHeaderWidget(),
-                  SizedBox(height: screenHeight * 0.05),
-                  BlocBuilder<PasswordBloc, PasswordState>(
-                    buildWhen: (previous, current) =>
-                        previous.model.status != current.model.status,
-                    builder: (context, state) {
-                      final status = state.model.status;
+              child: BlocBuilder<PasswordBloc, PasswordState>(
+                buildWhen: (previous, current) =>
+                    previous.model.status != current.model.status,
+                builder: (context, state) {
+                  final status = state.model.status;
 
-                      return Skeletonizer(
-                        enabled: status.isInProgress,
-                        child: Column(
-                          children: [
-                            const PassNameWidget(),
-                            SizedBox(height: screenHeight * 0.02),
-                            PassUserWidget(),
-                            SizedBox(height: screenHeight * 0.02),
-                            const PassWidget(),
-                            SizedBox(height: screenHeight * 0.02),
-                            PassDomainWidget(),
-                            SizedBox(height: screenHeight * 0.02),
-                            PassDescWidget(),
-                            SizedBox(height: screenHeight * 0.4),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ],
+                  return Skeletonizer(
+                    enabled: status.isInProgress,
+                    child: Column(
+                      children: [
+                        const PassHeaderWidget(),
+                        SizedBox(height: screenHeight * 0.05),
+                        const PassNameWidget(),
+                        SizedBox(height: screenHeight * 0.02),
+                        const PassUserWidget(),
+                        SizedBox(height: screenHeight * 0.02),
+                        const PassWidget(),
+                        SizedBox(height: screenHeight * 0.02),
+                        PassDomainWidget(),
+                        SizedBox(height: screenHeight * 0.02),
+                        PassDescWidget(),
+                        SizedBox(height: screenHeight * 0.4),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
           ),

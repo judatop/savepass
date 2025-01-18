@@ -1,17 +1,19 @@
-import 'package:atomic_design_system/atomic_design_system.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:savepass/core/utils/auth_utils.dart';
+import 'package:savepass/app/dashboard/presentation/widgets/tools/add_card_widget.dart';
+import 'package:savepass/app/dashboard/presentation/widgets/tools/add_password_widget.dart';
+import 'package:savepass/app/dashboard/presentation/widgets/tools/cards_widget.dart';
+import 'package:savepass/app/dashboard/presentation/widgets/tools/join_biometrics_widget.dart';
+import 'package:savepass/app/dashboard/presentation/widgets/tools/passwords_widget.dart';
 
 class ToolsWidget extends StatelessWidget {
   const ToolsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final intl = AppLocalizations.of(context)!;
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
-    final theme = Theme.of(context);
 
     return Column(
       children: [
@@ -21,7 +23,7 @@ class ToolsWidget extends StatelessWidget {
             padding: EdgeInsets.only(
               left: deviceWidth * 0.04,
               right: deviceWidth * 0.04,
-              top: deviceHeight * 0.02,
+              top: deviceHeight * (Platform.isAndroid ? 0.04 : 0.02),
               bottom: deviceHeight * 0.01,
             ),
             child: Row(
@@ -29,37 +31,14 @@ class ToolsWidget extends StatelessWidget {
                 Expanded(
                   child: Column(
                     children: [
-                      Expanded(
+                      const Expanded(
                         flex: 6,
-                        child: AdsCard(
-                          bgColor: theme.primaryColor,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: deviceHeight * 0.02,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Passwords',
-                                  style: theme.textTheme.titleMedium
-                                      ?.copyWith(color: Colors.white),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: PasswordsWidget(),
                       ),
                       SizedBox(height: deviceHeight * 0.01),
                       const Expanded(
                         flex: 4,
-                        child: AdsCard(
-                          bgColor: Color(0xFFE8E8E8),
-                          child: Row(
-                            children: [AdsTitle(text: 'Hey')],
-                          ),
-                        ),
+                        child: AddCardWidget(),
                       ),
                     ],
                   ),
@@ -69,23 +48,13 @@ class ToolsWidget extends StatelessWidget {
                   child: Column(
                     children: [
                       const Expanded(
-                        flex: 5,
-                        child: AdsCard(
-                          bgColor: Color(0xFFE8E8E8),
-                          child: Row(
-                            children: [AdsTitle(text: 'Hey')],
-                          ),
-                        ),
+                        flex: 4,
+                        child: AddPasswordWidget(),
                       ),
                       SizedBox(height: deviceHeight * 0.01),
                       const Expanded(
-                        flex: 6,
-                        child: AdsCard(
-                          bgColor: Color(0xFFE8E8E8),
-                          child: Row(
-                            children: [AdsTitle(text: 'Hey')],
-                          ),
-                        ),
+                        flex: 5,
+                        child: CardsWidget(),
                       ),
                     ],
                   ),
@@ -102,30 +71,11 @@ class ToolsWidget extends StatelessWidget {
               right: deviceWidth * 0.04,
               bottom: deviceHeight * 0.02,
             ),
-            child: AdsCard(
-              onTap: () {},
-              bgColor: Colors.green,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.face,
-                    color: Colors.white,
-                  ),
-                  SizedBox(width: deviceWidth * 0.02),
-                  Text(
-                    'Use biometrics',
-                    style: theme.textTheme.titleMedium
-                        ?.copyWith(color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
+            child: const JoinBiometricsWidget(),
           ),
         ),
         Expanded(
-          flex: 2,
+          flex: 4,
           child: Container(
             color: Colors.transparent,
           ),

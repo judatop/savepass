@@ -16,4 +16,5 @@ class Routes {
   static const String photoPermissionRoute = '/photoPermission';
   static const String syncMasterPasswordRoute = '/syncMasterPassword';
   static const String passwordRoute = '/password';
+  static const String cardRoute = '/card';
 }

@@ -65,7 +65,7 @@ class DashboardStateModel extends Equatable {
   final FormzSubmissionStatus passwordStatus;
 
   const DashboardStateModel({
-    this.currentIndex = 1,
+    this.currentIndex = 0,
     this.displayName = const TextForm.pure(),
     this.status = FormzSubmissionStatus.initial,
     this.displayNameStatus = FormzSubmissionStatus.initial,

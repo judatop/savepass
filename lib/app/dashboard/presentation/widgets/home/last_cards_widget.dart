@@ -4,6 +4,8 @@ import 'package:atomic_design_system/molecules/text/ads_subtitle.dart';
 import 'package:atomic_design_system/molecules/text/ads_title.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:savepass/core/config/routes.dart';
 
 class LastCardsWidget extends StatelessWidget {
   const LastCardsWidget({super.key});
@@ -26,7 +28,9 @@ class LastCardsWidget extends StatelessWidget {
                 Icons.add,
                 color: Colors.white,
               ),
-              onPressedCallback: () {},
+              onPressedCallback: () {
+                Modular.to.pushNamed(Routes.cardRoute);
+              },
             ),
             SizedBox(width: deviceWidth * 0.04),
             const AdsTitle(
@@ -44,6 +48,7 @@ class LastCardsWidget extends StatelessWidget {
             enlargeCenterPage: true,
             viewportFraction: 0.7,
             aspectRatio: 2.0,
+            enableInfiniteScroll: false,
           ),
           items: [1, 2, 3, 4, 5].map((i) {
             return Builder(

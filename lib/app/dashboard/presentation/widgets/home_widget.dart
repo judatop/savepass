@@ -1,6 +1,7 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/home/home_search_widget.dart';
+import 'package:savepass/app/dashboard/presentation/widgets/home/last_cards_widget.dart';
 // import 'package:savepass/app/dashboard/presentation/widgets/home/last_cards_widget.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/home/last_passwords_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -55,7 +56,7 @@ class HomeWidget extends StatelessWidget {
             SizedBox(
               height: deviceHeight * 0.05,
             ),
-            // const LastCardsWidget(),
+            const LastCardsWidget(),
           ],
         ),
       ),

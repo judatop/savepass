@@ -14,6 +14,7 @@ import 'package:savepass/app/auth_init/infrastructure/datasources/supabase_auth_
 import 'package:savepass/app/auth_init/infrastructure/repositories/auth_init_repository_impl.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_bloc.dart';
 import 'package:savepass/app/auth_init/presentation/screens/auth_init_screen.dart';
+import 'package:savepass/app/card/presentation/screens/card_screen.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/get_started/presentation/blocs/get_started_bloc.dart';
 import 'package:savepass/app/get_started/presentation/screens/get_started_screen.dart';
@@ -116,6 +117,10 @@ class AppModule extends Module {
     r.child(
       Routes.passwordRoute,
       child: (context) => PasswordScreen(selectedPassId: r.args.data),
+    );
+    r.child(
+      Routes.cardRoute,
+      child: (context) => const CardScreen(),
     );
   }
 }

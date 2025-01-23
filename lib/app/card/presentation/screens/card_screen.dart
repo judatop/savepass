@@ -1,12 +1,40 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:savepass/app/card/presentation/widgets/card_action_buttons_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:savepass/app/card/presentation/blocs/card_bloc.dart';
+import 'package:savepass/app/card/presentation/blocs/card_event.dart';
+import 'package:savepass/app/card/presentation/blocs/card_state.dart';
 import 'package:savepass/app/card/presentation/widgets/card_header_widget.dart';
+import 'package:savepass/app/card/presentation/widgets/card_number_widget.dart';
 import 'package:savepass/app/card/presentation/widgets/card_widget.dart';
 
 class CardScreen extends StatelessWidget {
-  const CardScreen({super.key});
+  final String? cardId;
+
+  const CardScreen({
+    this.cardId,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Modular.get<CardBloc>();
+    return BlocProvider.value(
+      value: bloc..add(CardInitialEvent(cardId: cardId)),
+      child: const BlocListener<CardBloc, CardState>(
+        listener: _listener,
+        child: _Body(),
+      ),
+    );
+  }
+}
+
+void _listener(context, state) {}
+
+class _Body extends StatelessWidget {
+  const _Body();
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +67,13 @@ class CardScreen extends StatelessWidget {
                     duration: const Duration(seconds: 2),
                     child: const CardWidget(),
                   ),
+                  SizedBox(height: deviceHeight * 0.05),
+                  const CardNumberWidget(),
                   SizedBox(height: deviceHeight * 0.9),
                 ],
               ),
             ),
           ),
-          const CardActionButtonsWidget(),
         ],
       ),
     );

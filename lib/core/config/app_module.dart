@@ -14,6 +14,7 @@ import 'package:savepass/app/auth_init/infrastructure/datasources/supabase_auth_
 import 'package:savepass/app/auth_init/infrastructure/repositories/auth_init_repository_impl.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_bloc.dart';
 import 'package:savepass/app/auth_init/presentation/screens/auth_init_screen.dart';
+import 'package:savepass/app/card/presentation/blocs/card_bloc.dart';
 import 'package:savepass/app/card/presentation/screens/card_screen.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/get_started/presentation/blocs/get_started_bloc.dart';
@@ -74,6 +75,7 @@ class AppModule extends Module {
     i.addSingleton(AuthBloc.new);
     i.addSingleton(DashboardBloc.new);
     i.addSingleton(PasswordBloc.new);
+    i.addSingleton(CardBloc.new);
   }
 
   @override

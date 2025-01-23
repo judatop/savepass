@@ -1,6 +1,10 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:atomic_design_system/molecules/card/ads_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:savepass/app/card/presentation/blocs/card_bloc.dart';
+import 'package:savepass/app/card/presentation/blocs/card_state.dart';
 import 'package:savepass/core/image/image_paths.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -16,7 +20,7 @@ class CardWidget extends StatelessWidget {
 
     return AdsCard(
       elevation: 1.5,
-      bgColor: colorScheme.primary,
+      bgColor: colorScheme.primary.withOpacity(0.8),
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: deviceWidth * 0.05,
@@ -48,14 +52,30 @@ class CardWidget extends StatelessWidget {
                 SizedBox(
                   height: deviceHeight * 0.015,
                 ),
-                Text(
-                  '2202 XXXX XXXX 7856',
-                  style: textTheme.titleMedium?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w300,
-                    wordSpacing: deviceWidth * 0.025,
-                    fontSize: 20,
-                  ),
+                BlocBuilder<CardBloc, CardState>(
+                  buildWhen: (previous, current) =>
+                      (previous.model.cardNumber != current.model.cardNumber) ||
+                      (previous.model.showCardNumber) !=
+                          (current.model.showCardNumber),
+                  builder: (context, state) {
+                    final number = state.model.cardNumber.value;
+                    final showCardNumber = state.model.showCardNumber;
+
+                    return Skeletonizer(
+                      enabled: !showCardNumber,
+                      child: BounceInRight(
+                        child: Text(
+                          showCardNumber ? number : '1231 XXXX XXXX XXXX 1231',
+                          style: textTheme.titleMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w300,
+                            wordSpacing: deviceWidth * 0.025,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 SizedBox(height: deviceHeight * 0.005),
                 Skeletonizer(

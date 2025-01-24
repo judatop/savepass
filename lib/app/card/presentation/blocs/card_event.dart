@@ -50,3 +50,7 @@ class SubmitCardNumberEvent extends CardEvent {
 class SubmitCardHolderEvent extends CardEvent {
   const SubmitCardHolderEvent() : super();
 }
+
+class SubmitCardExpirationEvent extends CardEvent{
+  const SubmitCardExpirationEvent() : super();
+}

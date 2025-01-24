@@ -18,23 +18,36 @@ class CardNumberWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
     final bloc = Modular.get<CardBloc>();
+    final textTheme = Theme.of(context).textTheme;
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Flexible(child: _Card()),
+        Text(
+          'Card Number',
+          style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              width: deviceWidth * 0.03,
-            ),
-            AdsFilledRoundIconButton(
-              icon: const Icon(Icons.check),
-              onPressedCallback: () {
-                FocusManager.instance.primaryFocus?.unfocus();
-                bloc.add(const SubmitCardNumberEvent());
-              },
+            Flexible(child: _Card()),
+            Row(
+              children: [
+                SizedBox(
+                  width: deviceWidth * 0.03,
+                ),
+                AdsFilledRoundIconButton(
+                  icon: const Icon(Icons.check),
+                  onPressedCallback: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    bloc.add(const SubmitCardNumberEvent());
+                  },
+                ),
+              ],
             ),
           ],
         ),
@@ -63,7 +76,6 @@ class _Card extends StatelessWidget {
         _controller.text = cardNumber;
 
         return AdsFormField(
-          label: 'Card Number',
           formField: AdsTextField(
             controller: _controller,
             key: const Key('card_number_textField'),

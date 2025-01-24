@@ -3,6 +3,7 @@ import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:atomic_design_system/molecules/card/ads_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:savepass/app/card/infrastructure/models/card_type.dart';
 import 'package:savepass/app/card/presentation/blocs/card_bloc.dart';
 import 'package:savepass/app/card/presentation/blocs/card_state.dart';
 import 'package:savepass/app/card/utils/card_utils.dart';
@@ -32,19 +33,33 @@ class CardWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Skeletonizer(
-                  enabled: true,
-                  child: Text(
-                    'VISA',
-                    style:
-                        textTheme.headlineMedium?.copyWith(color: Colors.white),
-                  ),
+                BlocBuilder<CardBloc, CardState>(
+                  buildWhen: (previous, current) =>
+                      previous.model.cardType != current.model.cardType,
+                  builder: (context, state) {
+                    final cardType = state.model.cardType;
+
+                    return Skeletonizer(
+                      enabled: (cardType != CardType.visa &&
+                          cardType != CardType.americanExpress),
+                      child: Text(
+                        cardType == CardType.visa ? 'VISA' : 'AMERICAN EXPRESS',
+                        style: textTheme.titleMedium?.copyWith(
+                          color: Colors.white,
+                          fontSize: 26,
+                        ),
+                        textAlign: cardType == CardType.visa
+                            ? TextAlign.start
+                            : TextAlign.center,
+                      ),
+                    );
+                  },
                 ),
                 SizedBox(
                   height: deviceHeight * 0.015,
                 ),
                 Skeletonizer(
-                  enabled: true,
+                  enabled: false,
                   child: Image.asset(
                     ImagePaths.chipImage,
                     height: 50,
@@ -107,85 +122,69 @@ class CardWidget extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Skeletonizer(
-                      enabled: true,
-                      child: Row(
-                        children: [
-                          Column(
+                    BlocBuilder<CardBloc, CardState>(
+                      buildWhen: (previous, current) =>
+                          (previous.model.expirationMonth !=
+                              current.model.expirationMonth) ||
+                          (previous.model.expirationYear !=
+                              current.model.expirationYear),
+                      builder: (context, state) {
+                        final expirationMonth =
+                            state.model.expirationMonth.value;
+                        final expirationYear = state.model.expirationYear.value;
+
+                        return Skeletonizer(
+                          enabled: expirationMonth.isEmpty,
+                          child: Row(
                             children: [
-                              Text(
-                                'VÁLIDO',
-                                style: textTheme.titleMedium?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 11,
-                                ),
+                              Column(
+                                children: [
+                                  Text(
+                                    'VÁLIDO',
+                                    style: textTheme.titleMedium?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                  Text(
+                                    'HASTA',
+                                    style: textTheme.titleMedium?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Text(
-                                'HASTA',
-                                style: textTheme.titleMedium?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 11,
+                              SizedBox(
+                                width: deviceWidth * 0.03,
+                              ),
+                              BounceInRight(
+                                child: Text(
+                                  (expirationMonth.isEmpty &&
+                                          expirationYear.isEmpty)
+                                      ? '00/00'
+                                      : '$expirationMonth/$expirationYear',
+                                  style: textTheme.titleMedium?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w300,
+                                    wordSpacing: deviceWidth * 0.01,
+                                    fontSize: 17,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(
-                            width: deviceWidth * 0.03,
-                          ),
-                          Text(
-                            '05/27',
-                            style: textTheme.titleMedium?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w300,
-                              wordSpacing: deviceWidth * 0.01,
-                              fontSize: 17,
-                            ),
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
-                    SizedBox(width: deviceWidth * 0.05),
-                    Skeletonizer(
-                      enabled: true,
-                      child: Row(
-                        children: [
-                          Column(
-                            children: [
-                              Text(
-                                'VÁLIDO',
-                                style: textTheme.titleMedium?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 11,
-                                ),
-                              ),
-                              Text(
-                                'HASTA',
-                                style: textTheme.titleMedium?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 11,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            width: deviceWidth * 0.03,
-                          ),
-                          Text(
-                            '05/27',
-                            style: textTheme.titleMedium?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w300,
-                              wordSpacing: deviceWidth * 0.01,
-                              fontSize: 17,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Container(
+                    //   color: Colors.yellow,
+                    //   child: Image.asset(
+                    //     ImagePaths.visaImage,
+                    //   ),
+                    // ),
                   ],
                 ),
               ],

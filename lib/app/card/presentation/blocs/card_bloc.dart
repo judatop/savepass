@@ -5,7 +5,6 @@ import 'package:formz/formz.dart';
 import 'package:logger/logger.dart';
 import 'package:savepass/app/card/presentation/blocs/card_event.dart';
 import 'package:savepass/app/card/presentation/blocs/card_state.dart';
-import 'package:savepass/app/card/utils/card_utils.dart';
 import 'package:savepass/core/form/text_form.dart';
 
 class CardBloc extends Bloc<CardEvent, CardState> {
@@ -21,6 +20,7 @@ class CardBloc extends Bloc<CardEvent, CardState> {
     on<ChangeExpirationMonth>(_onChangeExpirationMonth);
     on<ChangeExpirationYear>(_onChangeExpirationYear);
     on<SubmitCardNumberEvent>(_onSubmitCardNumberEvent);
+    on<SubmitCardHolderEvent>(_onSubmitCardHolderEvent);
   }
 
   FutureOr<void> _onChangeCardNumberEvent(
@@ -41,7 +41,17 @@ class CardBloc extends Bloc<CardEvent, CardState> {
   FutureOr<void> _onChangeCardHolderEvent(
     ChangeCardHolderEvent event,
     Emitter<CardState> emit,
-  ) {}
+  ) {
+    emit(
+      ChangeCardState(
+        state.model.copyWith(
+          cardHolderName: TextForm.dirty(
+            event.cardHolderName,
+          ),
+        ),
+      ),
+    );
+  }
 
   FutureOr<void> _onChangeCardCvv(
     ChangeCardCvv event,
@@ -88,18 +98,26 @@ class CardBloc extends Bloc<CardEvent, CardState> {
     final cardNumber = state.model.cardNumber.value;
 
     if (cardNumber.length < 12) {
-      emit(GeneralErrorState(state.model)); //TODO: Replace with custom error
+      emit(MinLengthErrorCardState(state.model));
       return;
     }
 
     emit(
       ChangeCardState(
         state.model.copyWith(
-          cardNumber:
-              TextForm.dirty(CardUtils.formatCreditCardNumber(cardNumber)),
-          showCardNumber: true,
+          step: 2,
+          alreadySubmitted: false,
         ),
       ),
     );
+  }
+
+  FutureOr<void> _onSubmitCardHolderEvent(
+    SubmitCardHolderEvent event,
+    Emitter<CardState> emit,
+  ) {
+
+    
+
   }
 }

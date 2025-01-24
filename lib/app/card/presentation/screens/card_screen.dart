@@ -7,8 +7,10 @@ import 'package:savepass/app/card/presentation/blocs/card_bloc.dart';
 import 'package:savepass/app/card/presentation/blocs/card_event.dart';
 import 'package:savepass/app/card/presentation/blocs/card_state.dart';
 import 'package:savepass/app/card/presentation/widgets/card_header_widget.dart';
+import 'package:savepass/app/card/presentation/widgets/card_holder_widget.dart';
 import 'package:savepass/app/card/presentation/widgets/card_number_widget.dart';
 import 'package:savepass/app/card/presentation/widgets/card_widget.dart';
+import 'package:savepass/core/utils/snackbar_utils.dart';
 
 class CardScreen extends StatelessWidget {
   final String? cardId;
@@ -31,7 +33,14 @@ class CardScreen extends StatelessWidget {
   }
 }
 
-void _listener(context, state) {}
+void _listener(context, state) {
+  if (state is MinLengthErrorCardState) {
+    SnackBarUtils.showErrroSnackBar(
+      context,
+      'Card number must have at least 16 characters',
+    );
+  }
+}
 
 class _Body extends StatelessWidget {
   const _Body();
@@ -68,7 +77,20 @@ class _Body extends StatelessWidget {
                     child: const CardWidget(),
                   ),
                   SizedBox(height: deviceHeight * 0.05),
-                  const CardNumberWidget(),
+                  BlocBuilder<CardBloc, CardState>(
+                    buildWhen: (previous, current) =>
+                        previous.model.step != current.model.step,
+                    builder: (context, state) {
+                      final step = state.model.step;
+
+                      return Column(
+                        children: [
+                          if (step == 1) const CardNumberWidget(),
+                          if (step == 2) const CardHolderWidget(),
+                        ],
+                      );
+                    },
+                  ),
                   SizedBox(height: deviceHeight * 0.9),
                 ],
               ),

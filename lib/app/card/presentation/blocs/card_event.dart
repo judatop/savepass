@@ -46,3 +46,7 @@ class ChangeExpirationYear extends CardEvent {
 class SubmitCardNumberEvent extends CardEvent {
   const SubmitCardNumberEvent() : super();
 }
+
+class SubmitCardHolderEvent extends CardEvent {
+  const SubmitCardHolderEvent() : super();
+}

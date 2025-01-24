@@ -20,7 +20,7 @@ class CardNumberWidget extends StatelessWidget {
     final bloc = Modular.get<CardBloc>();
 
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Flexible(child: _Card()),
@@ -63,6 +63,7 @@ class _Card extends StatelessWidget {
         _controller.text = cardNumber;
 
         return AdsFormField(
+          label: 'Card Number',
           formField: AdsTextField(
             controller: _controller,
             key: const Key('card_number_textField'),
@@ -75,12 +76,13 @@ class _Card extends StatelessWidget {
               bloc.add(ChangeCardNumberEvent(cardNumber: value));
             },
             textInputAction: TextInputAction.done,
-            hintText: 'Card Number',
+            hintText: 'XXXXXXXXXXXXXXXX',
             inputFormatters: [
               FilteringTextInputFormatter.allow(
                 RegexUtils.numbers,
               ),
             ],
+            maxLength: 16,
           ),
         );
       },

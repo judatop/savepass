@@ -26,6 +26,10 @@ class LoadingCardState extends CardState {
   const LoadingCardState(super.model);
 }
 
+class MinLengthErrorCardState extends CardState {
+  const MinLengthErrorCardState(super.model);
+}
+
 class CardStateModel extends Equatable {
   final TextForm cardNumber;
   final TextForm cardHolderName;
@@ -35,7 +39,6 @@ class CardStateModel extends Equatable {
   final int step;
   final bool isUpdating;
   final bool alreadySubmitted;
-  final bool showCardNumber;
 
   const CardStateModel({
     this.cardNumber = const TextForm.pure(),
@@ -43,10 +46,9 @@ class CardStateModel extends Equatable {
     this.cardCvv = const TextForm.pure(),
     this.expirationMonth = const TextForm.pure(),
     this.expirationYear = const TextForm.pure(),
-    this.step = 0,
+    this.step = 1,
     this.isUpdating = false,
     this.alreadySubmitted = false,
-    this.showCardNumber = false,
   });
 
   CardStateModel copyWith({
@@ -58,7 +60,6 @@ class CardStateModel extends Equatable {
     int? step,
     bool? isUpdating,
     bool? alreadySubmitted,
-    bool? showCardNumber,
   }) {
     return CardStateModel(
       cardNumber: cardNumber ?? this.cardNumber,
@@ -69,7 +70,6 @@ class CardStateModel extends Equatable {
       step: step ?? this.step,
       isUpdating: isUpdating ?? this.isUpdating,
       alreadySubmitted: alreadySubmitted ?? this.alreadySubmitted,
-      showCardNumber: showCardNumber ?? this.showCardNumber,
     );
   }
 
@@ -83,6 +83,5 @@ class CardStateModel extends Equatable {
         step,
         isUpdating,
         alreadySubmitted,
-        showCardNumber,
       ];
 }

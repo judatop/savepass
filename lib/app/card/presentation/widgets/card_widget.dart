@@ -119,73 +119,78 @@ class CardWidget extends StatelessWidget {
                   },
                 ),
                 SizedBox(height: deviceHeight * 0.01),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    BlocBuilder<CardBloc, CardState>(
-                      buildWhen: (previous, current) =>
-                          (previous.model.expirationMonth !=
-                              current.model.expirationMonth) ||
-                          (previous.model.expirationYear !=
-                              current.model.expirationYear),
-                      builder: (context, state) {
-                        final expirationMonth =
-                            state.model.expirationMonth.value;
-                        final expirationYear = state.model.expirationYear.value;
+                Container(
+                  color: Colors.blue,
+                  width: 200,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      BlocBuilder<CardBloc, CardState>(
+                        buildWhen: (previous, current) =>
+                            (previous.model.expirationMonth !=
+                                current.model.expirationMonth) ||
+                            (previous.model.expirationYear !=
+                                current.model.expirationYear),
+                        builder: (context, state) {
+                          final expirationMonth =
+                              state.model.expirationMonth.value;
+                          final expirationYear =
+                              state.model.expirationYear.value;
 
-                        return Skeletonizer(
-                          enabled: expirationMonth.isEmpty,
-                          child: Row(
-                            children: [
-                              Column(
-                                children: [
-                                  Text(
-                                    'VÁLIDO',
+                          return Skeletonizer(
+                            enabled: expirationMonth.isEmpty,
+                            child: Row(
+                              children: [
+                                Column(
+                                  children: [
+                                    Text(
+                                      'VÁLIDO',
+                                      style: textTheme.titleMedium?.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                    Text(
+                                      'HASTA',
+                                      style: textTheme.titleMedium?.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  width: deviceWidth * 0.03,
+                                ),
+                                BounceInRight(
+                                  child: Text(
+                                    (expirationMonth.isEmpty &&
+                                            expirationYear.isEmpty)
+                                        ? '00/00'
+                                        : '$expirationMonth/$expirationYear',
                                     style: textTheme.titleMedium?.copyWith(
                                       color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 11,
+                                      fontWeight: FontWeight.w300,
+                                      wordSpacing: deviceWidth * 0.01,
+                                      fontSize: 17,
                                     ),
-                                  ),
-                                  Text(
-                                    'HASTA',
-                                    style: textTheme.titleMedium?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 11,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                width: deviceWidth * 0.03,
-                              ),
-                              BounceInRight(
-                                child: Text(
-                                  (expirationMonth.isEmpty &&
-                                          expirationYear.isEmpty)
-                                      ? '00/00'
-                                      : '$expirationMonth/$expirationYear',
-                                  style: textTheme.titleMedium?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w300,
-                                    wordSpacing: deviceWidth * 0.01,
-                                    fontSize: 17,
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                    // Container(
-                    //   color: Colors.yellow,
-                    //   child: Image.asset(
-                    //     ImagePaths.visaImage,
-                    //   ),
-                    // ),
-                  ],
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                      // Container(
+                      //   color: Colors.yellow,
+                      //   child: Image.asset(
+                      //     ImagePaths.masterCardImage,
+                      //   ),
+                      // ),
+                    ],
+                  ),
                 ),
               ],
             ),

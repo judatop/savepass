@@ -72,8 +72,8 @@ class _Card extends StatelessWidget {
           (previous.model.cardNumber != current.model.cardNumber),
       builder: (context, state) {
         final model = state.model;
-        final cardNumber = model.cardNumber.value;
-        _controller.text = cardNumber;
+        // final cardNumber = model.cardNumber.value;
+        // _controller.text = cardNumber;
 
         return AdsFormField(
           formField: AdsTextField(

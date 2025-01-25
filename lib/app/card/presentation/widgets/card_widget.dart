@@ -28,29 +28,49 @@ class CardWidget extends StatelessWidget {
           horizontal: deviceWidth * 0.05,
           vertical: deviceHeight * 0.02,
         ),
-        child: Row(
+        child: Stack(
           children: [
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 BlocBuilder<CardBloc, CardState>(
                   buildWhen: (previous, current) =>
-                      previous.model.cardType != current.model.cardType,
+                      (previous.model.cardType != current.model.cardType) ||
+                      ((previous.model.cardNumber != current.model.cardNumber)),
                   builder: (context, state) {
                     final cardType = state.model.cardType;
+                    final cardNumber = state.model.cardNumber.value;
+
+                    String? cardText;
+                    TextAlign? textAlign;
+                    if (cardType == CardType.visa) {
+                      cardText = 'VISA';
+                    } else if (cardType == CardType.americanExpress) {
+                      cardText = 'AMERICAN EXPRESS';
+                      textAlign = TextAlign.center;
+                    } else if (cardType == CardType.discover) {
+                      cardText = 'DISCOVER';
+                    } else if (cardType == CardType.dinersClub) {
+                      cardText = 'DINERS CLUB';
+                    } else if (cardType == CardType.masterCard) {
+                      cardText = 'MASTER CARD';
+                    }
+
+                    if (cardType == CardType.unknown && cardNumber.isNotEmpty) {
+                      return Container();
+                    }
 
                     return Skeletonizer(
-                      enabled: (cardType != CardType.visa &&
-                          cardType != CardType.americanExpress),
+                      enabled: cardNumber.isEmpty,
                       child: Text(
-                        cardType == CardType.visa ? 'VISA' : 'AMERICAN EXPRESS',
+                        cardType == CardType.unknown
+                            ? 'XXXXXXXXXXXX'
+                            : cardText!,
                         style: textTheme.titleMedium?.copyWith(
                           color: Colors.white,
                           fontSize: 26,
                         ),
-                        textAlign: cardType == CardType.visa
-                            ? TextAlign.start
-                            : TextAlign.center,
+                        textAlign: textAlign ?? TextAlign.start,
                       ),
                     );
                   },
@@ -58,12 +78,16 @@ class CardWidget extends StatelessWidget {
                 SizedBox(
                   height: deviceHeight * 0.015,
                 ),
-                Skeletonizer(
-                  enabled: false,
-                  child: Image.asset(
-                    ImagePaths.chipImage,
-                    height: 50,
-                  ),
+                Row(
+                  children: [
+                    Skeletonizer(
+                      enabled: false,
+                      child: Image.asset(
+                        ImagePaths.chipImage,
+                        height: 50,
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: deviceHeight * 0.015,
@@ -119,80 +143,125 @@ class CardWidget extends StatelessWidget {
                   },
                 ),
                 SizedBox(height: deviceHeight * 0.01),
-                Container(
-                  color: Colors.blue,
-                  width: 200,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      BlocBuilder<CardBloc, CardState>(
-                        buildWhen: (previous, current) =>
-                            (previous.model.expirationMonth !=
-                                current.model.expirationMonth) ||
-                            (previous.model.expirationYear !=
-                                current.model.expirationYear),
-                        builder: (context, state) {
-                          final expirationMonth =
-                              state.model.expirationMonth.value;
-                          final expirationYear =
-                              state.model.expirationYear.value;
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    BlocBuilder<CardBloc, CardState>(
+                      buildWhen: (previous, current) =>
+                          (previous.model.expirationMonth !=
+                              current.model.expirationMonth) ||
+                          (previous.model.expirationYear !=
+                              current.model.expirationYear),
+                      builder: (context, state) {
+                        final expirationMonth =
+                            state.model.expirationMonth.value;
+                        final expirationYear = state.model.expirationYear.value;
 
-                          return Skeletonizer(
-                            enabled: expirationMonth.isEmpty,
-                            child: Row(
-                              children: [
-                                Column(
-                                  children: [
-                                    Text(
-                                      'VÁLIDO',
-                                      style: textTheme.titleMedium?.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 11,
-                                      ),
-                                    ),
-                                    Text(
-                                      'HASTA',
-                                      style: textTheme.titleMedium?.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 11,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  width: deviceWidth * 0.03,
-                                ),
-                                BounceInRight(
-                                  child: Text(
-                                    (expirationMonth.isEmpty &&
-                                            expirationYear.isEmpty)
-                                        ? '00/00'
-                                        : '$expirationMonth/$expirationYear',
+                        return Skeletonizer(
+                          enabled: expirationMonth.isEmpty,
+                          child: Row(
+                            children: [
+                              Column(
+                                children: [
+                                  Text(
+                                    'VÁLIDO',
                                     style: textTheme.titleMedium?.copyWith(
                                       color: Colors.white,
-                                      fontWeight: FontWeight.w300,
-                                      wordSpacing: deviceWidth * 0.01,
-                                      fontSize: 17,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 11,
                                     ),
                                   ),
+                                  Text(
+                                    'HASTA',
+                                    style: textTheme.titleMedium?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                width: deviceWidth * 0.03,
+                              ),
+                              BounceInRight(
+                                child: Text(
+                                  (expirationMonth.isEmpty &&
+                                          expirationYear.isEmpty)
+                                      ? '00/00'
+                                      : '$expirationMonth/$expirationYear',
+                                  style: textTheme.titleMedium?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w300,
+                                    wordSpacing: deviceWidth * 0.01,
+                                    fontSize: 17,
+                                  ),
                                 ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                      // Container(
-                      //   color: Colors.yellow,
-                      //   child: Image.asset(
-                      //     ImagePaths.masterCardImage,
-                      //   ),
-                      // ),
-                    ],
-                  ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ],
+            ),
+            Positioned(
+              right: 0,
+              bottom: 0,
+              child: BlocBuilder<CardBloc, CardState>(
+                buildWhen: (previous, current) =>
+                    previous.model.cardType != current.model.cardType,
+                builder: (context, state) {
+                  final cardType = state.model.cardType;
+
+                  String? imgPath;
+
+                  if (cardType == CardType.visa) {
+                    imgPath = ImagePaths.visaImage;
+                  } else if (cardType == CardType.masterCard) {
+                    imgPath = ImagePaths.masterCardImage;
+                  } else if (cardType == CardType.dinersClub) {
+                    imgPath = ImagePaths.dinnersImage;
+                  }
+
+                  if (imgPath == null) {
+                    return Container();
+                  }
+
+                  return Image.asset(
+                    imgPath,
+                    width: deviceWidth *
+                        (cardType == CardType.dinersClub ? 0.08 : 0.12),
+                  );
+                },
+              ),
+            ),
+            BlocBuilder<CardBloc, CardState>(
+              buildWhen: (previous, current) =>
+                  previous.model.cardType != current.model.cardType,
+              builder: (context, state) {
+                final cardType = state.model.cardType;
+
+                if (cardType != CardType.americanExpress) {
+                  return Container();
+                }
+
+                return Positioned.fill(
+                  child: Opacity(
+                    opacity: 0.2,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: deviceHeight * 0.05),
+                      child: Image.asset(
+                        ImagePaths.americanExpressFaceImage,
+                        width: deviceWidth * 0.35,
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),

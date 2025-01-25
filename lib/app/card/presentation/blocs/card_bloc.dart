@@ -29,21 +29,21 @@ class CardBloc extends Bloc<CardEvent, CardState> {
     ChangeCardNumberEvent event,
     Emitter<CardState> emit,
   ) {
-
     final number = event.cardNumber;
 
     CardType cardType = CardType.unknown;
 
-    if(number.startsWith('4')){
+    if (number.startsWith('4')) {
       cardType = CardType.visa;
-    }else if(number.startsWith('51') || number.startsWith('55')){
+    } else if (number.startsWith('51') || number.startsWith('55')) {
       cardType = CardType.masterCard;
-    } else if(number.startsWith('34') || number.startsWith('37')){
+    } else if (number.startsWith('34') || number.startsWith('37')) {
       cardType = CardType.americanExpress;
-    } else if(number.startsWith('36') || number.startsWith('38')){
+    } else if (number.startsWith('6011')) {
+      cardType = CardType.discover;
+    } else if (number.startsWith('36') || number.startsWith('38')) {
       cardType = CardType.dinersClub;
     }
-
 
     emit(
       ChangeCardState(

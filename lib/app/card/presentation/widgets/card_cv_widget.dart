@@ -11,8 +11,8 @@ import 'package:savepass/app/card/presentation/blocs/card_event.dart';
 import 'package:savepass/app/card/presentation/blocs/card_state.dart';
 import 'package:savepass/core/utils/regex_utils.dart';
 
-class CardNumberWidget extends StatelessWidget {
-  const CardNumberWidget({super.key});
+class CardCvvWidget extends StatelessWidget {
+  const CardCvvWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,46 +20,55 @@ class CardNumberWidget extends StatelessWidget {
     final bloc = Modular.get<CardBloc>();
     final textTheme = Theme.of(context).textTheme;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Card Number',
-          style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
-        ),
-        const SizedBox(
-          height: 5,
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
+    return BlocBuilder<CardBloc, CardState>(
+      buildWhen: (previous, current) =>
+          previous.model.status != current.model.status,
+      builder: (context, state) {
+        debugPrint('status: ${state.model.status}');
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Flexible(child: _Card()),
+            Text(
+              'Card Security Code (CVV)',
+              style:
+                  textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: deviceWidth * 0.03,
-                ),
-                AdsFilledRoundIconButton(
-                  icon: const Icon(Icons.check),
-                  onPressedCallback: () {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    bloc.add(const SubmitCardNumberEvent());
-                  },
+                Flexible(child: _Cvv()),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: deviceWidth * 0.03,
+                    ),
+                    AdsFilledRoundIconButton(
+                      icon: const Icon(Icons.check),
+                      onPressedCallback: () {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        bloc.add(const SubmitCvvEvent());
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }
 
-class _Card extends StatelessWidget {
+class _Cvv extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
 
-  _Card();
+  _Cvv();
 
   @override
   Widget build(BuildContext context) {
@@ -69,32 +78,32 @@ class _Card extends StatelessWidget {
     return BlocBuilder<CardBloc, CardState>(
       buildWhen: (previous, current) =>
           (previous.model.alreadySubmitted != current.model.alreadySubmitted) ||
-          (previous.model.cardNumber != current.model.cardNumber),
+          (previous.model.cardCvv != current.model.cardCvv),
       builder: (context, state) {
         final model = state.model;
-        final cardNumber = model.cardNumber.value;
-        _controller.text = cardNumber;
+        final cvv = model.cardCvv.value;
+        _controller.text = cvv;
 
         return AdsFormField(
           formField: AdsTextField(
             controller: _controller,
-            key: const Key('card_number_textField'),
+            key: const Key('card_cvv_textField'),
             keyboardType: TextInputType.number,
             errorText: model.alreadySubmitted
-                ? model.cardNumber.getError(intl, model.cardNumber.error)
+                ? model.cardCvv.getError(intl, model.cardCvv.error)
                 : null,
             enableSuggestions: false,
             onChanged: (value) {
-              bloc.add(ChangeCardNumberEvent(cardNumber: value));
+              bloc.add(ChangeCardCvvEvent(cardCvv: value));
             },
             textInputAction: TextInputAction.done,
-            hintText: 'XXXXXXXXXXXXXXXX',
+            hintText: 'XXX',
             inputFormatters: [
               FilteringTextInputFormatter.allow(
                 RegexUtils.numbers,
               ),
             ],
-            maxLength: 16,
+            maxLength: 3,
           ),
         );
       },

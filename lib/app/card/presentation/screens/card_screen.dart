@@ -6,6 +6,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/card/presentation/blocs/card_bloc.dart';
 import 'package:savepass/app/card/presentation/blocs/card_event.dart';
 import 'package:savepass/app/card/presentation/blocs/card_state.dart';
+import 'package:savepass/app/card/presentation/widgets/card_cv_widget.dart';
 import 'package:savepass/app/card/presentation/widgets/card_expiration_widget.dart';
 import 'package:savepass/app/card/presentation/widgets/card_header_widget.dart';
 import 'package:savepass/app/card/presentation/widgets/card_holder_widget.dart';
@@ -88,7 +89,8 @@ class _Body extends StatelessWidget {
                         children: [
                           if (step == 1) const CardNumberWidget(),
                           if (step == 2) const CardHolderWidget(),
-                          if(step == 3) const CardExpirationWidget(),
+                          if (step == 3) const CardExpirationWidget(),
+                          if (step == 4) const CardCvvWidget(),
                         ],
                       );
                     },

@@ -17,12 +17,13 @@ class CardBloc extends Bloc<CardEvent, CardState> {
     on<CardInitialEvent>(_onCardInitialEvent);
     on<ChangeCardNumberEvent>(_onChangeCardNumberEvent);
     on<ChangeCardHolderEvent>(_onChangeCardHolderEvent);
-    on<ChangeCardCvv>(_onChangeCardCvv);
+    on<ChangeCardCvvEvent>(_onChangeCardCvv);
     on<ChangeExpirationMonth>(_onChangeExpirationMonth);
     on<ChangeExpirationYear>(_onChangeExpirationYear);
     on<SubmitCardNumberEvent>(_onSubmitCardNumberEvent);
     on<SubmitCardHolderEvent>(_onSubmitCardHolderEvent);
     on<SubmitCardExpirationEvent>(_onSubmitCardExpirationEvent);
+    on<SubmitCvvEvent>(_onSubmitCvvEvent);
   }
 
   FutureOr<void> _onChangeCardNumberEvent(
@@ -73,9 +74,19 @@ class CardBloc extends Bloc<CardEvent, CardState> {
   }
 
   FutureOr<void> _onChangeCardCvv(
-    ChangeCardCvv event,
+    ChangeCardCvvEvent event,
     Emitter<CardState> emit,
-  ) {}
+  ) {
+    emit(
+      ChangeCardState(
+        state.model.copyWith(
+          cardCvv: TextForm.dirty(
+            event.cardCvv,
+          ),
+        ),
+      ),
+    );
+  }
 
   FutureOr<void> _onChangeExpirationMonth(
     ChangeExpirationMonth event,
@@ -203,6 +214,44 @@ class CardBloc extends Bloc<CardEvent, CardState> {
         state.model.copyWith(
           step: 4,
           alreadySubmitted: false,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onSubmitCvvEvent(
+    SubmitCvvEvent event,
+    Emitter<CardState> emit,
+  ) async {
+    emit(
+      ChangeCardState(
+        state.model.copyWith(
+          alreadySubmitted: true,
+          status: FormzSubmissionStatus.inProgress,
+        ),
+      ),
+    );
+
+    if (!Formz.validate([
+      state.model.cardCvv,
+    ])) {
+      emit(
+        ChangeCardState(
+          state.model.copyWith(
+            alreadySubmitted: false,
+            status: FormzSubmissionStatus.failure,
+          ),
+        ),
+      );
+      return;
+    }
+
+    //TODO: Save card on Supabase
+
+    emit(
+      ChangeCardState(
+        state.model.copyWith(
+          status: FormzSubmissionStatus.success,
         ),
       ),
     );

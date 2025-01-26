@@ -25,10 +25,10 @@ class ChangeCardHolderEvent extends CardEvent {
   const ChangeCardHolderEvent({required this.cardHolderName}) : super();
 }
 
-class ChangeCardCvv extends CardEvent {
+class ChangeCardCvvEvent extends CardEvent {
   final String cardCvv;
 
-  const ChangeCardCvv({required this.cardCvv}) : super();
+  const ChangeCardCvvEvent({required this.cardCvv}) : super();
 }
 
 class ChangeExpirationMonth extends CardEvent {
@@ -53,4 +53,8 @@ class SubmitCardHolderEvent extends CardEvent {
 
 class SubmitCardExpirationEvent extends CardEvent{
   const SubmitCardExpirationEvent() : super();
+}
+
+class SubmitCvvEvent extends CardEvent {
+  const SubmitCvvEvent() : super();
 }

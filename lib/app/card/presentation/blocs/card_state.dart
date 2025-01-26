@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:formz/formz.dart';
 import 'package:savepass/app/card/infrastructure/models/card_type.dart';
 import 'package:savepass/core/form/text_form.dart';
 
@@ -41,6 +42,7 @@ class CardStateModel extends Equatable {
   final bool isUpdating;
   final bool alreadySubmitted;
   final CardType cardType;
+  final FormzSubmissionStatus status;
 
   const CardStateModel({
     this.cardNumber = const TextForm.pure(),
@@ -52,6 +54,7 @@ class CardStateModel extends Equatable {
     this.isUpdating = false,
     this.alreadySubmitted = false,
     this.cardType = CardType.unknown,
+    this.status = FormzSubmissionStatus.initial,
   });
 
   CardStateModel copyWith({
@@ -64,6 +67,7 @@ class CardStateModel extends Equatable {
     bool? isUpdating,
     bool? alreadySubmitted,
     CardType? cardType,
+    FormzSubmissionStatus? status,
   }) {
     return CardStateModel(
       cardNumber: cardNumber ?? this.cardNumber,
@@ -75,6 +79,7 @@ class CardStateModel extends Equatable {
       isUpdating: isUpdating ?? this.isUpdating,
       alreadySubmitted: alreadySubmitted ?? this.alreadySubmitted,
       cardType: cardType ?? this.cardType,
+      status: status ?? this.status,
     );
   }
 

@@ -46,7 +46,7 @@ class CardExpirationWidget extends StatelessWidget {
                   icon: const Icon(Icons.check),
                   onPressedCallback: () {
                     FocusManager.instance.primaryFocus?.unfocus();
-                    bloc.add(const SubmitCardNumberEvent());
+                    bloc.add(const SubmitCardExpirationEvent());
                   },
                 ),
               ],

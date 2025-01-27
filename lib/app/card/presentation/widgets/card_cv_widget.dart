@@ -19,13 +19,12 @@ class CardCvvWidget extends StatelessWidget {
     final deviceWidth = MediaQuery.of(context).size.width;
     final bloc = Modular.get<CardBloc>();
     final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return BlocBuilder<CardBloc, CardState>(
       buildWhen: (previous, current) =>
           previous.model.status != current.model.status,
       builder: (context, state) {
-        debugPrint('status: ${state.model.status}');
-
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -48,7 +47,11 @@ class CardCvvWidget extends StatelessWidget {
                       width: deviceWidth * 0.03,
                     ),
                     AdsFilledRoundIconButton(
-                      icon: const Icon(Icons.check),
+                      backgroundColor: colorScheme.primary,
+                      icon: const Icon(
+                        Icons.check,
+                        color: Colors.white,
+                      ),
                       onPressedCallback: () {
                         FocusManager.instance.primaryFocus?.unfocus();
                         bloc.add(const SubmitCvvEvent());

@@ -1,6 +1,4 @@
-import 'package:atomic_design_system/molecules/button/ads_filled_round_icon_button.dart';
-import 'package:atomic_design_system/molecules/text/ads_text_field.dart';
-import 'package:atomic_design_system/organisms/ads_form_field.dart';
+import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +17,7 @@ class CardExpirationWidget extends StatelessWidget {
     final deviceWidth = MediaQuery.of(context).size.width;
     final bloc = Modular.get<CardBloc>();
     final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,7 +34,9 @@ class CardExpirationWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Flexible(child: _Month()),
-            SizedBox(width: deviceWidth * 0.02),
+            SizedBox(width: deviceWidth * 0.01),
+            const AdsHeadline(text: '/'),
+            SizedBox(width: deviceWidth * 0.01),
             Flexible(child: _Year()),
             Row(
               children: [
@@ -43,7 +44,11 @@ class CardExpirationWidget extends StatelessWidget {
                   width: deviceWidth * 0.03,
                 ),
                 AdsFilledRoundIconButton(
-                  icon: const Icon(Icons.check),
+                  backgroundColor: colorScheme.primary,
+                  icon: const Icon(
+                    Icons.check,
+                    color: Colors.white,
+                  ),
                   onPressedCallback: () {
                     FocusManager.instance.primaryFocus?.unfocus();
                     bloc.add(const SubmitCardExpirationEvent());

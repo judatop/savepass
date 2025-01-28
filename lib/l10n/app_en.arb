@@ -237,5 +237,9 @@
     "cardExpMinLength": "At least 2 digits",
     "@cardExpMinLength": {},
     "cardsTitle": "Cards",
-    "@cardsTitle": {}
+    "@cardsTitle": {},
+    "deletePasswordText": "By deleting this password, you will not be able to recover it.",
+    "@deletePasswordText": {},
+    "passwordDeleted": "Password deleted",
+    "@passwordDeleted": {}
 }

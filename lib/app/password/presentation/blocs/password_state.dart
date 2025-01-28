@@ -50,6 +50,10 @@ class UserCopiedState extends PasswordState {
   const UserCopiedState(super.model);
 }
 
+class PasswordDeletedState extends PasswordState {
+  const PasswordDeletedState(super.model);
+}
+
 class PasswordStateModel extends Equatable {
   final TextForm name;
   final TextForm email;

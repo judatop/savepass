@@ -10,4 +10,5 @@ abstract class PasswordDatasource {
     PasswordModel model,
     String clearPassword,
   );
+  Future<Either<Fail, Unit>> deletePassword(String passwordId, String vaultId);
 }

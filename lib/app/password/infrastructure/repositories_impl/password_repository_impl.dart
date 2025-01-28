@@ -37,4 +37,12 @@ class PasswordRepositoryImpl implements PasswordRepository {
   ) async {
     return await datasource.editPassword(model, clearPassword);
   }
+
+  @override
+  Future<Either<Fail, Unit>> deletePassword(
+    String passwordId,
+    String vaultId,
+  ) async {
+    return await datasource.deletePassword(passwordId, vaultId);
+  }
 }

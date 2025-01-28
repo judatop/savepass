@@ -129,4 +129,27 @@ class SupabasePasswordDatasource implements PasswordDatasource {
       );
     }
   }
+
+  @override
+  Future<Either<Fail, Unit>> deletePassword(
+    String passwordId,
+    String vaultId,
+  ) async {
+    try {
+      await supabase.rpc(
+        DbUtils.deletepasswordFunction,
+        params: {
+          'password_id_param': passwordId,
+          'vault_id_param': vaultId,
+        },
+      );
+
+      return const Right(unit);
+    } catch (e) {
+      log.e('deletePassword: $e');
+      return Left(
+        Fail('Error occurred while deleting your password'),
+      );
+    }
+  }
 }

@@ -15,4 +15,5 @@ class DbUtils {
   static const insertPasswordFunction = 'insert_password';
   static const getPasswordFunction = 'get_password';
   static const editPasswordFunction = 'edit_password';
+  static const deletepasswordFunction = 'delete_password';
 }

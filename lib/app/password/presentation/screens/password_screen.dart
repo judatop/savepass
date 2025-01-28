@@ -70,6 +70,13 @@ void _listener(context, state) {
   if (state is UserCopiedState) {
     SnackBarUtils.showSuccessSnackBar(context, intl.userCopiedClipboard);
   }
+
+  if (state is PasswordDeletedState) {
+    final bloc = Modular.get<DashboardBloc>();
+    bloc.add(const DashboardInitialEvent());
+    SnackBarUtils.showSuccessSnackBar(context, intl.passwordDeleted);
+    Modular.to.pop();
+  }
 }
 
 class _Body extends StatelessWidget {

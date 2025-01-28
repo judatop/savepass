@@ -74,3 +74,7 @@ class CopyPassToClipboardEvent extends PasswordEvent{
 class CopyUserToClipboardEvent extends PasswordEvent{
   const CopyUserToClipboardEvent() : super();
 }
+
+class DeletePasswordEvent extends PasswordEvent{
+  const DeletePasswordEvent() : super();
+}

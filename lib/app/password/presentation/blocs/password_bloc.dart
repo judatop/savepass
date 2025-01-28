@@ -38,6 +38,7 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     on<SubmitPasswordEvent>(_onSavePasswordEvent);
     on<CopyUserToClipboardEvent>(_onCopyUserToClipboardEvent);
     on<CopyPassToClipboardEvent>(_onCopyPassToClipboardEvent);
+    on<DeletePasswordEvent>(_onDeletePasswordEvent);
   }
 
   FutureOr<void> _onPasswordInitialEvent(
@@ -395,5 +396,39 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
         ),
       ),
     );
+  }
+
+  FutureOr<void> _onDeletePasswordEvent(
+    DeletePasswordEvent event,
+    Emitter<PasswordState> emit,
+  ) async {
+    if (state.model.isUpdating) {
+      final passwordId = state.model.passwordSelected!.id!;
+      final vaultId = state.model.passwordSelected!.password;
+
+      final response =
+          await passwordRepository.deletePassword(passwordId, vaultId);
+
+      response.fold(
+        (l) {
+          emit(
+            GeneralErrorState(
+              state.model.copyWith(
+                status: FormzSubmissionStatus.failure,
+              ),
+            ),
+          );
+        },
+        (r) {
+          emit(
+            PasswordDeletedState(
+              state.model.copyWith(
+                status: FormzSubmissionStatus.success,
+              ),
+            ),
+          );
+        },
+      );
+    }
   }
 }

@@ -237,5 +237,9 @@
     "cardExpMinLength": "Almenos 2 caracteres",
     "@cardExpMinLength": {},
     "cardsTitle": "Tarjetas",
-    "@cardsTitle": {}
+    "@cardsTitle": {},
+    "deletePasswordText": "Una vez eliminada la contraseña, no podrás recuperarla",
+    "@deletePasswordText": {},
+    "passwordDeleted": "Contraseña eliminada",
+    "@passwordDeleted": {}
 }

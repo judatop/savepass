@@ -4,6 +4,7 @@ import 'package:savepass/app/card/infrastructure/models/card_cvv_form.dart';
 import 'package:savepass/app/card/infrastructure/models/card_exp_form.dart';
 import 'package:savepass/app/card/infrastructure/models/card_number_form.dart';
 import 'package:savepass/app/card/infrastructure/models/card_type.dart';
+import 'package:savepass/app/preferences/infrastructure/models/card_image_model.dart';
 import 'package:savepass/core/form/text_form.dart';
 
 abstract class CardState extends Equatable {
@@ -46,6 +47,8 @@ class CardStateModel extends Equatable {
   final bool alreadySubmitted;
   final CardType cardType;
   final FormzSubmissionStatus status;
+  final List<CardImageModel> images;
+  final CardImageModel? cardImgSelected;
 
   const CardStateModel({
     this.cardNumber = const CardNumberForm.pure(),
@@ -58,6 +61,8 @@ class CardStateModel extends Equatable {
     this.alreadySubmitted = false,
     this.cardType = CardType.unknown,
     this.status = FormzSubmissionStatus.initial,
+    this.images = const [],
+    this.cardImgSelected,
   });
 
   CardStateModel copyWith({
@@ -71,6 +76,8 @@ class CardStateModel extends Equatable {
     bool? alreadySubmitted,
     CardType? cardType,
     FormzSubmissionStatus? status,
+    List<CardImageModel>? images,
+    CardImageModel? cardImgSelected,
   }) {
     return CardStateModel(
       cardNumber: cardNumber ?? this.cardNumber,
@@ -83,6 +90,8 @@ class CardStateModel extends Equatable {
       alreadySubmitted: alreadySubmitted ?? this.alreadySubmitted,
       cardType: cardType ?? this.cardType,
       status: status ?? this.status,
+      images: images ?? this.images,
+      cardImgSelected: cardImgSelected ?? this.cardImgSelected,
     );
   }
 
@@ -97,5 +106,7 @@ class CardStateModel extends Equatable {
         isUpdating,
         alreadySubmitted,
         cardType,
+        images,
+        cardImgSelected,
       ];
 }

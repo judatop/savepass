@@ -9,13 +9,17 @@ import 'package:savepass/app/card/infrastructure/models/card_number_form.dart';
 import 'package:savepass/app/card/infrastructure/models/card_type.dart';
 import 'package:savepass/app/card/presentation/blocs/card_event.dart';
 import 'package:savepass/app/card/presentation/blocs/card_state.dart';
+import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
+import 'package:savepass/app/preferences/infrastructure/models/card_image_model.dart';
 import 'package:savepass/core/form/text_form.dart';
 
 class CardBloc extends Bloc<CardEvent, CardState> {
   final Logger log;
+  final PreferencesRepository preferencesRepository;
 
   CardBloc({
     required this.log,
+    required this.preferencesRepository,
   }) : super(const CardInitialState()) {
     on<CardInitialEvent>(_onCardInitialEvent);
     on<ChangeCardNumberEvent>(_onChangeCardNumberEvent);
@@ -49,6 +53,14 @@ class CardBloc extends Bloc<CardEvent, CardState> {
       cardType = CardType.dinersClub;
     }
 
+    CardImageModel? selected;
+    for (CardImageModel m in state.model.images) {
+      if (m.type == cardType.stringValue) {
+        selected = m;
+        break;
+      }
+    }
+
     emit(
       ChangeCardState(
         state.model.copyWith(
@@ -56,6 +68,7 @@ class CardBloc extends Bloc<CardEvent, CardState> {
             event.cardNumber,
           ),
           cardType: cardType,
+          cardImgSelected: selected,
         ),
       ),
     );
@@ -124,9 +137,24 @@ class CardBloc extends Bloc<CardEvent, CardState> {
   FutureOr<void> _onCardInitialEvent(
     CardInitialEvent event,
     Emitter<CardState> emit,
-  ) {
+  ) async {
     emit(
       const ChangeCardState(CardStateModel()),
+    );
+
+    final response = await preferencesRepository.getCardImages();
+
+    response.fold(
+      (l) {},
+      (r) {
+        emit(
+          ChangeCardState(
+            state.model.copyWith(
+              images: r,
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -145,13 +173,6 @@ class CardBloc extends Bloc<CardEvent, CardState> {
     if (!Formz.validate([
       state.model.cardNumber,
     ])) {
-      return;
-    }
-
-    final cardNumber = state.model.cardNumber.value;
-
-    if (cardNumber.length < 12) {
-      emit(MinLengthErrorCardState(state.model));
       return;
     }
 

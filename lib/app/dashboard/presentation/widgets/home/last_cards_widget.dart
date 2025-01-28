@@ -6,6 +6,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/core/config/routes.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LastCardsWidget extends StatelessWidget {
   const LastCardsWidget({super.key});
@@ -15,6 +16,7 @@ class LastCardsWidget extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
+    final intl = AppLocalizations.of(context)!;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,8 +35,8 @@ class LastCardsWidget extends StatelessWidget {
               },
             ),
             SizedBox(width: deviceWidth * 0.04),
-            const AdsTitle(
-              text: 'Cards',
+            AdsTitle(
+              text: intl.cardsTitle,
               textAlign: TextAlign.start,
             ),
           ],

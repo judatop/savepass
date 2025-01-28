@@ -13,7 +13,7 @@ extension CardTypeExtension on CardType {
       case CardType.visa:
         return 'Visa';
       case CardType.masterCard:
-        return 'MasterCard';
+        return 'Master Card';
       case CardType.americanExpress:
         return 'American Express';
       case CardType.discover:

@@ -235,5 +235,7 @@
     "cvvMinLength": "The CVV must have at least 3 digits",
     "@cvvMinLength": {},
     "cardExpMinLength": "At least 2 digits",
-    "@cardExpMinLength": {}
+    "@cardExpMinLength": {},
+    "cardsTitle": "Cards",
+    "@cardsTitle": {}
 }

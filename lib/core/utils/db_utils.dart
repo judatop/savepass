@@ -9,6 +9,7 @@ class DbUtils {
   static const updateMasterPassword = 'update_master_password';
   static const publicParameters = 'public_parameters';
   static const passwordsParameters = 'passwords_parameters';
+  static const cardParameters = 'card_parameters';
   static const deleteAccountFunction = 'delete_account';
   static const passwordsTable = 'passwords';
   static const insertPasswordFunction = 'insert_password';

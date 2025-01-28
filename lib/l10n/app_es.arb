@@ -235,5 +235,7 @@
     "cvvMinLength": "El CVV debe tener al menos 3 caracteres",
     "@cvvMinLength": {},
     "cardExpMinLength": "Almenos 2 caracteres",
-    "@cardExpMinLength": {}
+    "@cardExpMinLength": {},
+    "cardsTitle": "Tarjetas",
+    "@cardsTitle": {}
 }

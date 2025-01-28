@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:atomic_design_system/molecules/card/ads_card.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:savepass/app/card/infrastructure/models/card_type.dart';
@@ -199,28 +200,30 @@ class CardWidget extends StatelessWidget {
               bottom: 0,
               child: BlocBuilder<CardBloc, CardState>(
                 buildWhen: (previous, current) =>
-                    previous.model.cardType != current.model.cardType,
+                    (previous.model.cardImgSelected !=
+                        current.model.cardImgSelected) ||
+                    (previous.model.cardType != current.model.cardType),
                 builder: (context, state) {
+                  final cardImgSelected = state.model.cardImgSelected;
                   final cardType = state.model.cardType;
 
-                  String? imgPath;
-
-                  if (cardType == CardType.visa) {
-                    imgPath = ImagePaths.visaImage;
-                  } else if (cardType == CardType.masterCard) {
-                    imgPath = ImagePaths.masterCardImage;
-                  } else if (cardType == CardType.dinersClub) {
-                    imgPath = ImagePaths.dinnersImage;
-                  }
-
-                  if (imgPath == null) {
+                  if (cardImgSelected == null || cardType == CardType.unknown) {
                     return Container();
                   }
 
-                  return Image.asset(
-                    imgPath,
+                  return CachedNetworkImage(
+                    imageUrl: cardImgSelected.imgUrl,
                     width: deviceWidth *
-                        (cardType == CardType.dinersClub ? 0.08 : 0.12),
+                        (cardImgSelected.type == CardType.dinersClub.stringValue
+                            ? 0.08
+                            : 0.12),
+                    placeholder: (context, url) => Skeletonizer(
+                      child: Container(
+                        width: 20,
+                      ),
+                    ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   );
                 },
               ),

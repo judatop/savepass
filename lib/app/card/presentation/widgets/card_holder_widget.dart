@@ -20,12 +20,13 @@ class CardHolderWidget extends StatelessWidget {
     final bloc = Modular.get<CardBloc>();
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+    final intl = AppLocalizations.of(context)!;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Cardholder Name',
+          intl.cardholderName,
           style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
         ),
         const SizedBox(
@@ -89,13 +90,17 @@ class _CardHolder extends StatelessWidget {
                 : null,
             enableSuggestions: false,
             onChanged: (value) {
-              bloc.add(ChangeCardHolderEvent(cardHolderName: value));
+              bloc.add(
+                ChangeCardHolderEvent(
+                  cardHolderName: value.toUpperCase(),
+                ),
+              );
             },
             textInputAction: TextInputAction.done,
-            hintText: 'JHON DOE',
+            hintText: intl.cardholderHint,
             inputFormatters: [
               FilteringTextInputFormatter.allow(
-                RegexUtils.lettersWithSpaceCapitalCase,
+                RegexUtils.lettersWithSpace,
               ),
             ],
           ),

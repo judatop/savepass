@@ -32,9 +32,9 @@ class CardHeaderWidget extends StatelessWidget {
               },
             ),
             SizedBox(width: screenWidth * 0.05),
-            const Flexible(
+            Flexible(
               child: AdsHeadline(
-                text: 'New card',
+                text: intl.newCardTitle,
                 overflow: TextOverflow.ellipsis,
               ),
             ),

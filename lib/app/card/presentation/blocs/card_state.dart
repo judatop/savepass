@@ -1,5 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:savepass/app/card/infrastructure/models/card_cvv_form.dart';
+import 'package:savepass/app/card/infrastructure/models/card_exp_form.dart';
+import 'package:savepass/app/card/infrastructure/models/card_number_form.dart';
 import 'package:savepass/app/card/infrastructure/models/card_type.dart';
 import 'package:savepass/core/form/text_form.dart';
 
@@ -33,11 +36,11 @@ class MinLengthErrorCardState extends CardState {
 }
 
 class CardStateModel extends Equatable {
-  final TextForm cardNumber;
+  final CardNumberForm cardNumber;
   final TextForm cardHolderName;
-  final TextForm cardCvv;
-  final TextForm expirationMonth;
-  final TextForm expirationYear;
+  final CardCvvForm cardCvv;
+  final CardExpForm expirationMonth;
+  final CardExpForm expirationYear;
   final int step;
   final bool isUpdating;
   final bool alreadySubmitted;
@@ -45,11 +48,11 @@ class CardStateModel extends Equatable {
   final FormzSubmissionStatus status;
 
   const CardStateModel({
-    this.cardNumber = const TextForm.pure(),
+    this.cardNumber = const CardNumberForm.pure(),
     this.cardHolderName = const TextForm.pure(),
-    this.cardCvv = const TextForm.pure(),
-    this.expirationMonth = const TextForm.pure(),
-    this.expirationYear = const TextForm.pure(),
+    this.cardCvv = const CardCvvForm.pure(),
+    this.expirationMonth = const CardExpForm.pure(),
+    this.expirationYear = const CardExpForm.pure(),
     this.step = 1,
     this.isUpdating = false,
     this.alreadySubmitted = false,
@@ -58,11 +61,11 @@ class CardStateModel extends Equatable {
   });
 
   CardStateModel copyWith({
-    TextForm? cardNumber,
+    CardNumberForm? cardNumber,
     TextForm? cardHolderName,
-    TextForm? cardCvv,
-    TextForm? expirationMonth,
-    TextForm? expirationYear,
+    CardCvvForm? cardCvv,
+    CardExpForm? expirationMonth,
+    CardExpForm? expirationYear,
     int? step,
     bool? isUpdating,
     bool? alreadySubmitted,

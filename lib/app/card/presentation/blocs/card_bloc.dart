@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:logger/logger.dart';
+import 'package:savepass/app/card/infrastructure/models/card_cvv_form.dart';
+import 'package:savepass/app/card/infrastructure/models/card_exp_form.dart';
+import 'package:savepass/app/card/infrastructure/models/card_number_form.dart';
 import 'package:savepass/app/card/infrastructure/models/card_type.dart';
 import 'package:savepass/app/card/presentation/blocs/card_event.dart';
 import 'package:savepass/app/card/presentation/blocs/card_state.dart';
@@ -49,7 +52,7 @@ class CardBloc extends Bloc<CardEvent, CardState> {
     emit(
       ChangeCardState(
         state.model.copyWith(
-          cardNumber: TextForm.dirty(
+          cardNumber: CardNumberForm.dirty(
             event.cardNumber,
           ),
           cardType: cardType,
@@ -80,7 +83,7 @@ class CardBloc extends Bloc<CardEvent, CardState> {
     emit(
       ChangeCardState(
         state.model.copyWith(
-          cardCvv: TextForm.dirty(
+          cardCvv: CardCvvForm.dirty(
             event.cardCvv,
           ),
         ),
@@ -95,7 +98,7 @@ class CardBloc extends Bloc<CardEvent, CardState> {
     emit(
       ChangeCardState(
         state.model.copyWith(
-          expirationMonth: TextForm.dirty(
+          expirationMonth: CardExpForm.dirty(
             event.expirationMonth,
           ),
         ),
@@ -110,7 +113,7 @@ class CardBloc extends Bloc<CardEvent, CardState> {
     emit(
       ChangeCardState(
         state.model.copyWith(
-          expirationYear: TextForm.dirty(
+          expirationYear: CardExpForm.dirty(
             event.expirationYear,
           ),
         ),
@@ -238,7 +241,6 @@ class CardBloc extends Bloc<CardEvent, CardState> {
       emit(
         ChangeCardState(
           state.model.copyWith(
-            alreadySubmitted: false,
             status: FormzSubmissionStatus.failure,
           ),
         ),

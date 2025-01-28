@@ -13,6 +13,7 @@ import 'package:savepass/app/card/presentation/widgets/card_holder_widget.dart';
 import 'package:savepass/app/card/presentation/widgets/card_number_widget.dart';
 import 'package:savepass/app/card/presentation/widgets/card_widget.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CardScreen extends StatelessWidget {
   final String? cardId;
@@ -36,10 +37,12 @@ class CardScreen extends StatelessWidget {
 }
 
 void _listener(context, state) {
+  final intl = AppLocalizations.of(context)!;
+
   if (state is MinLengthErrorCardState) {
     SnackBarUtils.showErrroSnackBar(
       context,
-      'Card number must have at least 16 characters',
+      intl.cardMinLength,
     );
   }
 }
@@ -75,7 +78,7 @@ class _Body extends StatelessWidget {
                   const CardHeaderWidget(),
                   SizedBox(height: deviceHeight * 0.05),
                   FlipInY(
-                    duration: const Duration(seconds: 2),
+                    duration: const Duration(seconds: 1),
                     child: const CardWidget(),
                   ),
                   SizedBox(height: deviceHeight * 0.05),

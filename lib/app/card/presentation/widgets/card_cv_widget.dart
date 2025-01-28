@@ -20,6 +20,7 @@ class CardCvvWidget extends StatelessWidget {
     final bloc = Modular.get<CardBloc>();
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+    final intl = AppLocalizations.of(context)!;
 
     return BlocBuilder<CardBloc, CardState>(
       buildWhen: (previous, current) =>
@@ -29,7 +30,7 @@ class CardCvvWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Card Security Code (CVV)',
+              intl.cardCvv,
               style:
                   textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
             ),
@@ -100,7 +101,7 @@ class _Cvv extends StatelessWidget {
               bloc.add(ChangeCardCvvEvent(cardCvv: value));
             },
             textInputAction: TextInputAction.done,
-            hintText: 'XXX',
+            hintText: '000',
             inputFormatters: [
               FilteringTextInputFormatter.allow(
                 RegexUtils.numbers,

@@ -18,12 +18,13 @@ class CardExpirationWidget extends StatelessWidget {
     final bloc = Modular.get<CardBloc>();
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+    final intl = AppLocalizations.of(context)!;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Expiration Date',
+          intl.cardExpiration,
           style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
         ),
         const SizedBox(

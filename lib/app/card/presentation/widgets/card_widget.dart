@@ -9,6 +9,7 @@ import 'package:savepass/app/card/presentation/blocs/card_state.dart';
 import 'package:savepass/app/card/utils/card_utils.dart';
 import 'package:savepass/core/image/image_paths.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CardWidget extends StatelessWidget {
   const CardWidget({super.key});
@@ -19,6 +20,7 @@ class CardWidget extends StatelessWidget {
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
     final textTheme = Theme.of(context).textTheme;
+    final intl = AppLocalizations.of(context)!;
 
     return AdsCard(
       elevation: 1.5,
@@ -41,19 +43,9 @@ class CardWidget extends StatelessWidget {
                     final cardType = state.model.cardType;
                     final cardNumber = state.model.cardNumber.value;
 
-                    String? cardText;
                     TextAlign? textAlign;
-                    if (cardType == CardType.visa) {
-                      cardText = 'VISA';
-                    } else if (cardType == CardType.americanExpress) {
-                      cardText = 'AMERICAN EXPRESS';
+                    if (cardType == CardType.americanExpress) {
                       textAlign = TextAlign.center;
-                    } else if (cardType == CardType.discover) {
-                      cardText = 'DISCOVER';
-                    } else if (cardType == CardType.dinersClub) {
-                      cardText = 'DINERS CLUB';
-                    } else if (cardType == CardType.masterCard) {
-                      cardText = 'MASTER CARD';
                     }
 
                     if (cardType == CardType.unknown && cardNumber.isNotEmpty) {
@@ -63,9 +55,7 @@ class CardWidget extends StatelessWidget {
                     return Skeletonizer(
                       enabled: cardNumber.isEmpty,
                       child: Text(
-                        cardType == CardType.unknown
-                            ? 'XXXXXXXXXXXX'
-                            : cardText!,
+                        cardType.stringValue,
                         style: textTheme.titleMedium?.copyWith(
                           color: Colors.white,
                           fontSize: 26,
@@ -75,23 +65,19 @@ class CardWidget extends StatelessWidget {
                     );
                   },
                 ),
-                SizedBox(
-                  height: deviceHeight * 0.015,
-                ),
+                SizedBox(height: deviceHeight * 0.01),
                 Row(
                   children: [
                     Skeletonizer(
                       enabled: false,
                       child: Image.asset(
                         ImagePaths.chipImage,
-                        height: 50,
+                        height: deviceHeight * 0.06,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: deviceHeight * 0.015,
-                ),
+                SizedBox(height: deviceHeight * 0.01),
                 BlocBuilder<CardBloc, CardState>(
                   buildWhen: (previous, current) =>
                       (previous.model.cardNumber != current.model.cardNumber),
@@ -103,7 +89,7 @@ class CardWidget extends StatelessWidget {
                       child: BounceInRight(
                         child: Text(
                           number.isEmpty
-                              ? '9999 9999 99999 9999'
+                              ? 'XXXX XXXX XXXX XXXX'
                               : CardUtils.formatCreditCardNumber(number),
                           style: textTheme.titleMedium?.copyWith(
                             color: Colors.white,
@@ -165,7 +151,7 @@ class CardWidget extends StatelessWidget {
                               Column(
                                 children: [
                                   Text(
-                                    'VÁLIDO',
+                                    intl.cardValid,
                                     style: textTheme.titleMedium?.copyWith(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
@@ -173,7 +159,7 @@ class CardWidget extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    'HASTA',
+                                    intl.cardUntil,
                                     style: textTheme.titleMedium?.copyWith(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
@@ -189,7 +175,7 @@ class CardWidget extends StatelessWidget {
                                 child: Text(
                                   (expirationMonth.isEmpty &&
                                           expirationYear.isEmpty)
-                                      ? '00/00'
+                                      ? 'XX/XX'
                                       : '$expirationMonth/$expirationYear',
                                   style: textTheme.titleMedium?.copyWith(
                                     color: Colors.white,

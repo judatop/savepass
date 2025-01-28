@@ -20,12 +20,13 @@ class CardNumberWidget extends StatelessWidget {
     final bloc = Modular.get<CardBloc>();
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+    final intl = AppLocalizations.of(context)!;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Card Number',
+          intl.cardNumber,
           style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
         ),
         const SizedBox(
@@ -93,7 +94,7 @@ class _Card extends StatelessWidget {
               bloc.add(ChangeCardNumberEvent(cardNumber: value));
             },
             textInputAction: TextInputAction.done,
-            hintText: 'XXXXXXXXXXXXXXXX',
+            hintText: '0000000000000000',
             inputFormatters: [
               FilteringTextInputFormatter.allow(
                 RegexUtils.numbers,

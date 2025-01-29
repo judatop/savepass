@@ -7,6 +7,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:savepass/app/card/domain/repositories/card_repository.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
 import 'package:savepass/app/password/domain/repositories/password_repository.dart';
@@ -21,12 +22,14 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final ProfileRepository profileRepository;
   final PreferencesRepository preferencesRepository;
   final PasswordRepository passwordRepository;
+  final CardRepository cardRepository;
 
   DashboardBloc({
     required this.log,
     required this.profileRepository,
     required this.preferencesRepository,
     required this.passwordRepository,
+    required this.cardRepository,
   }) : super(const DashboardInitialState()) {
     on<DashboardInitialEvent>(_onDashboardInitialEvent);
     on<ChangeIndexEvent>(_onChangeIndexEvent);
@@ -86,6 +89,34 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             state.model.copyWith(
               passwordStatus: FormzSubmissionStatus.success,
               passwords: r,
+            ),
+          ),
+        );
+      },
+    );
+
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(cardStatus: FormzSubmissionStatus.inProgress),
+      ),
+    );
+
+    final cardsRes = await cardRepository.getCards();
+
+    cardsRes.fold(
+      (l) {
+        emit(
+          ChangeDashboardState(
+            state.model.copyWith(cardStatus: FormzSubmissionStatus.failure),
+          ),
+        );
+      },
+      (r) {
+        emit(
+          ChangeDashboardState(
+            state.model.copyWith(
+              cardStatus: FormzSubmissionStatus.success,
+              cards: r,
             ),
           ),
         );

@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:savepass/app/card/infrastructure/models/card_cvv_form.dart';
 import 'package:savepass/app/card/infrastructure/models/card_exp_form.dart';
+import 'package:savepass/app/card/infrastructure/models/card_model.dart';
 import 'package:savepass/app/card/infrastructure/models/card_number_form.dart';
 import 'package:savepass/app/card/infrastructure/models/card_type.dart';
 import 'package:savepass/app/preferences/infrastructure/models/card_image_model.dart';
@@ -36,6 +37,10 @@ class MinLengthErrorCardState extends CardState {
   const MinLengthErrorCardState(super.model);
 }
 
+class CardCreatedState extends CardState{
+  const CardCreatedState(super.model);
+}
+
 class CardStateModel extends Equatable {
   final CardNumberForm cardNumber;
   final TextForm cardHolderName;
@@ -49,6 +54,7 @@ class CardStateModel extends Equatable {
   final FormzSubmissionStatus status;
   final List<CardImageModel> images;
   final CardImageModel? cardImgSelected;
+  final CardModel? cardSelected;
 
   const CardStateModel({
     this.cardNumber = const CardNumberForm.pure(),
@@ -63,6 +69,7 @@ class CardStateModel extends Equatable {
     this.status = FormzSubmissionStatus.initial,
     this.images = const [],
     this.cardImgSelected,
+    this.cardSelected,
   });
 
   CardStateModel copyWith({
@@ -78,6 +85,7 @@ class CardStateModel extends Equatable {
     FormzSubmissionStatus? status,
     List<CardImageModel>? images,
     CardImageModel? cardImgSelected,
+    CardModel? cardSelected,
   }) {
     return CardStateModel(
       cardNumber: cardNumber ?? this.cardNumber,
@@ -92,6 +100,7 @@ class CardStateModel extends Equatable {
       status: status ?? this.status,
       images: images ?? this.images,
       cardImgSelected: cardImgSelected ?? this.cardImgSelected,
+      cardSelected: cardSelected ?? this.cardSelected,
     );
   }
 
@@ -108,5 +117,6 @@ class CardStateModel extends Equatable {
         cardType,
         images,
         cardImgSelected,
+        cardSelected,
       ];
 }

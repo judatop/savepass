@@ -241,5 +241,11 @@
     "deletePasswordText": "By deleting this password, you will not be able to recover it.",
     "@deletePasswordText": {},
     "passwordDeleted": "Password deleted",
-    "@passwordDeleted": {}
+    "@passwordDeleted": {},
+    "cardCreated": "Card created successfully",
+    "@cardCreated": {},
+    "noCardsCreatedTitle": "No cards created",
+    "@noCardsCreatedTitle": {},
+    "noCardsCreatedText": "Tap to add a new card",
+    "@noCardsCreatedText": {}
 }

@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:savepass/app/card/infrastructure/models/card_model.dart';
 
-abstract class CardRepository {
+abstract class CardDatasource {
   Future<Either<Fail, Unit>> insertCard(CardModel model);
   Future<Either<Fail, List<CardModel>>> getCards();
   Future<Either<Fail, String>> getCard(String cardId);

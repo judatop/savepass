@@ -4,9 +4,15 @@ import 'package:atomic_design_system/molecules/text/ads_subtitle.dart';
 import 'package:atomic_design_system/molecules/text/ads_title.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:formz/formz.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
+import 'package:savepass/app/dashboard/presentation/widgets/home/no_cards_widget.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class LastCardsWidget extends StatelessWidget {
   const LastCardsWidget({super.key});
@@ -18,91 +24,118 @@ class LastCardsWidget extends StatelessWidget {
     final deviceHeight = MediaQuery.of(context).size.height;
     final intl = AppLocalizations.of(context)!;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            AdsFilledRoundIconButton(
-              backgroundColor: colorScheme.primary,
-              icon: const Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-              onPressedCallback: () {
-                Modular.to.pushNamed(Routes.cardRoute);
-              },
-            ),
-            SizedBox(width: deviceWidth * 0.04),
-            AdsTitle(
-              text: intl.cardsTitle,
-              textAlign: TextAlign.start,
-            ),
-          ],
-        ),
-        SizedBox(
-          height: deviceHeight * 0.02,
-        ),
-        CarouselSlider(
-          options: CarouselOptions(
-            autoPlay: false,
-            enlargeCenterPage: true,
-            viewportFraction: 0.7,
-            aspectRatio: 2.0,
-            enableInfiniteScroll: false,
-          ),
-          items: [1, 2, 3, 4, 5].map((i) {
-            return Builder(
-              builder: (BuildContext context) {
-                return AdsCard(
-                  child: Container(
-                    color: colorScheme.primary.withOpacity(0.1),
-                    width: MediaQuery.of(context).size.width,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30,
-                        vertical: 20,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const AdsSubtitle(text: 'Visa'),
-                              SizedBox(
-                                width: deviceWidth * 0.02,
-                              ),
-                              const Icon(Icons.credit_card),
-                            ],
-                          ),
-                          SizedBox(
-                            height: deviceHeight * 0.02,
-                          ),
-                          const Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '1234 **** **** 0120',
-                              ),
-                              Text(
-                                'John Doe',
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+    return BlocBuilder<DashboardBloc, DashboardState>(
+      buildWhen: (previous, current) =>
+          (previous.model.cards != current.model.cards) ||
+          (previous.model.cardStatus != current.model.cardStatus),
+      builder: (context, state) {
+        final cardStatus = state.model.cardStatus;
+
+        return Skeletonizer(
+          enabled: cardStatus.isInProgress,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  AdsFilledRoundIconButton(
+                    backgroundColor: colorScheme.primary,
+                    icon: const Icon(
+                      Icons.add,
+                      color: Colors.white,
                     ),
+                    onPressedCallback: () {
+                      Modular.to.pushNamed(Routes.cardRoute);
+                    },
                   ),
-                );
-              },
-            );
-          }).toList(),
-        ),
-      ],
+                  SizedBox(width: deviceWidth * 0.04),
+                  AdsTitle(
+                    text: intl.cardsTitle,
+                    textAlign: TextAlign.start,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: deviceHeight * 0.02,
+              ),
+              BlocBuilder<DashboardBloc, DashboardState>(
+                buildWhen: (previous, current) =>
+                    previous.model.cards != current.model.cards,
+                builder: (context, state) {
+                  final list = state.model.cards;
+
+                  if (list.isEmpty) {
+                    return const NoCardsWidget();
+                  }
+
+                  return CarouselSlider(
+                    options: CarouselOptions(
+                      autoPlay: false,
+                      enlargeCenterPage: true,
+                      viewportFraction: 0.7,
+                      aspectRatio: 2.0,
+                      enableInfiniteScroll: false,
+                    ),
+                    items: list.map((i) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return AdsCard(
+                            child: Container(
+                              color: colorScheme.primary.withOpacity(0.1),
+                              width: MediaQuery.of(context).size.width,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 30,
+                                  vertical: 20,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const AdsSubtitle(text: 'Visa'),
+                                        SizedBox(
+                                          width: deviceWidth * 0.02,
+                                        ),
+                                        const Icon(Icons.credit_card),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: deviceHeight * 0.02,
+                                    ),
+                                    const Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '1234 **** **** 0120',
+                                        ),
+                                        Text(
+                                          'John Doe',
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

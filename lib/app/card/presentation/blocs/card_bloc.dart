@@ -1,10 +1,13 @@
 import 'dart:async';
 
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:logger/logger.dart';
+import 'package:savepass/app/card/domain/repositories/card_repository.dart';
 import 'package:savepass/app/card/infrastructure/models/card_cvv_form.dart';
 import 'package:savepass/app/card/infrastructure/models/card_exp_form.dart';
+import 'package:savepass/app/card/infrastructure/models/card_model.dart';
 import 'package:savepass/app/card/infrastructure/models/card_number_form.dart';
 import 'package:savepass/app/card/infrastructure/models/card_type.dart';
 import 'package:savepass/app/card/presentation/blocs/card_event.dart';
@@ -16,10 +19,12 @@ import 'package:savepass/core/form/text_form.dart';
 class CardBloc extends Bloc<CardEvent, CardState> {
   final Logger log;
   final PreferencesRepository preferencesRepository;
+  final CardRepository cardRepository;
 
   CardBloc({
     required this.log,
     required this.preferencesRepository,
+    required this.cardRepository,
   }) : super(const CardInitialState()) {
     on<CardInitialEvent>(_onCardInitialEvent);
     on<ChangeCardNumberEvent>(_onChangeCardNumberEvent);
@@ -269,14 +274,50 @@ class CardBloc extends Bloc<CardEvent, CardState> {
       return;
     }
 
-    //TODO: Save card on Supabase
+    final isUpdating = state.model.isUpdating;
 
-    emit(
-      ChangeCardState(
-        state.model.copyWith(
-          status: FormzSubmissionStatus.success,
-        ),
-      ),
+    late final Either<Fail, Unit> response;
+    if (isUpdating && state.model.cardSelected != null) {
+      // response = await passwordRepository.editPassword(
+      //   PasswordModel(
+      //     id: state.model.passwordSelected!.id,
+      //     typeImg: state.model.imgUrl,
+      //     name: state.model.name.value,
+      //     username: state.model.email.value,
+      //     password: state.model.passwordSelected!.password,
+      //     description: state.model.desc.value,
+      //     domain: state.model.singleTag.value,
+      //   ),
+      //   state.model.password.value,
+      // );
+    } else {
+      final type = state.model.cardImgSelected?.id;
+      final card =
+          '${state.model.cardNumber.value}|${state.model.cardHolderName.value}|${state.model.expirationMonth.value}/${state.model.expirationYear.value}|${state.model.cardCvv.value}';
+
+      response =
+          await cardRepository.insertCard(CardModel(type: type, card: card));
+    }
+
+    response.fold(
+      (l) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.failure,
+            ),
+          ),
+        );
+      },
+      (r) {
+        emit(
+          CardCreatedState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.success,
+            ),
+          ),
+        );
+      },
     );
   }
 }

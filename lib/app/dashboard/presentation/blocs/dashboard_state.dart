@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:savepass/app/card/infrastructure/models/card_model.dart';
 import 'package:savepass/app/password/infrastructure/models/password_model.dart';
 import 'package:savepass/app/profile/domain/entities/profile_entity.dart';
 import 'package:savepass/core/form/text_form.dart';
@@ -63,6 +64,8 @@ class DashboardStateModel extends Equatable {
   final TextForm homeSearch;
   final List<PasswordModel> passwords;
   final FormzSubmissionStatus passwordStatus;
+  final List<CardModel> cards;
+  final FormzSubmissionStatus cardStatus;
 
   const DashboardStateModel({
     this.currentIndex = 0,
@@ -74,6 +77,8 @@ class DashboardStateModel extends Equatable {
     this.homeSearch = const TextForm.pure(),
     this.passwords = const [],
     this.passwordStatus = FormzSubmissionStatus.initial,
+    this.cards = const [],
+    this.cardStatus = FormzSubmissionStatus.initial,
   });
 
   DashboardStateModel copyWith({
@@ -86,6 +91,8 @@ class DashboardStateModel extends Equatable {
     TextForm? homeSearch,
     List<PasswordModel>? passwords,
     FormzSubmissionStatus? passwordStatus,
+    List<CardModel>? cards,
+    FormzSubmissionStatus? cardStatus,
   }) {
     return DashboardStateModel(
       currentIndex: currentIndex ?? this.currentIndex,
@@ -97,6 +104,8 @@ class DashboardStateModel extends Equatable {
       homeSearch: homeSearch ?? this.homeSearch,
       passwords: passwords ?? this.passwords,
       passwordStatus: passwordStatus ?? this.passwordStatus,
+      cards: cards ?? this.cards,
+      cardStatus: cardStatus ?? this.cardStatus,
     );
   }
 
@@ -111,5 +120,6 @@ class DashboardStateModel extends Equatable {
         homeSearch,
         passwords,
         passwordStatus,
+        cardStatus,
       ];
 }

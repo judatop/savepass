@@ -12,6 +12,8 @@ import 'package:savepass/app/card/presentation/widgets/card_header_widget.dart';
 import 'package:savepass/app/card/presentation/widgets/card_holder_widget.dart';
 import 'package:savepass/app/card/presentation/widgets/card_number_widget.dart';
 import 'package:savepass/app/card/presentation/widgets/card_widget.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -44,6 +46,13 @@ void _listener(context, state) {
       context,
       intl.cardMinLength,
     );
+  }
+
+  if(state is CardCreatedState){
+    final bloc = Modular.get<DashboardBloc>();
+    bloc.add(const DashboardInitialEvent());
+    SnackBarUtils.showSuccessSnackBar(context, intl.cardCreated);
+    Modular.to.pop();
   }
 }
 

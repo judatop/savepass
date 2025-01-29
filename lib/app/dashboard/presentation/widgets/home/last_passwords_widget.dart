@@ -27,7 +27,7 @@ class LastPasswordsWidget extends StatelessWidget {
     return BlocBuilder<DashboardBloc, DashboardState>(
       buildWhen: (previous, current) =>
           (previous.model.passwords != current.model.passwords) ||
-          (previous.model.status != current.model.status),
+          (previous.model.passwordStatus != current.model.passwordStatus),
       builder: (context, state) {
         final status = state.model.passwordStatus;
 

@@ -14,6 +14,10 @@ import 'package:savepass/app/auth_init/infrastructure/datasources/supabase_auth_
 import 'package:savepass/app/auth_init/infrastructure/repositories/auth_init_repository_impl.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_bloc.dart';
 import 'package:savepass/app/auth_init/presentation/screens/auth_init_screen.dart';
+import 'package:savepass/app/card/domain/datasources/card_datasource.dart';
+import 'package:savepass/app/card/domain/repositories/card_repository.dart';
+import 'package:savepass/app/card/infrastructure/datasources/supabase_card_datasource.dart';
+import 'package:savepass/app/card/infrastructure/repositories_impl/card_repository_impl.dart';
 import 'package:savepass/app/card/presentation/blocs/card_bloc.dart';
 import 'package:savepass/app/card/presentation/screens/card_screen.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
@@ -68,6 +72,8 @@ class AppModule extends Module {
     i.addSingleton<AuthRepository>(AuthRepositoryImpl.new);
     i.addSingleton<PasswordDatasource>(SupabasePasswordDatasource.new);
     i.addSingleton<PasswordRepository>(PasswordRepositoryImpl.new);
+    i.addSingleton<CardDatasource>(SupabaseCardDatasource.new);
+    i.addSingleton<CardRepository>(CardRepositoryImpl.new);
     i.addSingleton(GetStartedBloc.new);
     i.addSingleton(AuthInitBloc.new);
     i.addSingleton(SyncBloc.new);

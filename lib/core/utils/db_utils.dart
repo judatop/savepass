@@ -16,4 +16,9 @@ class DbUtils {
   static const getPasswordFunction = 'get_password';
   static const editPasswordFunction = 'edit_password';
   static const deletepasswordFunction = 'delete_password';
+  static const cardsTable = 'cards';
+  static const insertCardFunction = 'insert_card';
+  static const getCardFunction = 'get_card';
+  static const editCardFunction = 'edit_card';
+  static const deleteCardFunction = 'delete_card';
 }

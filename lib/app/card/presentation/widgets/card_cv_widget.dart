@@ -70,10 +70,6 @@ class CardCvvWidget extends StatelessWidget {
 }
 
 class _Cvv extends StatelessWidget {
-  final TextEditingController _controller = TextEditingController();
-
-  _Cvv();
-
   @override
   Widget build(BuildContext context) {
     final intl = AppLocalizations.of(context)!;
@@ -86,11 +82,10 @@ class _Cvv extends StatelessWidget {
       builder: (context, state) {
         final model = state.model;
         final cvv = model.cardCvv.value;
-        _controller.text = cvv;
 
         return AdsFormField(
           formField: AdsTextField(
-            controller: _controller,
+            initialValue: cvv,
             key: const Key('card_cvv_textField'),
             keyboardType: TextInputType.number,
             errorText: model.alreadySubmitted

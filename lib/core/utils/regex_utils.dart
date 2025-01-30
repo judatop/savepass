@@ -10,4 +10,5 @@ class RegexUtils {
   );
   static final lettersWithSpaceCapitalCase = RegExp(r'^[A-Z\s]+$');
   static final lettersWithSpace = RegExp(r'^[a-zA-Z\s]+$');
+
 }

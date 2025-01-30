@@ -1,6 +1,4 @@
-import 'package:atomic_design_system/molecules/button/ads_filled_round_icon_button.dart';
-import 'package:atomic_design_system/molecules/text/ads_text_field.dart';
-import 'package:atomic_design_system/organisms/ads_form_field.dart';
+import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,8 +61,6 @@ class CardHolderWidget extends StatelessWidget {
 }
 
 class _CardHolder extends StatelessWidget {
-  final TextEditingController _controller = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     final intl = AppLocalizations.of(context)!;
@@ -77,11 +73,10 @@ class _CardHolder extends StatelessWidget {
       builder: (context, state) {
         final model = state.model;
         final cardHolderName = model.cardHolderName.value;
-        _controller.text = cardHolderName;
 
         return AdsFormField(
-          formField: AdsTextField(
-            controller: _controller,
+          formField: AdsTextFormField(
+            initialValue: cardHolderName,
             key: const Key('card_name_textField'),
             keyboardType: TextInputType.text,
             errorText: model.alreadySubmitted

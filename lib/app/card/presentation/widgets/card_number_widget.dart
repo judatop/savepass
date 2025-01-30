@@ -1,6 +1,4 @@
-import 'package:atomic_design_system/molecules/button/ads_filled_round_icon_button.dart';
-import 'package:atomic_design_system/molecules/text/ads_text_field.dart';
-import 'package:atomic_design_system/organisms/ads_form_field.dart';
+import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +34,7 @@ class CardNumberWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Flexible(child: _Card()),
+            const Flexible(child: _Card()),
             Row(
               children: [
                 SizedBox(
@@ -63,9 +61,7 @@ class CardNumberWidget extends StatelessWidget {
 }
 
 class _Card extends StatelessWidget {
-  final TextEditingController _controller = TextEditingController();
-
-  _Card();
+  const _Card();
 
   @override
   Widget build(BuildContext context) {
@@ -79,22 +75,22 @@ class _Card extends StatelessWidget {
       builder: (context, state) {
         final model = state.model;
         final cardNumber = model.cardNumber.value;
-        _controller.text = cardNumber;
 
         return AdsFormField(
-          formField: AdsTextField(
-            controller: _controller,
-            key: const Key('card_number_textField'),
-            keyboardType: TextInputType.number,
+          formField: AdsTextFormField(
+            initialValue: cardNumber,
+            hintText: '0000000000000000',
             errorText: model.alreadySubmitted
                 ? model.cardNumber.getError(intl, model.cardNumber.error)
                 : null,
+            counterText: '',
+            key: const Key('card_number_textField'),
+            keyboardType: TextInputType.number,
             enableSuggestions: false,
             onChanged: (value) {
               bloc.add(ChangeCardNumberEvent(cardNumber: value));
             },
             textInputAction: TextInputAction.done,
-            hintText: '0000000000000000',
             inputFormatters: [
               FilteringTextInputFormatter.allow(
                 RegexUtils.numbers,

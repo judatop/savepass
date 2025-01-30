@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:savepass/app/card/domain/datasources/card_datasource.dart';
 import 'package:savepass/app/card/domain/repositories/card_repository.dart';
 import 'package:savepass/app/card/infrastructure/models/card_model.dart';
+import 'package:savepass/app/card/infrastructure/models/dashboard_card_model.dart';
 
 class CardRepositoryImpl implements CardRepository {
   final CardDatasource datasource;
@@ -33,7 +34,7 @@ class CardRepositoryImpl implements CardRepository {
   }
 
   @override
-  Future<Either<Fail, List<CardModel>>> getCards() async {
+  Future<Either<Fail, List<DashboardCardModel>>> getCards() async {
     return await datasource.getCards();
   }
 

@@ -65,10 +65,6 @@ class CardExpirationWidget extends StatelessWidget {
 }
 
 class _Month extends StatelessWidget {
-  final TextEditingController _controller = TextEditingController();
-
-  _Month();
-
   @override
   Widget build(BuildContext context) {
     final intl = AppLocalizations.of(context)!;
@@ -81,11 +77,10 @@ class _Month extends StatelessWidget {
       builder: (context, state) {
         final model = state.model;
         final expirationMonth = model.expirationMonth.value;
-        _controller.text = expirationMonth;
 
         return AdsFormField(
-          formField: AdsTextField(
-            controller: _controller,
+          formField: AdsTextFormField(
+            initialValue: expirationMonth,
             key: const Key('card_month_textField'),
             keyboardType: TextInputType.number,
             errorText: model.alreadySubmitted
@@ -112,10 +107,6 @@ class _Month extends StatelessWidget {
 }
 
 class _Year extends StatelessWidget {
-  final TextEditingController _controller = TextEditingController();
-
-  _Year();
-
   @override
   Widget build(BuildContext context) {
     final intl = AppLocalizations.of(context)!;
@@ -128,11 +119,10 @@ class _Year extends StatelessWidget {
       builder: (context, state) {
         final model = state.model;
         final expirationYear = model.expirationYear.value;
-        _controller.text = expirationYear;
 
         return AdsFormField(
-          formField: AdsTextField(
-            controller: _controller,
+          formField: AdsTextFormField(
+            initialValue: expirationYear,
             key: const Key('card_year_textField'),
             keyboardType: TextInputType.number,
             errorText: model.alreadySubmitted

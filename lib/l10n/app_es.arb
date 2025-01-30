@@ -247,5 +247,13 @@
     "noCardsCreatedTitle": "No existen tarjetas",
     "@noCardsCreatedTitle": {},
     "noCardsCreatedText": "Presiona para agregar una nueva tarjeta",
-    "@noCardsCreatedText": {}
+    "@noCardsCreatedText": {},
+    "toolTipAddCard": "Agregar una nueva tarjeta",
+    "@toolTipAddCard": {},
+    "editCardTitle": "Editar tarjeta",
+    "@editCardTitle": {},
+    "deleteCardText": "Una vez eliminada la tarjeta, no podrás recuperarla",
+    "@deleteCardText": {},
+    "cardDeleted": "Tarjeta eliminada",
+    "@cardDeleted": {}
 }

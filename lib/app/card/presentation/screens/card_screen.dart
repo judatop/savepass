@@ -48,7 +48,7 @@ void _listener(context, state) {
     );
   }
 
-  if(state is CardCreatedState){
+  if (state is CardCreatedState) {
     final bloc = Modular.get<DashboardBloc>();
     bloc.add(const DashboardInitialEvent());
     SnackBarUtils.showSuccessSnackBar(context, intl.cardCreated);

@@ -218,6 +218,8 @@
     "@cardMinLength": {},
     "newCardTitle": "New card",
     "@newCardTitle": {},
+    "editCardTitle": "Edit card",
+    "@editCardTitle": {},
     "cardValid": "VALID",
     "@cardValid": {},
     "cardUntil": "UNTIL",
@@ -247,5 +249,11 @@
     "noCardsCreatedTitle": "No cards created",
     "@noCardsCreatedTitle": {},
     "noCardsCreatedText": "Tap to add a new card",
-    "@noCardsCreatedText": {}
+    "@noCardsCreatedText": {},
+    "toolTipAddCard": "Add a new card",
+    "@toolTipAddCard": {},
+    "deleteCardText": "By deleting this card, you will not be able to recover it.",
+    "@deleteCardText": {},
+    "cardDeleted": "Card deleted",
+    "@cardDeleted": {}
 }

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
-import 'package:savepass/app/card/infrastructure/models/card_model.dart';
+import 'package:savepass/app/card/infrastructure/models/dashboard_card_model.dart';
 import 'package:savepass/app/password/infrastructure/models/password_model.dart';
 import 'package:savepass/app/profile/domain/entities/profile_entity.dart';
 import 'package:savepass/core/form/text_form.dart';
@@ -64,7 +64,7 @@ class DashboardStateModel extends Equatable {
   final TextForm homeSearch;
   final List<PasswordModel> passwords;
   final FormzSubmissionStatus passwordStatus;
-  final List<CardModel> cards;
+  final List<DashboardCardModel> cards;
   final FormzSubmissionStatus cardStatus;
 
   const DashboardStateModel({
@@ -91,7 +91,7 @@ class DashboardStateModel extends Equatable {
     TextForm? homeSearch,
     List<PasswordModel>? passwords,
     FormzSubmissionStatus? passwordStatus,
-    List<CardModel>? cards,
+    List<DashboardCardModel>? cards,
     FormzSubmissionStatus? cardStatus,
   }) {
     return DashboardStateModel(

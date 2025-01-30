@@ -1,12 +1,11 @@
-import 'package:atomic_design_system/molecules/button/ads_filled_round_icon_button.dart';
-import 'package:atomic_design_system/molecules/card/ads_card.dart';
-import 'package:atomic_design_system/molecules/text/ads_subtitle.dart';
-import 'package:atomic_design_system/molecules/text/ads_title.dart';
+import 'package:atomic_design_system/atomic_design_system.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
+import 'package:savepass/app/card/infrastructure/models/card_type.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/home/no_cards_widget.dart';
@@ -23,6 +22,7 @@ class LastCardsWidget extends StatelessWidget {
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
     final intl = AppLocalizations.of(context)!;
+    final textTheme = Theme.of(context).textTheme;
 
     return BlocBuilder<DashboardBloc, DashboardState>(
       buildWhen: (previous, current) =>
@@ -48,6 +48,7 @@ class LastCardsWidget extends StatelessWidget {
                     onPressedCallback: () {
                       Modular.to.pushNamed(Routes.cardRoute);
                     },
+                    tooltip: intl.toolTipAddCard,
                   ),
                   SizedBox(width: deviceWidth * 0.04),
                   AdsTitle(
@@ -77,52 +78,76 @@ class LastCardsWidget extends StatelessWidget {
                       aspectRatio: 2.0,
                       enableInfiniteScroll: false,
                     ),
-                    items: list.map((i) {
+                    items: list.map((card) {
                       return Builder(
                         builder: (BuildContext context) {
                           return AdsCard(
-                            child: Container(
-                              color: colorScheme.primary.withOpacity(0.1),
-                              width: MediaQuery.of(context).size.width,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 30,
-                                  vertical: 20,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const AdsSubtitle(text: 'Visa'),
-                                        SizedBox(
-                                          width: deviceWidth * 0.02,
-                                        ),
-                                        const Icon(Icons.credit_card),
-                                      ],
+                            onTap: () {},
+                            elevation: 1.5,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: deviceWidth * 0.05,
+                                vertical: deviceHeight * 0.02,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      card.type,
+                                      style: textTheme.titleMedium?.copyWith(
+                                        color: Colors.white,
+                                        fontSize: 19.5,
+                                      ),
+                                      textAlign: TextAlign.start,
                                     ),
-                                    SizedBox(
-                                      height: deviceHeight * 0.02,
+                                  ),
+                                  CachedNetworkImage(
+                                    imageUrl: card.url,
+                                    width: deviceWidth *
+                                        (card.type ==
+                                                CardType.dinersClub.stringValue
+                                            ? 0.08
+                                            : 0.12),
+                                    placeholder: (context, url) => Skeletonizer(
+                                      child: Container(
+                                        width: 20,
+                                      ),
                                     ),
-                                    const Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '1234 **** **** 0120',
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  ),
+                                  SizedBox(
+                                    height: deviceHeight * 0.02,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        card.cardNumber,
+                                        style: textTheme.titleMedium?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                          wordSpacing: deviceWidth * 0.025,
+                                          fontSize: 14.5,
                                         ),
-                                        Text(
-                                          'John Doe',
+                                      ),
+                                      Text(
+                                        card.cardHolderName,
+                                        style: textTheme.titleMedium?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w400,
+                                          wordSpacing: deviceWidth * 0.01,
+                                          fontSize: 14,
                                         ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
                           );

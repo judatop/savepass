@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:logger/logger.dart';
 import 'package:savepass/app/card/domain/datasources/card_datasource.dart';
 import 'package:savepass/app/card/infrastructure/models/card_model.dart';
+import 'package:savepass/app/card/infrastructure/models/dashboard_card_model.dart';
 import 'package:savepass/core/utils/db_utils.dart';
 import 'package:savepass/main.dart';
 
@@ -35,16 +36,12 @@ class SupabaseCardDatasource implements CardDatasource {
   }
 
   @override
-  Future<Either<Fail, List<CardModel>>> getCards() async {
+  Future<Either<Fail, List<DashboardCardModel>>> getCards() async {
     try {
-      final response = await supabase.from(DbUtils.cardsTable).select().order(
-            'created_at',
-            ascending: false,
-          );
+      final response = await supabase.rpc(DbUtils.getCardsFunction);
 
-      List<CardModel> cards = response.map((e) {
-        CardModel model = CardModel.fromJson(e);
-        return model;
+      List<DashboardCardModel> cards = (response as List<dynamic>).map((e) {
+        return DashboardCardModel.fromJson(e as Map<String, dynamic>);
       }).toList();
 
       return Right(cards);

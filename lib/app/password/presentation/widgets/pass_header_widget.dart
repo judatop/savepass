@@ -14,6 +14,7 @@ class PassHeaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = Modular.get<PasswordBloc>();
     final intl = AppLocalizations.of(context)!;
+    final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
     return BlocBuilder<PasswordBloc, PasswordState>(
@@ -29,7 +30,9 @@ class PassHeaderWidget extends StatelessWidget {
                   screenHeight,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: isUpdating
+                  ? MainAxisAlignment.spaceBetween
+                  : MainAxisAlignment.start,
               children: [
                 AdsFilledRoundIconButton(
                   icon: const Icon(
@@ -39,6 +42,10 @@ class PassHeaderWidget extends StatelessWidget {
                     Modular.to.pop();
                   },
                 ),
+                if (!isUpdating)
+                  SizedBox(
+                    width: screenWidth * 0.05,
+                  ),
                 isUpdating
                     ? AdsFilledRoundIconButton(
                         backgroundColor: ADSFoundationsColors.errorBackground,
@@ -88,7 +95,12 @@ class PassHeaderWidget extends StatelessWidget {
                           );
                         },
                       )
-                    : Container(),
+                    : AdsHeadline(
+                        text: isUpdating
+                            ? intl.passwordEditTitle
+                            : intl.passwordTitle,
+                        overflow: TextOverflow.ellipsis,
+                      ),
               ],
             ),
           ],

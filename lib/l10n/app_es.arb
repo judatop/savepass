@@ -255,5 +255,7 @@
     "deleteCardText": "Una vez eliminada la tarjeta, no podrás recuperarla",
     "@deleteCardText": {},
     "cardDeleted": "Tarjeta eliminada",
-    "@cardDeleted": {}
+    "@cardDeleted": {},
+    "cardValueCopiedClipboard": "Valor de tarjeta copiado en portapapeles",
+    "@cardValueCopiedClipboard": {}
 }

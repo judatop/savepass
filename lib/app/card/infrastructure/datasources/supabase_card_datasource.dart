@@ -73,4 +73,24 @@ class SupabaseCardDatasource implements CardDatasource {
       );
     }
   }
+
+  @override
+  Future<Either<Fail, String>> getCardValue(int index, String vaultId) async {
+    try {
+      final response = await supabase.rpc(
+        DbUtils.getCardValueFunction,
+        params: {
+          'index_val': index,
+          'secret_uuid': vaultId,
+        },
+      );
+
+      return Right(response as String);
+    } catch (e) {
+      log.e('getCardValue: $e');
+      return Left(
+        Fail('Error occurred while getting card value'),
+      );
+    }
+  }
 }

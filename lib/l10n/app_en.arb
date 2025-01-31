@@ -255,5 +255,7 @@
     "deleteCardText": "By deleting this card, you will not be able to recover it.",
     "@deleteCardText": {},
     "cardDeleted": "Card deleted",
-    "@cardDeleted": {}
+    "@cardDeleted": {},
+    "cardValueCopiedClipboard": "Card value copied to clipboard",
+    "@cardValueCopiedClipboard": {}
 }

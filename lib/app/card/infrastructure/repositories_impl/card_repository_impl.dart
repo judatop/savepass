@@ -42,4 +42,9 @@ class CardRepositoryImpl implements CardRepository {
   Future<Either<Fail, Unit>> insertCard(CardModel model) async {
     return await datasource.insertCard(model);
   }
+  
+  @override
+  Future<Either<Fail, String>> getCardValue(int index, String vaultId) async {
+    return await datasource.getCardValue(index, vaultId);
+  }
 }

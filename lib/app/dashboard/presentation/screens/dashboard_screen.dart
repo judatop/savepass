@@ -64,6 +64,13 @@ void _listener(context, state) {
       intl.passwordCopiedClipboard,
     );
   }
+
+  if (state is CardValueCopiedState) {
+    SnackBarUtils.showSuccessSnackBar(
+      context,
+      intl.cardValueCopiedClipboard,
+    );
+  }
 }
 
 class _Body extends StatelessWidget {

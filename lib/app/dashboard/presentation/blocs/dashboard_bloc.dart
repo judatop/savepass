@@ -45,6 +45,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<OnClickNewPassword>(_onOnClickNewPassword);
     on<OnClickNewCard>(_onOnClickNewCard);
     on<CopyPasswordEvent>(_onCopyPasswordEvent);
+    on<GetCardValueEvent>(_onGetCardValueEvent);
   }
 
   FutureOr<void> _onDashboardInitialEvent(
@@ -569,6 +570,58 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       PasswordObtainedState(
         state.model.copyWith(
           status: FormzSubmissionStatus.success,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onGetCardValueEvent(
+    GetCardValueEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(
+          statusCardValue: FormzSubmissionStatus.inProgress,
+        ),
+      ),
+    );
+
+    final index = event.index;
+
+    final response = await cardRepository.getCardValue(
+      index,
+      event.vaultId,
+    );
+
+    late String? value;
+
+    response.fold(
+      (l) {
+        value = null;
+      },
+      (r) {
+        value = r;
+      },
+    );
+
+    if (value == null) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(
+            statusCardValue: FormzSubmissionStatus.failure,
+          ),
+        ),
+      );
+
+      return;
+    }
+
+    await Clipboard.setData(ClipboardData(text: value!));
+    emit(
+      CardValueCopiedState(
+        state.model.copyWith(
+          statusCardValue: FormzSubmissionStatus.success,
         ),
       ),
     );

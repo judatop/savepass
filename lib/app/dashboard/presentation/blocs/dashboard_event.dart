@@ -70,3 +70,13 @@ class CopyPasswordEvent extends DashboardEvent {
 
   const CopyPasswordEvent({required this.passwordUuid}) : super();
 }
+
+class GetCardValueEvent extends DashboardEvent {
+  final String vaultId;
+  final int index;
+
+  const GetCardValueEvent({
+    required this.vaultId,
+    required this.index,
+  }) : super();
+}

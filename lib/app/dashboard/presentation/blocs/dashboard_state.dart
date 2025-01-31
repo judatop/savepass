@@ -54,6 +54,10 @@ class PasswordObtainedState extends DashboardState {
   const PasswordObtainedState(super.model);
 }
 
+class CardValueCopiedState extends DashboardState{
+  const CardValueCopiedState(super.model);
+}
+
 class DashboardStateModel extends Equatable {
   final int currentIndex;
   final TextForm displayName;
@@ -66,6 +70,7 @@ class DashboardStateModel extends Equatable {
   final FormzSubmissionStatus passwordStatus;
   final List<DashboardCardModel> cards;
   final FormzSubmissionStatus cardStatus;
+  final FormzSubmissionStatus statusCardValue;
 
   const DashboardStateModel({
     this.currentIndex = 0,
@@ -79,6 +84,7 @@ class DashboardStateModel extends Equatable {
     this.passwordStatus = FormzSubmissionStatus.initial,
     this.cards = const [],
     this.cardStatus = FormzSubmissionStatus.initial,
+    this.statusCardValue = FormzSubmissionStatus.initial,
   });
 
   DashboardStateModel copyWith({
@@ -93,6 +99,7 @@ class DashboardStateModel extends Equatable {
     FormzSubmissionStatus? passwordStatus,
     List<DashboardCardModel>? cards,
     FormzSubmissionStatus? cardStatus,
+    FormzSubmissionStatus? statusCardValue,
   }) {
     return DashboardStateModel(
       currentIndex: currentIndex ?? this.currentIndex,
@@ -106,6 +113,7 @@ class DashboardStateModel extends Equatable {
       passwordStatus: passwordStatus ?? this.passwordStatus,
       cards: cards ?? this.cards,
       cardStatus: cardStatus ?? this.cardStatus,
+      statusCardValue: statusCardValue ?? this.statusCardValue,
     );
   }
 
@@ -121,5 +129,7 @@ class DashboardStateModel extends Equatable {
         passwords,
         passwordStatus,
         cardStatus,
+        statusCardValue,
+
       ];
 }

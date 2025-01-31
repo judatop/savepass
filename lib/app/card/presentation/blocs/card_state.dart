@@ -41,6 +41,10 @@ class CardCreatedState extends CardState{
   const CardCreatedState(super.model);
 }
 
+class CardValueCopiedState extends CardState{
+  const CardValueCopiedState(super.model);
+}
+
 class CardStateModel extends Equatable {
   final CardNumberForm cardNumber;
   final TextForm cardHolderName;
@@ -55,6 +59,7 @@ class CardStateModel extends Equatable {
   final List<CardImageModel> images;
   final CardImageModel? cardImgSelected;
   final CardModel? cardSelected;
+
 
   const CardStateModel({
     this.cardNumber = const CardNumberForm.pure(),

@@ -53,6 +53,24 @@ void _listener(context, state) {
     Modular.to
         .pushNamedAndRemoveUntil(Routes.getStartedRoute, (route) => false);
   }
+
+  if (state is OpenPasswordState) {
+    Modular.to.pushNamed(Routes.passwordRoute);
+  }
+
+  if (state is PasswordObtainedState) {
+    SnackBarUtils.showSuccessSnackBar(
+      context,
+      intl.passwordCopiedClipboard,
+    );
+  }
+
+  if (state is CardValueCopiedState) {
+    SnackBarUtils.showSuccessSnackBar(
+      context,
+      intl.cardValueCopiedClipboard,
+    );
+  }
 }
 
 class _Body extends StatelessWidget {

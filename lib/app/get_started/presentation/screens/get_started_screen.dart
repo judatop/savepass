@@ -58,7 +58,7 @@ class _Body extends StatelessWidget {
       safeAreaBottom: false,
       wrapScroll: false,
       child: PopScope(
-        canPop: true,
+        canPop: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

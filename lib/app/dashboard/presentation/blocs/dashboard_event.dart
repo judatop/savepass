@@ -50,3 +50,33 @@ class DeleteAccountEvent extends DashboardEvent {
 class LogOutEvent extends DashboardEvent {
   const LogOutEvent() : super();
 }
+
+class ChangeHomeSearchEvent extends DashboardEvent {
+  final String search;
+
+  const ChangeHomeSearchEvent({required this.search}) : super();
+}
+
+class OnClickNewPassword extends DashboardEvent {
+  const OnClickNewPassword() : super();
+}
+
+class OnClickNewCard extends DashboardEvent {
+  const OnClickNewCard() : super();
+}
+
+class CopyPasswordEvent extends DashboardEvent {
+  final String passwordUuid;
+
+  const CopyPasswordEvent({required this.passwordUuid}) : super();
+}
+
+class GetCardValueEvent extends DashboardEvent {
+  final String vaultId;
+  final int index;
+
+  const GetCardValueEvent({
+    required this.vaultId,
+    required this.index,
+  }) : super();
+}

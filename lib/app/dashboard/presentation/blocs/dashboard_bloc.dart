@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:formz/formz.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:savepass/app/card/domain/repositories/card_repository.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
+import 'package:savepass/app/password/domain/repositories/password_repository.dart';
 import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/core/form/text_form.dart';
@@ -18,11 +21,15 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final Logger log;
   final ProfileRepository profileRepository;
   final PreferencesRepository preferencesRepository;
+  final PasswordRepository passwordRepository;
+  final CardRepository cardRepository;
 
   DashboardBloc({
     required this.log,
     required this.profileRepository,
     required this.preferencesRepository,
+    required this.passwordRepository,
+    required this.cardRepository,
   }) : super(const DashboardInitialState()) {
     on<DashboardInitialEvent>(_onDashboardInitialEvent);
     on<ChangeIndexEvent>(_onChangeIndexEvent);
@@ -34,6 +41,11 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<OpenTermsEvent>(_onOpenTermsEvent);
     on<DeleteAccountEvent>(_onDeleteAccountEvent);
     on<LogOutEvent>(_onLogOutEvent);
+    on<ChangeHomeSearchEvent>(_onChangeHomeSearchEvent);
+    on<OnClickNewPassword>(_onOnClickNewPassword);
+    on<OnClickNewCard>(_onOnClickNewCard);
+    on<CopyPasswordEvent>(_onCopyPasswordEvent);
+    on<GetCardValueEvent>(_onGetCardValueEvent);
   }
 
   FutureOr<void> _onDashboardInitialEvent(
@@ -50,6 +62,62 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             state.model.copyWith(
               profile: r,
               displayName: TextForm.dirty(r.displayName ?? ''),
+            ),
+          ),
+        );
+      },
+    );
+
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(passwordStatus: FormzSubmissionStatus.inProgress),
+      ),
+    );
+
+    final res2 = await passwordRepository.getPasswords();
+
+    res2.fold(
+      (l) {
+        emit(
+          ChangeDashboardState(
+            state.model.copyWith(passwordStatus: FormzSubmissionStatus.failure),
+          ),
+        );
+      },
+      (r) {
+        emit(
+          ChangeDashboardState(
+            state.model.copyWith(
+              passwordStatus: FormzSubmissionStatus.success,
+              passwords: r,
+            ),
+          ),
+        );
+      },
+    );
+
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(cardStatus: FormzSubmissionStatus.inProgress),
+      ),
+    );
+
+    final cardsRes = await cardRepository.getCards();
+
+    cardsRes.fold(
+      (l) {
+        emit(
+          ChangeDashboardState(
+            state.model.copyWith(cardStatus: FormzSubmissionStatus.failure),
+          ),
+        );
+      },
+      (r) {
+        emit(
+          ChangeDashboardState(
+            state.model.copyWith(
+              cardStatus: FormzSubmissionStatus.success,
+              cards: r,
             ),
           ),
         );
@@ -434,6 +502,128 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           ),
         );
       },
+    );
+  }
+
+  FutureOr<void> _onChangeHomeSearchEvent(
+    ChangeHomeSearchEvent event,
+    Emitter<DashboardState> emit,
+  ) {
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(homeSearch: TextForm.dirty(event.search)),
+      ),
+    );
+  }
+
+  FutureOr<void> _onOnClickNewPassword(
+    OnClickNewPassword event,
+    Emitter<DashboardState> emit,
+  ) {
+    emit(LoadingDashboardState(state.model));
+    emit(OpenPasswordState(state.model));
+  }
+
+  FutureOr<void> _onOnClickNewCard(
+    OnClickNewCard event,
+    Emitter<DashboardState> emit,
+  ) {}
+
+  FutureOr<void> _onCopyPasswordEvent(
+    CopyPasswordEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(
+          status: FormzSubmissionStatus.inProgress,
+        ),
+      ),
+    );
+
+    final response = await passwordRepository.getPassword(event.passwordUuid);
+
+    String? cleanPassword;
+
+    response.fold(
+      (l) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.failure,
+            ),
+          ),
+        );
+      },
+      (r) {
+        cleanPassword = r;
+      },
+    );
+
+    if (cleanPassword == null) {
+      return;
+    }
+
+    await Clipboard.setData(ClipboardData(text: cleanPassword!));
+
+    emit(
+      PasswordObtainedState(
+        state.model.copyWith(
+          status: FormzSubmissionStatus.success,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onGetCardValueEvent(
+    GetCardValueEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(
+          statusCardValue: FormzSubmissionStatus.inProgress,
+        ),
+      ),
+    );
+
+    final index = event.index;
+
+    final response = await cardRepository.getCardValue(
+      index,
+      event.vaultId,
+    );
+
+    late String? value;
+
+    response.fold(
+      (l) {
+        value = null;
+      },
+      (r) {
+        value = r;
+      },
+    );
+
+    if (value == null) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(
+            statusCardValue: FormzSubmissionStatus.failure,
+          ),
+        ),
+      );
+
+      return;
+    }
+
+    await Clipboard.setData(ClipboardData(text: value!));
+    emit(
+      CardValueCopiedState(
+        state.model.copyWith(
+          statusCardValue: FormzSubmissionStatus.success,
+        ),
+      ),
     );
   }
 }

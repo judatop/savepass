@@ -8,5 +8,19 @@ class DbUtils {
   static const insertMasterPassword = 'insert_master_password';
   static const updateMasterPassword = 'update_master_password';
   static const publicParameters = 'public_parameters';
+  static const passwordsParameters = 'passwords_parameters';
+  static const cardParameters = 'card_parameters';
   static const deleteAccountFunction = 'delete_account';
+  static const passwordsTable = 'passwords';
+  static const insertPasswordFunction = 'insert_password';
+  static const getPasswordFunction = 'get_password';
+  static const editPasswordFunction = 'edit_password';
+  static const deletepasswordFunction = 'delete_password';
+  static const cardsTable = 'cards';
+  static const insertCardFunction = 'insert_card';
+  static const getCardFunction = 'get_card';
+  static const getCardValueFunction = 'get_card_value';
+  static const getCardsFunction = 'get_cards';
+  static const editCardFunction = 'edit_card';
+  static const deleteCardFunction = 'delete_card';
 }

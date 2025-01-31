@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:savepass/app/card/infrastructure/models/dashboard_card_model.dart';
+import 'package:savepass/app/password/infrastructure/models/password_model.dart';
 import 'package:savepass/app/profile/domain/entities/profile_entity.dart';
 import 'package:savepass/core/form/text_form.dart';
 
@@ -44,6 +46,18 @@ class LogOutState extends DashboardState {
   const LogOutState(super.model);
 }
 
+class OpenPasswordState extends DashboardState {
+  const OpenPasswordState(super.model);
+}
+
+class PasswordObtainedState extends DashboardState {
+  const PasswordObtainedState(super.model);
+}
+
+class CardValueCopiedState extends DashboardState{
+  const CardValueCopiedState(super.model);
+}
+
 class DashboardStateModel extends Equatable {
   final int currentIndex;
   final TextForm displayName;
@@ -51,6 +65,12 @@ class DashboardStateModel extends Equatable {
   final FormzSubmissionStatus displayNameStatus;
   final FormzSubmissionStatus deleteStatus;
   final ProfileEntity? profile;
+  final TextForm homeSearch;
+  final List<PasswordModel> passwords;
+  final FormzSubmissionStatus passwordStatus;
+  final List<DashboardCardModel> cards;
+  final FormzSubmissionStatus cardStatus;
+  final FormzSubmissionStatus statusCardValue;
 
   const DashboardStateModel({
     this.currentIndex = 0,
@@ -59,6 +79,12 @@ class DashboardStateModel extends Equatable {
     this.displayNameStatus = FormzSubmissionStatus.initial,
     this.profile,
     this.deleteStatus = FormzSubmissionStatus.initial,
+    this.homeSearch = const TextForm.pure(),
+    this.passwords = const [],
+    this.passwordStatus = FormzSubmissionStatus.initial,
+    this.cards = const [],
+    this.cardStatus = FormzSubmissionStatus.initial,
+    this.statusCardValue = FormzSubmissionStatus.initial,
   });
 
   DashboardStateModel copyWith({
@@ -68,6 +94,12 @@ class DashboardStateModel extends Equatable {
     FormzSubmissionStatus? displayNameStatus,
     ProfileEntity? profile,
     FormzSubmissionStatus? deleteStatus,
+    TextForm? homeSearch,
+    List<PasswordModel>? passwords,
+    FormzSubmissionStatus? passwordStatus,
+    List<DashboardCardModel>? cards,
+    FormzSubmissionStatus? cardStatus,
+    FormzSubmissionStatus? statusCardValue,
   }) {
     return DashboardStateModel(
       currentIndex: currentIndex ?? this.currentIndex,
@@ -76,6 +108,12 @@ class DashboardStateModel extends Equatable {
       displayNameStatus: displayNameStatus ?? this.displayNameStatus,
       profile: profile ?? this.profile,
       deleteStatus: deleteStatus ?? this.deleteStatus,
+      homeSearch: homeSearch ?? this.homeSearch,
+      passwords: passwords ?? this.passwords,
+      passwordStatus: passwordStatus ?? this.passwordStatus,
+      cards: cards ?? this.cards,
+      cardStatus: cardStatus ?? this.cardStatus,
+      statusCardValue: statusCardValue ?? this.statusCardValue,
     );
   }
 
@@ -87,5 +125,11 @@ class DashboardStateModel extends Equatable {
         displayNameStatus,
         profile,
         deleteStatus,
+        homeSearch,
+        passwords,
+        passwordStatus,
+        cardStatus,
+        statusCardValue,
+
       ];
 }

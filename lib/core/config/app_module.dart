@@ -14,10 +14,22 @@ import 'package:savepass/app/auth_init/infrastructure/datasources/supabase_auth_
 import 'package:savepass/app/auth_init/infrastructure/repositories/auth_init_repository_impl.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_bloc.dart';
 import 'package:savepass/app/auth_init/presentation/screens/auth_init_screen.dart';
+import 'package:savepass/app/card/domain/datasources/card_datasource.dart';
+import 'package:savepass/app/card/domain/repositories/card_repository.dart';
+import 'package:savepass/app/card/infrastructure/datasources/supabase_card_datasource.dart';
+import 'package:savepass/app/card/infrastructure/repositories_impl/card_repository_impl.dart';
+import 'package:savepass/app/card/presentation/blocs/card_bloc.dart';
+import 'package:savepass/app/card/presentation/screens/card_screen.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/get_started/presentation/blocs/get_started_bloc.dart';
 import 'package:savepass/app/get_started/presentation/screens/get_started_screen.dart';
 import 'package:savepass/app/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:savepass/app/password/domain/datasources/password_datasource.dart';
+import 'package:savepass/app/password/domain/repositories/password_repository.dart';
+import 'package:savepass/app/password/infrastructure/datasources/supabase_password_datasource.dart';
+import 'package:savepass/app/password/infrastructure/repositories_impl/password_repository_impl.dart';
+import 'package:savepass/app/password/presentation/blocs/password_bloc.dart';
+import 'package:savepass/app/password/presentation/screens/password_screen.dart';
 import 'package:savepass/app/preferences/domain/datasources/parameters_datasource.dart';
 import 'package:savepass/app/preferences/domain/datasources/preferences_datasource.dart';
 import 'package:savepass/app/preferences/infrastructure/datasources/local_parameters_datasource.dart';
@@ -58,12 +70,18 @@ class AppModule extends Module {
     i.addSingleton<AuthInitRepository>(AuthInitRepositoryImpl.new);
     i.addSingleton<AuthDatasource>(SupabaseAuthDatasource.new);
     i.addSingleton<AuthRepository>(AuthRepositoryImpl.new);
+    i.addSingleton<PasswordDatasource>(SupabasePasswordDatasource.new);
+    i.addSingleton<PasswordRepository>(PasswordRepositoryImpl.new);
+    i.addSingleton<CardDatasource>(SupabaseCardDatasource.new);
+    i.addSingleton<CardRepository>(CardRepositoryImpl.new);
     i.addSingleton(GetStartedBloc.new);
     i.addSingleton(AuthInitBloc.new);
     i.addSingleton(SyncBloc.new);
     i.addSingleton(SplashBloc.new);
     i.addSingleton(AuthBloc.new);
     i.addSingleton(DashboardBloc.new);
+    i.addSingleton(PasswordBloc.new);
+    i.addSingleton(CardBloc.new);
   }
 
   @override
@@ -103,6 +121,14 @@ class AppModule extends Module {
     r.child(
       Routes.authEmailRoute,
       child: (context) => const AuthEmailScreen(),
+    );
+    r.child(
+      Routes.passwordRoute,
+      child: (context) => PasswordScreen(selectedPassId: r.args.data),
+    );
+    r.child(
+      Routes.cardRoute,
+      child: (context) => const CardScreen(),
     );
   }
 }

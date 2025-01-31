@@ -118,79 +118,82 @@ class _Body extends StatelessWidget {
 
     return AdsScreenTemplate(
       wrapScroll: false,
-      child: BlocBuilder<AuthInitBloc, AuthInitState>(
-        buildWhen: (previous, current) =>
-            (previous.model.status != current.model.status) ||
-            (previous.model.profile != current.model.profile),
-        builder: (context, state) {
-          final profile = state.model.profile;
-          String? displayName;
-          String? photoURL;
+      child: PopScope(
+        canPop: false,
+        child: BlocBuilder<AuthInitBloc, AuthInitState>(
+          buildWhen: (previous, current) =>
+              (previous.model.status != current.model.status) ||
+              (previous.model.profile != current.model.profile),
+          builder: (context, state) {
+            final profile = state.model.profile;
+            String? displayName;
+            String? photoURL;
 
-          if (profile != null) {
-            displayName = profile.displayName;
-            photoURL = profile.avatar;
-          }
+            if (profile != null) {
+              displayName = profile.displayName;
+              photoURL = profile.avatar;
+            }
 
-          return Skeletonizer(
-            enabled: state.model.status.isInProgress,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(
-                  height: deviceHeight * (Platform.isAndroid ? 0.05 : 0.02),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                AdsHeadline(
-                                  text: intl.hello,
-                                ),
-                                if (displayName != null)
-                                  Text(
-                                    displayName,
-                                    style: textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.w400,
-                                    ),
+            return Skeletonizer(
+              enabled: state.model.status.isInProgress,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(
+                    height: deviceHeight * (Platform.isAndroid ? 0.05 : 0.02),
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  AdsHeadline(
+                                    text: intl.hello,
                                   ),
-                              ],
-                            ),
-                            AdsAvatar(
-                              imageUrl: photoURL,
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: deviceHeight * 0.15),
-                        AdsSubtitle(
-                          text: intl.authInitText,
-                          textAlign: TextAlign.start,
-                        ),
-                        SizedBox(height: deviceHeight * 0.02),
-                        const MasterPasswordWidget(),
-                        SizedBox(height: deviceHeight * 0.05),
-                        const SubmitButtonWidget(),
-                      ],
+                                  if (displayName != null)
+                                    Text(
+                                      displayName,
+                                      style: textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              AdsAvatar(
+                                imageUrl: photoURL,
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: deviceHeight * 0.15),
+                          AdsSubtitle(
+                            text: intl.authInitText,
+                            textAlign: TextAlign.start,
+                          ),
+                          SizedBox(height: deviceHeight * 0.02),
+                          const MasterPasswordWidget(),
+                          SizedBox(height: deviceHeight * 0.05),
+                          const SubmitButtonWidget(),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: deviceHeight * 0.01),
-                // AdsOutlinedIconButton(
-                //   onPressedCallback: () => _openBiometrics(context),
-                //   text: intl.useBiometrics,
-                //   icon: Platform.isIOS ? Icons.face : Icons.fingerprint,
-                // ),
-              ],
-            ),
-          );
-        },
+                  SizedBox(height: deviceHeight * 0.01),
+                  // AdsOutlinedIconButton(
+                  //   onPressedCallback: () => _openBiometrics(context),
+                  //   text: intl.useBiometrics,
+                  //   icon: Platform.isIOS ? Icons.face : Icons.fingerprint,
+                  // ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

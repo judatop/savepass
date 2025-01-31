@@ -25,4 +25,7 @@ final class Env {
 
   @EnviedField(varName: 'SUPABASE_REDIRECT_URL', obfuscate: true)
   static final String supabaseRedirectUrl = _Env.supabaseRedirectUrl;
+
+  @EnviedField(varName: 'SUPABASE_PARAMETERS_BUCKET', obfuscate: true)
+  static final String supabaseParametersBucket = _Env.supabaseParametersBucket;
 }

@@ -147,6 +147,88 @@ class CardBloc extends Bloc<CardEvent, CardState> {
       const ChangeCardState(CardStateModel()),
     );
 
+    final isUpdating = event.cardId != null;
+
+    if(isUpdating){
+      emit(
+        ChangeCardState(
+          state.model.copyWith(
+            status: FormzSubmissionStatus.inProgress,
+          ),
+        ),
+      );
+
+      final response =
+          await cardRepository.getCardModel(event.cardId!);
+
+      late CardModel? cardModel;
+      response.fold(
+        (l) {
+          cardModel = null;
+        },
+        (r) {
+          cardModel = r;
+        },
+      );
+
+      if (cardModel == null) {
+        emit(
+          ErrorLoadingCardState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.failure,
+            ),
+          ),
+        );
+        return;
+      }
+
+      final cardRes = await cardRepository.getCard(cardModel!.card);
+
+      late String? cardValues;
+
+      cardRes.fold(
+        (l) {
+          cardValues = null;
+        },
+        (r) {
+          cardValues = r;
+        },
+      );
+
+      if (cardValues == null) {
+        emit(
+          ErrorLoadingCardState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.failure,
+            ),
+          ),
+        );
+        return;
+      }
+
+      final values = cardValues!.split('|');
+      final cardNumber = values[0];
+      final cardHoldername = values[1];
+      final cardExpirationMonth = values[2].split('/')[0];
+      final cardExpirationYear = values[2].split('/')[1];
+      final cardCvv = values[3];
+
+      emit(
+        ChangeCardState(
+          state.model.copyWith(
+            status: FormzSubmissionStatus.success,
+            cardSelected: cardModel,
+            cardNumber: CardNumberForm.dirty(cardNumber),
+            cardHolderName: TextForm.dirty(cardHoldername),
+            expirationMonth: CardExpForm.dirty(cardExpirationMonth),
+            expirationYear: CardExpForm.dirty(cardExpirationYear),
+            cardCvv: CardCvvForm.dirty(cardCvv),
+            isUpdating: isUpdating,
+          ),
+        ),
+      );
+    }
+
     final response = await preferencesRepository.getCardImages();
 
     response.fold(

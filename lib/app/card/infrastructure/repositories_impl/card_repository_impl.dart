@@ -10,7 +10,7 @@ class CardRepositoryImpl implements CardRepository {
   CardRepositoryImpl({required this.datasource});
 
   @override
-  Future<Either<Fail, Unit>> deletePassword(String cardId, String vaultId) {
+  Future<Either<Fail, Unit>> deleteCard(String cardId, String vaultId) {
     // TODO: implement deletePassword
     throw UnimplementedError();
   }
@@ -22,15 +22,13 @@ class CardRepositoryImpl implements CardRepository {
   }
 
   @override
-  Future<Either<Fail, String>> getCard(String cardId) {
-    // TODO: implement getCard
-    throw UnimplementedError();
+  Future<Either<Fail, String>> getCard(String cardId) async {
+    return await datasource.getCard(cardId);
   }
 
   @override
-  Future<Either<Fail, CardModel>> getCardModel(String cardId) {
-    // TODO: implement getCardModel
-    throw UnimplementedError();
+  Future<Either<Fail, CardModel>> getCardModel(String cardId) async {
+    return await datasource.getCardModel(cardId);
   }
 
   @override

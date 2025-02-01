@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class DashboardCardModel with EquatableMixin {
+  final String id;
   final String vaultId;
   final String type;
   final String url;
@@ -8,6 +9,7 @@ class DashboardCardModel with EquatableMixin {
   final String cardHolderName;
 
   const DashboardCardModel({
+    required this.id,
     required this.vaultId,
     required this.type,
     required this.url,
@@ -17,6 +19,7 @@ class DashboardCardModel with EquatableMixin {
 
   factory DashboardCardModel.fromJson(Map<String, dynamic> json) {
     return DashboardCardModel(
+      id: json['id'],
       vaultId: json['vault_id'],
       type: json['type'],
       url: json['url'],
@@ -27,6 +30,7 @@ class DashboardCardModel with EquatableMixin {
 
   @override
   List<Object?> get props => [
+        id,
         vaultId,
         type,
         url,

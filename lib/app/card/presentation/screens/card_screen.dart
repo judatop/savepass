@@ -54,6 +54,11 @@ void _listener(context, state) {
     SnackBarUtils.showSuccessSnackBar(context, intl.cardCreated);
     Modular.to.pop();
   }
+
+   if (state is ErrorLoadingCardState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.genericError);
+    Modular.to.pop();
+  }
 }
 
 class _Body extends StatelessWidget {

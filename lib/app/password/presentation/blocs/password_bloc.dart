@@ -403,6 +403,14 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     Emitter<PasswordState> emit,
   ) async {
     if (state.model.isUpdating) {
+      emit(
+        ChangePasswordState(
+          state.model.copyWith(
+            status: FormzSubmissionStatus.inProgress,
+          ),
+        ),
+      );
+
       final passwordId = state.model.passwordSelected!.id!;
       final vaultId = state.model.passwordSelected!.password;
 

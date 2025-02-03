@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/card/presentation/blocs/card_bloc.dart';
+import 'package:savepass/app/card/presentation/blocs/card_event.dart';
 import 'package:savepass/app/card/presentation/blocs/card_state.dart';
 
 class CardHeaderWidget extends StatelessWidget {
@@ -18,6 +19,7 @@ class CardHeaderWidget extends StatelessWidget {
     final intl = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final bloc = Modular.get<CardBloc>();
 
     return BlocBuilder<CardBloc, CardState>(
       buildWhen: (previous, current) =>
@@ -75,7 +77,7 @@ class CardHeaderWidget extends StatelessWidget {
                                   AdsFilledIconButton(
                                     onPressedCallback: () {
                                       Modular.to.pop();
-                                      // bloc.add(const DeletePasswordEvent());
+                                      bloc.add(const DeleteCardEvent());
                                     },
                                     text: intl.acceptButton,
                                     icon: Icons.check,

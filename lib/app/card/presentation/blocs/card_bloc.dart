@@ -36,6 +36,7 @@ class CardBloc extends Bloc<CardEvent, CardState> {
     on<SubmitCardExpirationEvent>(_onSubmitCardExpirationEvent);
     on<SubmitCardEvent>(_onSubmitCardEvent);
     on<SubmitEditCardEvent>(_onSubmitEditCardEvent);
+    on<DeleteCardEvent>(_onDeleteCardEvent);
   }
 
   CardType getCardType(String number) {
@@ -472,5 +473,46 @@ class CardBloc extends Bloc<CardEvent, CardState> {
         );
       },
     );
+  }
+
+  FutureOr<void> _onDeleteCardEvent(
+    DeleteCardEvent event,
+    Emitter<CardState> emit,
+  ) async {
+    if (state.model.isUpdating) {
+      emit(
+        ChangeCardState(
+          state.model.copyWith(
+            status: FormzSubmissionStatus.inProgress,
+          ),
+        ),
+      );
+
+      final passwordId = state.model.cardSelected!.id!;
+      final vaultId = state.model.cardSelected!.card;
+
+      final response = await cardRepository.deleteCard(passwordId, vaultId);
+
+      response.fold(
+        (l) {
+          emit(
+            GeneralErrorState(
+              state.model.copyWith(
+                status: FormzSubmissionStatus.failure,
+              ),
+            ),
+          );
+        },
+        (r) {
+          emit(
+            CardDeletedState(
+              state.model.copyWith(
+                status: FormzSubmissionStatus.success,
+              ),
+            ),
+          );
+        },
+      );
+    }
   }
 }

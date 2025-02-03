@@ -72,3 +72,7 @@ class GetCardValueEvent extends CardEvent {
     required this.index,
   }) : super();
 }
+
+class DeleteCardEvent extends CardEvent{
+  const DeleteCardEvent() : super();
+}

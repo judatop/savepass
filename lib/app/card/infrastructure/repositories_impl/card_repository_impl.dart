@@ -10,9 +10,8 @@ class CardRepositoryImpl implements CardRepository {
   CardRepositoryImpl({required this.datasource});
 
   @override
-  Future<Either<Fail, Unit>> deleteCard(String cardId, String vaultId) {
-    // TODO: implement deletePassword
-    throw UnimplementedError();
+  Future<Either<Fail, Unit>> deleteCard(String cardId, String vaultId) async {
+    return await datasource.deleteCard(cardId, vaultId);
   }
 
   @override

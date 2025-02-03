@@ -69,6 +69,13 @@ void _listener(context, state) {
     SnackBarUtils.showErrroSnackBar(context, intl.genericError);
     Modular.to.pop();
   }
+
+  if (state is CardDeletedState) {
+    final bloc = Modular.get<DashboardBloc>();
+    bloc.add(const DashboardInitialEvent());
+    SnackBarUtils.showSuccessSnackBar(context, intl.cardDeleted);
+    Modular.to.pop();
+  }
 }
 
 class _Body extends StatelessWidget {

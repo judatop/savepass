@@ -53,6 +53,10 @@ class ErrorLoadingCardState extends CardState {
   const ErrorLoadingCardState(super.model);
 }
 
+class CardDeletedState extends CardState{
+  const CardDeletedState(super.model);
+}
+
 class CardStateModel extends Equatable {
   final CardNumberForm cardNumber;
   final TextForm cardHolderName;

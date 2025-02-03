@@ -12,9 +12,23 @@ class SupabaseCardDatasource implements CardDatasource {
   SupabaseCardDatasource({required this.log});
 
   @override
-  Future<Either<Fail, Unit>> deleteCard(String cardId, String vaultId) {
-    // TODO: implement deletePassword
-    throw UnimplementedError();
+  Future<Either<Fail, Unit>> deleteCard(String cardId, String vaultId) async {
+    try {
+      await supabase.rpc(
+        DbUtils.deleteCardFunction,
+        params: {
+          'card_id_param': cardId,
+          'vault_id_param': vaultId,
+        },
+      );
+
+      return const Right(unit);
+    } catch (e) {
+      log.e('deleteCard: $e');
+      return Left(
+        Fail('Error occurred while deleting your card'),
+      );
+    }
   }
 
   @override

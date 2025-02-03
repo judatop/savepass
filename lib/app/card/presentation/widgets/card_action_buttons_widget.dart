@@ -4,6 +4,9 @@ import 'package:atomic_design_system/foundations/ads_foundation_sizes.dart';
 import 'package:atomic_design_system/molecules/button/ads_filled_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:savepass/app/card/presentation/blocs/card_bloc.dart';
+import 'package:savepass/app/card/presentation/blocs/card_event.dart';
 
 class CardActionButtonsWidget extends StatelessWidget {
   const CardActionButtonsWidget({super.key});
@@ -14,6 +17,7 @@ class CardActionButtonsWidget extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
+    final bloc = Modular.get<CardBloc>();
 
     return Positioned(
       bottom: 0,
@@ -21,7 +25,7 @@ class CardActionButtonsWidget extends StatelessWidget {
       right: 0,
       child: Container(
         color: colorScheme.brightness == Brightness.light
-            ? Colors.transparent
+            ? Colors.white
             : Colors.black,
         child: Column(
           children: [
@@ -40,7 +44,7 @@ class CardActionButtonsWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   AdsFilledButton(
-                    onPressedCallback: () {},
+                    onPressedCallback: () => bloc.add(const SubmitEditCardEvent()),
                     text: intl.saveText,
                   ),
                 ],

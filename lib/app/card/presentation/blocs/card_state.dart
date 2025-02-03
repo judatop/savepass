@@ -37,12 +37,24 @@ class MinLengthErrorCardState extends CardState {
   const MinLengthErrorCardState(super.model);
 }
 
-class CardCreatedState extends CardState{
+class CardCreatedState extends CardState {
   const CardCreatedState(super.model);
 }
 
-class CardValueCopiedState extends CardState{
+class CardEditedState extends CardState {
+  const CardEditedState(super.model);
+}
+
+class CardValueCopiedState extends CardState {
   const CardValueCopiedState(super.model);
+}
+
+class ErrorLoadingCardState extends CardState {
+  const ErrorLoadingCardState(super.model);
+}
+
+class CardDeletedState extends CardState{
+  const CardDeletedState(super.model);
 }
 
 class CardStateModel extends Equatable {
@@ -59,7 +71,6 @@ class CardStateModel extends Equatable {
   final List<CardImageModel> images;
   final CardImageModel? cardImgSelected;
   final CardModel? cardSelected;
-
 
   const CardStateModel({
     this.cardNumber = const CardNumberForm.pure(),
@@ -123,5 +134,6 @@ class CardStateModel extends Equatable {
         images,
         cardImgSelected,
         cardSelected,
+        status,
       ];
 }

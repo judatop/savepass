@@ -257,5 +257,11 @@
     "cardDeleted": "Card deleted",
     "@cardDeleted": {},
     "cardValueCopiedClipboard": "Card value copied to clipboard",
-    "@cardValueCopiedClipboard": {}
+    "@cardValueCopiedClipboard": {},
+    "copyValueCardTooltip": "Press a value to copy it",
+    "@copyValueCardTooltip": {},
+    "cardEdited": "Card updated successfully",
+    "@cardEdited": {},
+    "card": "Card",
+    "@card": {}
 }

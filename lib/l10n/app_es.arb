@@ -257,5 +257,11 @@
     "cardDeleted": "Tarjeta eliminada",
     "@cardDeleted": {},
     "cardValueCopiedClipboard": "Valor de tarjeta copiado en portapapeles",
-    "@cardValueCopiedClipboard": {}
+    "@cardValueCopiedClipboard": {},
+    "copyValueCardTooltip": "Presiona un valor para copiarlo",
+    "@copyValueCardTooltip": {},
+    "cardEdited": "Tarjeta actualizada exitosamente",
+    "@cardEdited": {},
+    "card": "Tarjeta",
+    "@card": {}
 }

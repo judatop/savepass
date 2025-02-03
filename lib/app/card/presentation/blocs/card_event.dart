@@ -8,9 +8,14 @@ abstract class CardEvent extends Equatable {
 }
 
 class CardInitialEvent extends CardEvent {
+
+  const CardInitialEvent() : super();
+}
+
+class CardInitDataEvent extends CardEvent {
   final String? cardId;
 
-  const CardInitialEvent({this.cardId}) : super();
+  const CardInitDataEvent({this.cardId}) : super();
 }
 
 class ChangeCardNumberEvent extends CardEvent {
@@ -55,8 +60,12 @@ class SubmitCardExpirationEvent extends CardEvent {
   const SubmitCardExpirationEvent() : super();
 }
 
-class SubmitCvvEvent extends CardEvent {
-  const SubmitCvvEvent() : super();
+class SubmitCardEvent extends CardEvent {
+  const SubmitCardEvent() : super();
+}
+
+class SubmitEditCardEvent extends CardEvent{
+  const SubmitEditCardEvent() : super();
 }
 
 class GetCardValueEvent extends CardEvent {
@@ -67,4 +76,8 @@ class GetCardValueEvent extends CardEvent {
     required this.vaultId,
     required this.index,
   }) : super();
+}
+
+class DeleteCardEvent extends CardEvent{
+  const DeleteCardEvent() : super();
 }

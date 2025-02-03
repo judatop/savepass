@@ -6,12 +6,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
 import 'package:savepass/app/card/infrastructure/models/card_type.dart';
+import 'package:savepass/app/card/presentation/widgets/copy_card_value_bottom_sheet_widget.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/home/no_cards_widget.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/core/image/image_paths.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class LastCardsWidget extends StatelessWidget {
@@ -47,9 +49,7 @@ class LastCardsWidget extends StatelessWidget {
                       Icons.add,
                       color: Colors.white,
                     ),
-                    onPressedCallback: () {
-                      Modular.to.pushNamed(Routes.cardRoute);
-                    },
+                    onPressedCallback: () => bloc.add(const OnClickNewCard()),
                     tooltip: intl.toolTipAddCard,
                   ),
                   SizedBox(width: deviceWidth * 0.04),
@@ -69,7 +69,6 @@ class LastCardsWidget extends StatelessWidget {
                         current.model.statusCardValue),
                 builder: (context, state) {
                   final list = state.model.cards;
-                  final status = state.model.statusCardValue;
 
                   if (list.isEmpty) {
                     return const NoCardsWidget();
@@ -95,148 +94,20 @@ class LastCardsWidget extends StatelessWidget {
                                 builder: (BuildContext context) {
                                   return SizedBox(
                                     height: deviceHeight * 0.70,
-                                    child: Stack(
-                                      children: [
-                                        Positioned(
-                                          top: deviceHeight * 0.01,
-                                          right: deviceWidth * 0.04,
-                                          child: Align(
-                                            alignment: Alignment.topRight,
-                                            child: TextButton(
-                                              onPressed: () => Modular.to.pop(),
-                                              child: const Text(
-                                                'Cerrar',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w900,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: deviceWidth * 0.04,
-                                            vertical: deviceHeight * 0.08,
-                                          ),
-                                          child: SingleChildScrollView(
-                                            child: Skeletonizer(
-                                              enabled: status.isInProgress,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  SizedBox(
-                                                    height: deviceHeight * 0.01,
-                                                  ),
-                                                  const Text(
-                                                    'Presiona el valor que deseas copiar:',
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: deviceHeight * 0.03,
-                                                  ),
-                                                  ListTile(
-                                                    onTap: () {
-                                                      Modular.to.pop();
-                                                      bloc.add(
-                                                        GetCardValueEvent(
-                                                          vaultId: card.vaultId,
-                                                          index: 1,
-                                                        ),
-                                                      );
-                                                    },
-                                                    title: const Text(
-                                                      'Card Number',
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                      ),
-                                                    ),
-                                                    leading: const Icon(
-                                                      Icons.numbers,
-                                                    ),
-                                                  ),
-                                                  const Divider(),
-                                                  ListTile(
-                                                    onTap: () {
-                                                      Modular.to.pop();
-                                                      bloc.add(
-                                                        GetCardValueEvent(
-                                                          vaultId: card.vaultId,
-                                                          index: 2,
-                                                        ),
-                                                      );
-                                                    },
-                                                    title: const Text(
-                                                      'Card Holdername',
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                      ),
-                                                    ),
-                                                    leading: const Icon(
-                                                      Icons.person,
-                                                    ),
-                                                  ),
-                                                  const Divider(),
-                                                  ListTile(
-                                                    onTap: () {
-                                                      Modular.to.pop();
-                                                      bloc.add(
-                                                        GetCardValueEvent(
-                                                          vaultId: card.vaultId,
-                                                          index: 3,
-                                                        ),
-                                                      );
-                                                    },
-                                                    title: const Text(
-                                                      'Expiration',
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                      ),
-                                                    ),
-                                                    leading: const Icon(
-                                                      Icons.date_range,
-                                                    ),
-                                                  ),
-                                                  const Divider(),
-                                                  ListTile(
-                                                    onTap: () {
-                                                      Modular.to.pop();
-                                                      bloc.add(
-                                                        GetCardValueEvent(
-                                                          vaultId: card.vaultId,
-                                                          index: 4,
-                                                        ),
-                                                      );
-                                                    },
-                                                    title: const Text(
-                                                      'CVV',
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                      ),
-                                                    ),
-                                                    leading: const Icon(
-                                                      Icons.security,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                    child: CopyCardValueBottomSheetWidget(
+                                      status: cardStatus,
+                                      card: card,
                                     ),
                                   );
                                 },
                               );
                             },
-                            onTap: () {},
+                            onTap: () {
+                              Modular.to.pushNamed(
+                                Routes.cardRoute,
+                                arguments: card.id,
+                              );
+                            },
                             child: Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: deviceWidth * 0.05,
@@ -250,28 +121,35 @@ class LastCardsWidget extends StatelessWidget {
                                 children: [
                                   Flexible(
                                     child: Text(
-                                      card.type,
+                                      card.type ?? intl.card,
                                       style: textTheme.titleMedium?.copyWith(
                                         fontSize: 19.5,
                                       ),
                                       textAlign: TextAlign.start,
                                     ),
                                   ),
-                                  CachedNetworkImage(
-                                    imageUrl: card.url,
-                                    width: deviceWidth *
-                                        (card.type ==
-                                                CardType.dinersClub.stringValue
-                                            ? 0.08
-                                            : 0.12),
-                                    placeholder: (context, url) => Skeletonizer(
-                                      child: Container(
-                                        width: 20,
-                                      ),
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        const Icon(Icons.error),
-                                  ),
+                                  card.url != null
+                                      ? CachedNetworkImage(
+                                          imageUrl: card.url!,
+                                          width: deviceWidth *
+                                              (card.type ==
+                                                      CardType.dinersClub
+                                                          .stringValue
+                                                  ? 0.08
+                                                  : 0.12),
+                                          placeholder: (context, url) =>
+                                              Skeletonizer(
+                                            child: Container(
+                                              width: 20,
+                                            ),
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                        )
+                                      : Image.asset(
+                                          ImagePaths.chipImage,
+                                          width: deviceWidth * 0.10,
+                                        ),
                                   SizedBox(
                                     height: deviceHeight * 0.02,
                                   ),

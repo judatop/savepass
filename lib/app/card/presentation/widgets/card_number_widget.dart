@@ -20,42 +20,52 @@ class CardNumberWidget extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final intl = AppLocalizations.of(context)!;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          intl.cardNumber,
-          style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
-        ),
-        const SizedBox(
-          height: 5,
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
+    return BlocBuilder<CardBloc, CardState>(
+      buildWhen: (previous, current) =>
+          previous.model.isUpdating != current.model.isUpdating,
+      builder: (context, state) {
+        final isUpdating = state.model.isUpdating;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Flexible(child: _Card()),
+            Text(
+              intl.cardNumber,
+              style:
+                  textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: deviceWidth * 0.03,
-                ),
-                AdsFilledRoundIconButton(
-                  backgroundColor: colorScheme.primary,
-                  icon: const Icon(
-                    Icons.check,
-                    color: Colors.white,
+                const Flexible(child: _Card()),
+                if (!isUpdating)
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: deviceWidth * 0.03,
+                      ),
+                      AdsFilledRoundIconButton(
+                        backgroundColor: colorScheme.primary,
+                        icon: const Icon(
+                          Icons.check,
+                          color: Colors.white,
+                        ),
+                        onPressedCallback: () {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          bloc.add(const SubmitCardNumberEvent());
+                        },
+                      ),
+                    ],
                   ),
-                  onPressedCallback: () {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    bloc.add(const SubmitCardNumberEvent());
-                  },
-                ),
               ],
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }

@@ -2,9 +2,9 @@ import 'package:atomic_design_system/molecules/card/ads_card.dart';
 import 'package:atomic_design_system/molecules/text/ads_subtitle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NoCardsWidget extends StatelessWidget {
   const NoCardsWidget({super.key});
@@ -14,8 +14,8 @@ class NoCardsWidget extends StatelessWidget {
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
     final colorScheme = Theme.of(context).colorScheme;
-    final bloc = Modular.get<DashboardBloc>();
     final intl = AppLocalizations.of(context)!;
+    final bloc = Modular.get<DashboardBloc>();
 
     return Padding(
       padding: EdgeInsets.symmetric(

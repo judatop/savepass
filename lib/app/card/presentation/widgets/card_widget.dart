@@ -4,6 +4,7 @@ import 'package:atomic_design_system/molecules/card/ads_card.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formz/formz.dart';
 import 'package:savepass/app/card/infrastructure/models/card_type.dart';
 import 'package:savepass/app/card/presentation/blocs/card_bloc.dart';
 import 'package:savepass/app/card/presentation/blocs/card_state.dart';
@@ -230,11 +231,14 @@ class CardWidget extends StatelessWidget {
             ),
             BlocBuilder<CardBloc, CardState>(
               buildWhen: (previous, current) =>
-                  previous.model.cardType != current.model.cardType,
+                  (previous.model.cardType != current.model.cardType) ||
+                  (previous.model.status != current.model.status),
               builder: (context, state) {
                 final cardType = state.model.cardType;
+                final status = state.model.status;
 
-                if (cardType != CardType.americanExpress) {
+                if (cardType != CardType.americanExpress ||
+                    status.isInProgress) {
                   return Container();
                 }
 

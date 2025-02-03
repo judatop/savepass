@@ -55,8 +55,12 @@ class SubmitCardExpirationEvent extends CardEvent {
   const SubmitCardExpirationEvent() : super();
 }
 
-class SubmitCvvEvent extends CardEvent {
-  const SubmitCvvEvent() : super();
+class SubmitCardEvent extends CardEvent {
+  const SubmitCardEvent() : super();
+}
+
+class SubmitEditCardEvent extends CardEvent{
+  const SubmitEditCardEvent() : super();
 }
 
 class GetCardValueEvent extends CardEvent {

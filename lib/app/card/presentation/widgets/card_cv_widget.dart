@@ -1,6 +1,4 @@
-import 'package:atomic_design_system/molecules/button/ads_filled_round_icon_button.dart';
-import 'package:atomic_design_system/molecules/text/ads_text_field.dart';
-import 'package:atomic_design_system/organisms/ads_form_field.dart';
+import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,8 +22,11 @@ class CardCvvWidget extends StatelessWidget {
 
     return BlocBuilder<CardBloc, CardState>(
       buildWhen: (previous, current) =>
-          previous.model.status != current.model.status,
+          (previous.model.status != current.model.status) ||
+          (previous.model.isUpdating != current.model.isUpdating),
       builder: (context, state) {
+        final isUpdating = state.model.isUpdating;
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -42,24 +43,25 @@ class CardCvvWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Flexible(child: _Cvv()),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: deviceWidth * 0.03,
-                    ),
-                    AdsFilledRoundIconButton(
-                      backgroundColor: colorScheme.primary,
-                      icon: const Icon(
-                        Icons.check,
-                        color: Colors.white,
+                if (!isUpdating)
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: deviceWidth * 0.03,
                       ),
-                      onPressedCallback: () {
-                        FocusManager.instance.primaryFocus?.unfocus();
-                        bloc.add(const SubmitCvvEvent());
-                      },
-                    ),
-                  ],
-                ),
+                      AdsFilledRoundIconButton(
+                        backgroundColor: colorScheme.primary,
+                        icon: const Icon(
+                          Icons.check,
+                          color: Colors.white,
+                        ),
+                        onPressedCallback: () {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          bloc.add(const SubmitCardEvent());
+                        },
+                      ),
+                    ],
+                  ),
               ],
             ),
           ],
@@ -84,7 +86,7 @@ class _Cvv extends StatelessWidget {
         final cvv = model.cardCvv.value;
 
         return AdsFormField(
-          formField: AdsTextField(
+          formField: AdsTextFormField(
             initialValue: cvv,
             key: const Key('card_cvv_textField'),
             keyboardType: TextInputType.number,

@@ -259,5 +259,7 @@
     "cardValueCopiedClipboard": "Card value copied to clipboard",
     "@cardValueCopiedClipboard": {},
     "copyValueCardTooltip": "Press a value to copy it",
-    "@copyValueCardTooltip": {}
+    "@copyValueCardTooltip": {},
+    "cardEdited": "Card updated successfully",
+    "@cardEdited": {}
 }

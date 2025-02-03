@@ -259,5 +259,7 @@
     "cardValueCopiedClipboard": "Valor de tarjeta copiado en portapapeles",
     "@cardValueCopiedClipboard": {},
     "copyValueCardTooltip": "Presiona un valor para copiarlo",
-    "@copyValueCardTooltip": {}
+    "@copyValueCardTooltip": {},
+    "cardEdited": "Tarjeta actualizada exitosamente",
+    "@cardEdited": {}
 }

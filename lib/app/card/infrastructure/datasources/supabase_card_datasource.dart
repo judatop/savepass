@@ -18,9 +18,26 @@ class SupabaseCardDatasource implements CardDatasource {
   }
 
   @override
-  Future<Either<Fail, Unit>> editCard(CardModel model, String clearCard) {
-    // TODO: implement editCard
-    throw UnimplementedError();
+  Future<Either<Fail, Unit>> editCard(CardModel model, String vaultId) async {
+    try {
+      await supabase.rpc(
+        DbUtils.editCardFunction,
+        params: {
+          'type_param': model.type,
+          'card_param': model.card,
+          'description_param': '',
+          'card_id_param': model.id,
+          'vault_id_param': vaultId,
+        },
+      );
+
+      return const Right(unit);
+    } catch (e) {
+      log.e('editCard: $e');
+      return Left(
+        Fail('Error occurred while editting card'),
+      );
+    }
   }
 
   @override

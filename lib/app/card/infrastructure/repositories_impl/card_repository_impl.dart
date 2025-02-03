@@ -16,9 +16,8 @@ class CardRepositoryImpl implements CardRepository {
   }
 
   @override
-  Future<Either<Fail, Unit>> editCard(CardModel model, String clearCard) {
-    // TODO: implement editCard
-    throw UnimplementedError();
+  Future<Either<Fail, Unit>> editCard(CardModel model, String vaultId) async {
+    return await datasource.editCard(model, vaultId);
   }
 
   @override

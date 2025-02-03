@@ -128,7 +128,7 @@ class AppModule extends Module {
     );
     r.child(
       Routes.cardRoute,
-      child: (context) => const CardScreen(),
+      child: (context) => CardScreen(cardId: r.args.data),
     );
   }
 }

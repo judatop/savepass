@@ -97,7 +97,7 @@ class CopyCardValueBottomSheetWidget extends StatelessWidget {
                       );
                     },
                     title: Text(
-                      card.cardHolderName,
+                      intl.cardholderName,
                       style: const TextStyle(
                         fontWeight: FontWeight.w300,
                       ),

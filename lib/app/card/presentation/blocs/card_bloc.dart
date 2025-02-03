@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:logger/logger.dart';
@@ -35,15 +34,11 @@ class CardBloc extends Bloc<CardEvent, CardState> {
     on<SubmitCardNumberEvent>(_onSubmitCardNumberEvent);
     on<SubmitCardHolderEvent>(_onSubmitCardHolderEvent);
     on<SubmitCardExpirationEvent>(_onSubmitCardExpirationEvent);
-    on<SubmitCvvEvent>(_onSubmitCvvEvent);
+    on<SubmitCardEvent>(_onSubmitCardEvent);
+    on<SubmitEditCardEvent>(_onSubmitEditCardEvent);
   }
 
-  FutureOr<void> _onChangeCardNumberEvent(
-    ChangeCardNumberEvent event,
-    Emitter<CardState> emit,
-  ) {
-    final number = event.cardNumber;
-
+  CardType getCardType(String number) {
     CardType cardType = CardType.unknown;
 
     if (number.startsWith('4')) {
@@ -57,6 +52,17 @@ class CardBloc extends Bloc<CardEvent, CardState> {
     } else if (number.startsWith('36') || number.startsWith('38')) {
       cardType = CardType.dinersClub;
     }
+
+    return cardType;
+  }
+
+  FutureOr<void> _onChangeCardNumberEvent(
+    ChangeCardNumberEvent event,
+    Emitter<CardState> emit,
+  ) {
+    final number = event.cardNumber;
+
+    CardType cardType = getCardType(number);
 
     CardImageModel? selected;
     for (CardImageModel m in state.model.images) {
@@ -144,22 +150,37 @@ class CardBloc extends Bloc<CardEvent, CardState> {
     Emitter<CardState> emit,
   ) async {
     emit(
-      const ChangeCardState(CardStateModel()),
+      const ChangeCardState(
+        CardStateModel(),
+      ),
     );
 
     final isUpdating = event.cardId != null;
 
-    if(isUpdating){
-      emit(
-        ChangeCardState(
-          state.model.copyWith(
-            status: FormzSubmissionStatus.inProgress,
-          ),
+    emit(
+      ChangeCardState(
+        CardStateModel(
+          isUpdating: isUpdating,
+          status: isUpdating
+              ? FormzSubmissionStatus.inProgress
+              : FormzSubmissionStatus.initial,
         ),
-      );
+      ),
+    );
 
-      final response =
-          await cardRepository.getCardModel(event.cardId!);
+    final response = await preferencesRepository.getCardImages();
+
+    List<CardImageModel> imgs = [];
+
+    response.fold(
+      (l) {},
+      (r) {
+        imgs = r;
+      },
+    );
+
+    if (isUpdating) {
+      final response = await cardRepository.getCardModel(event.cardId!);
 
       late CardModel? cardModel;
       response.fold(
@@ -213,6 +234,17 @@ class CardBloc extends Bloc<CardEvent, CardState> {
       final cardExpirationYear = values[2].split('/')[1];
       final cardCvv = values[3];
 
+      CardType cardType = getCardType(cardNumber);
+      CardImageModel? selectedImgModel;
+      if (isUpdating) {
+        for (CardImageModel imageModel in imgs) {
+          if (imageModel.id == cardModel?.type) {
+            selectedImgModel = imageModel;
+            break;
+          }
+        }
+      }
+
       emit(
         ChangeCardState(
           state.model.copyWith(
@@ -224,24 +256,19 @@ class CardBloc extends Bloc<CardEvent, CardState> {
             expirationYear: CardExpForm.dirty(cardExpirationYear),
             cardCvv: CardCvvForm.dirty(cardCvv),
             isUpdating: isUpdating,
+            cardImgSelected: selectedImgModel,
+            cardType: cardType,
           ),
         ),
       );
     }
 
-    final response = await preferencesRepository.getCardImages();
-
-    response.fold(
-      (l) {},
-      (r) {
-        emit(
-          ChangeCardState(
-            state.model.copyWith(
-              images: r,
-            ),
-          ),
-        );
-      },
+    emit(
+      ChangeCardState(
+        state.model.copyWith(
+          images: imgs,
+        ),
+      ),
     );
   }
 
@@ -330,8 +357,8 @@ class CardBloc extends Bloc<CardEvent, CardState> {
     );
   }
 
-  FutureOr<void> _onSubmitCvvEvent(
-    SubmitCvvEvent event,
+  FutureOr<void> _onSubmitCardEvent(
+    SubmitCardEvent event,
     Emitter<CardState> emit,
   ) async {
     emit(
@@ -356,30 +383,12 @@ class CardBloc extends Bloc<CardEvent, CardState> {
       return;
     }
 
-    final isUpdating = state.model.isUpdating;
+    final type = state.model.cardImgSelected?.id;
+    final card =
+        '${state.model.cardNumber.value}|${state.model.cardHolderName.value}|${state.model.expirationMonth.value}/${state.model.expirationYear.value}|${state.model.cardCvv.value}';
 
-    late final Either<Fail, Unit> response;
-    if (isUpdating && state.model.cardSelected != null) {
-      // response = await passwordRepository.editPassword(
-      //   PasswordModel(
-      //     id: state.model.passwordSelected!.id,
-      //     typeImg: state.model.imgUrl,
-      //     name: state.model.name.value,
-      //     username: state.model.email.value,
-      //     password: state.model.passwordSelected!.password,
-      //     description: state.model.desc.value,
-      //     domain: state.model.singleTag.value,
-      //   ),
-      //   state.model.password.value,
-      // );
-    } else {
-      final type = state.model.cardImgSelected?.id;
-      final card =
-          '${state.model.cardNumber.value}|${state.model.cardHolderName.value}|${state.model.expirationMonth.value}/${state.model.expirationYear.value}|${state.model.cardCvv.value}';
-
-      response =
-          await cardRepository.insertCard(CardModel(type: type, card: card));
-    }
+    final response =
+        await cardRepository.insertCard(CardModel(type: type, card: card));
 
     response.fold(
       (l) {
@@ -403,5 +412,65 @@ class CardBloc extends Bloc<CardEvent, CardState> {
     );
   }
 
- 
+  FutureOr<void> _onSubmitEditCardEvent(
+    SubmitEditCardEvent event,
+    Emitter<CardState> emit,
+  ) async {
+    emit(
+      ChangeCardState(
+        state.model.copyWith(
+          alreadySubmitted: true,
+          status: FormzSubmissionStatus.inProgress,
+        ),
+      ),
+    );
+
+    if (!Formz.validate([
+      state.model.cardNumber,
+      state.model.cardHolderName,
+      state.model.expirationMonth,
+      state.model.expirationYear,
+      state.model.cardCvv,
+    ])) {
+      emit(
+        ChangeCardState(
+          state.model.copyWith(
+            status: FormzSubmissionStatus.failure,
+          ),
+        ),
+      );
+      return;
+    }
+
+    final type = state.model.cardImgSelected?.id;
+    final card =
+        '${state.model.cardNumber.value}|${state.model.cardHolderName.value}|${state.model.expirationMonth.value}/${state.model.expirationYear.value}|${state.model.cardCvv.value}';
+    final cardSelected = state.model.cardSelected;
+
+    final response = await cardRepository.editCard(
+      CardModel(id: cardSelected!.id, type: type, card: card),
+      cardSelected.card,
+    );
+
+    response.fold(
+      (l) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.failure,
+            ),
+          ),
+        );
+      },
+      (r) {
+        emit(
+          CardEditedState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.success,
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

@@ -7,7 +7,7 @@ abstract class CardDatasource {
   Future<Either<Fail, List<DashboardCardModel>>> getCards();
   Future<Either<Fail, String>> getCard(String cardId);
   Future<Either<Fail, CardModel>> getCardModel(String cardId);
-  Future<Either<Fail, Unit>> editCard(CardModel model, String clearCard);
+  Future<Either<Fail, Unit>> editCard(CardModel model, String vaultId);
   Future<Either<Fail, Unit>> deleteCard(String cardId, String vaultId);
   Future<Either<Fail, String>> getCardValue(int index, String vaultId);
 }

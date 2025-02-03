@@ -1,5 +1,8 @@
 import 'package:atomic_design_system/molecules/card/ads_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 
 class AddCardWidget extends StatelessWidget {
   const AddCardWidget({super.key});
@@ -15,7 +18,10 @@ class AddCardWidget extends StatelessWidget {
 
     return AdsCard(
       elevation: 1,
-      onTap: () {},
+      onTap: () {
+        final bloc = Modular.get<DashboardBloc>();
+        bloc.add(const OnClickNewCard());
+      },
       bgColor: isLight ? const Color(0xFFE8E8E8) : Colors.black,
       child: Padding(
         padding: EdgeInsets.symmetric(

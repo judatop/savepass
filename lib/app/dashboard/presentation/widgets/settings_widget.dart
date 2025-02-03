@@ -10,6 +10,7 @@ import 'package:savepass/app/dashboard/presentation/widgets/settings/policy_sett
 import 'package:savepass/app/dashboard/presentation/widgets/settings/terms_settings_widget.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/settings/theme_settings_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/main.dart';
 
 class SettingsWidget extends StatelessWidget {
   const SettingsWidget({super.key});
@@ -36,7 +37,18 @@ class SettingsWidget extends StatelessWidget {
             ),
             SizedBox(height: deviceHeight * 0.015),
             const Divider(),
-            SizedBox(height: deviceHeight * 0.03),
+            SizedBox(height: deviceHeight * 0.01),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  supabase.auth.currentUser?.email ?? '',
+                  style: const TextStyle(color: Colors.grey),
+                ),
+              ],
+            ),
+            SizedBox(height: deviceHeight * 0.02),
             const AvatarSettingsWidget(),
             SizedBox(height: deviceHeight * 0.02),
             const DisplayNameWidget(),

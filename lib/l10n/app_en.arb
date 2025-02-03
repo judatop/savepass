@@ -261,5 +261,7 @@
     "copyValueCardTooltip": "Press a value to copy it",
     "@copyValueCardTooltip": {},
     "cardEdited": "Card updated successfully",
-    "@cardEdited": {}
+    "@cardEdited": {},
+    "card": "Card",
+    "@card": {}
 }

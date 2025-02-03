@@ -261,5 +261,7 @@
     "copyValueCardTooltip": "Presiona un valor para copiarlo",
     "@copyValueCardTooltip": {},
     "cardEdited": "Tarjeta actualizada exitosamente",
-    "@cardEdited": {}
+    "@cardEdited": {},
+    "card": "Tarjeta",
+    "@card": {}
 }

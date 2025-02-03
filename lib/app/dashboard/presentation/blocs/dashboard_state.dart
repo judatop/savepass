@@ -50,6 +50,10 @@ class OpenPasswordState extends DashboardState {
   const OpenPasswordState(super.model);
 }
 
+class OpenCardState extends DashboardState {
+  const OpenCardState(super.model);
+}
+
 class PasswordObtainedState extends DashboardState {
   const PasswordObtainedState(super.model);
 }

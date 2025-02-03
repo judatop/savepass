@@ -3,16 +3,16 @@ import 'package:equatable/equatable.dart';
 class DashboardCardModel with EquatableMixin {
   final String id;
   final String vaultId;
-  final String type;
-  final String url;
+  final String? type;
+  final String? url;
   final String cardNumber;
   final String cardHolderName;
 
   const DashboardCardModel({
     required this.id,
     required this.vaultId,
-    required this.type,
-    required this.url,
+    this.type,
+    this.url,
     required this.cardNumber,
     required this.cardHolderName,
   });

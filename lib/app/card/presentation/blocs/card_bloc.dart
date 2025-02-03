@@ -26,6 +26,7 @@ class CardBloc extends Bloc<CardEvent, CardState> {
     required this.cardRepository,
   }) : super(const CardInitialState()) {
     on<CardInitialEvent>(_onCardInitialEvent);
+    on<CardInitDataEvent>(_onCardInitDataEvent);
     on<ChangeCardNumberEvent>(_onChangeCardNumberEvent);
     on<ChangeCardHolderEvent>(_onChangeCardHolderEvent);
     on<ChangeCardCvvEvent>(_onChangeCardCvv);
@@ -149,13 +150,18 @@ class CardBloc extends Bloc<CardEvent, CardState> {
   FutureOr<void> _onCardInitialEvent(
     CardInitialEvent event,
     Emitter<CardState> emit,
-  ) async {
+  ) {
     emit(
       const ChangeCardState(
         CardStateModel(),
       ),
     );
+  }
 
+  FutureOr<void> _onCardInitDataEvent(
+    CardInitDataEvent event,
+    Emitter<CardState> emit,
+  ) async {
     final isUpdating = event.cardId != null;
 
     emit(

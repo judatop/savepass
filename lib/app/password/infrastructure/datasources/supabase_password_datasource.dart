@@ -39,7 +39,7 @@ class SupabasePasswordDatasource implements PasswordDatasource {
     try {
       final response =
           await supabase.from(DbUtils.passwordsTable).select().order(
-                'created_at',
+                'updated_at',
                 ascending: false,
               );
 

@@ -32,7 +32,9 @@ class CardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = Modular.get<CardBloc>();
     return BlocProvider.value(
-      value: bloc..add(CardInitialEvent(cardId: cardId)),
+      value: bloc
+        ..add(const CardInitialEvent())
+        ..add(CardInitDataEvent(cardId: cardId)),
       child: const BlocListener<CardBloc, CardState>(
         listener: _listener,
         child: _Body(),

@@ -8,9 +8,14 @@ abstract class CardEvent extends Equatable {
 }
 
 class CardInitialEvent extends CardEvent {
+
+  const CardInitialEvent() : super();
+}
+
+class CardInitDataEvent extends CardEvent {
   final String? cardId;
 
-  const CardInitialEvent({this.cardId}) : super();
+  const CardInitDataEvent({this.cardId}) : super();
 }
 
 class ChangeCardNumberEvent extends CardEvent {

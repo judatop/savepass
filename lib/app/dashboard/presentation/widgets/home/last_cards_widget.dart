@@ -8,10 +8,12 @@ import 'package:formz/formz.dart';
 import 'package:savepass/app/card/infrastructure/models/card_type.dart';
 import 'package:savepass/app/card/presentation/widgets/copy_card_value_bottom_sheet_widget.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/home/no_cards_widget.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/core/image/image_paths.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class LastCardsWidget extends StatelessWidget {
@@ -24,6 +26,7 @@ class LastCardsWidget extends StatelessWidget {
     final deviceHeight = MediaQuery.of(context).size.height;
     final intl = AppLocalizations.of(context)!;
     final textTheme = Theme.of(context).textTheme;
+    final bloc = Modular.get<DashboardBloc>();
 
     return BlocBuilder<DashboardBloc, DashboardState>(
       buildWhen: (previous, current) =>
@@ -46,9 +49,7 @@ class LastCardsWidget extends StatelessWidget {
                       Icons.add,
                       color: Colors.white,
                     ),
-                    onPressedCallback: () {
-                      Modular.to.pushNamed(Routes.cardRoute);
-                    },
+                    onPressedCallback: () => bloc.add(const OnClickNewCard()),
                     tooltip: intl.toolTipAddCard,
                   ),
                   SizedBox(width: deviceWidth * 0.04),
@@ -120,28 +121,35 @@ class LastCardsWidget extends StatelessWidget {
                                 children: [
                                   Flexible(
                                     child: Text(
-                                      card.type,
+                                      card.type ?? intl.card,
                                       style: textTheme.titleMedium?.copyWith(
                                         fontSize: 19.5,
                                       ),
                                       textAlign: TextAlign.start,
                                     ),
                                   ),
-                                  CachedNetworkImage(
-                                    imageUrl: card.url,
-                                    width: deviceWidth *
-                                        (card.type ==
-                                                CardType.dinersClub.stringValue
-                                            ? 0.08
-                                            : 0.12),
-                                    placeholder: (context, url) => Skeletonizer(
-                                      child: Container(
-                                        width: 20,
-                                      ),
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        const Icon(Icons.error),
-                                  ),
+                                  card.url != null
+                                      ? CachedNetworkImage(
+                                          imageUrl: card.url!,
+                                          width: deviceWidth *
+                                              (card.type ==
+                                                      CardType.dinersClub
+                                                          .stringValue
+                                                  ? 0.08
+                                                  : 0.12),
+                                          placeholder: (context, url) =>
+                                              Skeletonizer(
+                                            child: Container(
+                                              width: 20,
+                                            ),
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                        )
+                                      : Image.asset(
+                                          ImagePaths.chipImage,
+                                          width: deviceWidth * 0.10,
+                                        ),
                                   SizedBox(
                                     height: deviceHeight * 0.02,
                                   ),

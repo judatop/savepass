@@ -1,5 +1,9 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
+
+import '../../blocs/dashboard_bloc.dart';
 
 class CardsWidget extends StatelessWidget {
   const CardsWidget({super.key});
@@ -23,23 +27,37 @@ class CardsWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '3',
-                  style: theme.textTheme.displayMedium
-                      ?.copyWith(color: Colors.white),
-                ),
-                Text(
-                  'cards',
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    color: Colors.white,
-                    fontSize: 19,
-                  ),
-                ),
-                SizedBox(height: deviceHeight * 0.01),
-              ],
+            BlocBuilder<DashboardBloc, DashboardState>(
+              buildWhen: (previous, current) =>
+                  previous.model.cards != current.model.cards,
+              builder: (context, state) {
+                final value = state.model.cards.length;
+
+                String txtValue = value.toString();
+
+                if (value > 0 && value < 10) {
+                  txtValue = '0$txtValue';
+                }
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      txtValue,
+                      style: theme.textTheme.displayMedium
+                          ?.copyWith(color: Colors.white),
+                    ),
+                    Text(
+                      'card${value == 1 ? '' : 's'}',
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        color: Colors.white,
+                        fontSize: 19,
+                      ),
+                    ),
+                    SizedBox(height: deviceHeight * 0.01),
+                  ],
+                );
+              },
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,

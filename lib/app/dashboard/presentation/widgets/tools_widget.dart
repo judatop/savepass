@@ -71,7 +71,8 @@ class ToolsWidget extends StatelessWidget {
               right: deviceWidth * 0.04,
               bottom: deviceHeight * 0.02,
             ),
-            child: const JoinBiometricsWidget(),
+            child: Container(),
+            // child: const JoinBiometricsWidget(),
           ),
         ),
         Expanded(

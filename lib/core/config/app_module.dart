@@ -39,6 +39,7 @@ import 'package:savepass/app/profile/domain/datasources/profile_datasource.dart'
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/app/profile/infraestructure/datasources/supabase_profile_datasource.dart';
 import 'package:savepass/app/profile/infraestructure/repositories_impl/profile_repository_impl.dart';
+import 'package:savepass/app/search/presentation/screens/search_screen.dart';
 import 'package:savepass/app/splash/presentation/blocs/splash_bloc.dart';
 import 'package:savepass/app/splash/presentation/splash_screen.dart';
 import 'package:savepass/app/sync_pass/presentation/blocs/sync_bloc.dart';
@@ -129,6 +130,10 @@ class AppModule extends Module {
     r.child(
       Routes.cardRoute,
       child: (context) => CardScreen(cardId: r.args.data),
+    );
+    r.child(
+      Routes.searchRoute,
+      child: (context) => const SearchScreen(),
     );
   }
 }

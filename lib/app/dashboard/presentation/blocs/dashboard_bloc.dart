@@ -41,7 +41,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<OpenTermsEvent>(_onOpenTermsEvent);
     on<DeleteAccountEvent>(_onDeleteAccountEvent);
     on<LogOutEvent>(_onLogOutEvent);
-    on<ChangeHomeSearchEvent>(_onChangeHomeSearchEvent);
     on<OnClickNewPassword>(_onOnClickNewPassword);
     on<CopyPasswordEvent>(_onCopyPasswordEvent);
     on<GetCardValueEvent>(_onGetCardValueEvent);
@@ -502,17 +501,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           ),
         );
       },
-    );
-  }
-
-  FutureOr<void> _onChangeHomeSearchEvent(
-    ChangeHomeSearchEvent event,
-    Emitter<DashboardState> emit,
-  ) {
-    emit(
-      ChangeDashboardState(
-        state.model.copyWith(homeSearch: TextForm.dirty(event.search)),
-      ),
     );
   }
 

@@ -51,12 +51,6 @@ class LogOutEvent extends DashboardEvent {
   const LogOutEvent() : super();
 }
 
-class ChangeHomeSearchEvent extends DashboardEvent {
-  final String search;
-
-  const ChangeHomeSearchEvent({required this.search}) : super();
-}
-
 class OnClickNewPassword extends DashboardEvent {
   const OnClickNewPassword() : super();
 }

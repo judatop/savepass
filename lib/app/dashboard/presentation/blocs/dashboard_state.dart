@@ -69,7 +69,6 @@ class DashboardStateModel extends Equatable {
   final FormzSubmissionStatus displayNameStatus;
   final FormzSubmissionStatus deleteStatus;
   final ProfileEntity? profile;
-  final TextForm homeSearch;
   final List<PasswordModel> passwords;
   final FormzSubmissionStatus passwordStatus;
   final List<DashboardCardModel> cards;
@@ -83,7 +82,6 @@ class DashboardStateModel extends Equatable {
     this.displayNameStatus = FormzSubmissionStatus.initial,
     this.profile,
     this.deleteStatus = FormzSubmissionStatus.initial,
-    this.homeSearch = const TextForm.pure(),
     this.passwords = const [],
     this.passwordStatus = FormzSubmissionStatus.initial,
     this.cards = const [],
@@ -98,7 +96,6 @@ class DashboardStateModel extends Equatable {
     FormzSubmissionStatus? displayNameStatus,
     ProfileEntity? profile,
     FormzSubmissionStatus? deleteStatus,
-    TextForm? homeSearch,
     List<PasswordModel>? passwords,
     FormzSubmissionStatus? passwordStatus,
     List<DashboardCardModel>? cards,
@@ -112,7 +109,6 @@ class DashboardStateModel extends Equatable {
       displayNameStatus: displayNameStatus ?? this.displayNameStatus,
       profile: profile ?? this.profile,
       deleteStatus: deleteStatus ?? this.deleteStatus,
-      homeSearch: homeSearch ?? this.homeSearch,
       passwords: passwords ?? this.passwords,
       passwordStatus: passwordStatus ?? this.passwordStatus,
       cards: cards ?? this.cards,
@@ -129,7 +125,6 @@ class DashboardStateModel extends Equatable {
         displayNameStatus,
         profile,
         deleteStatus,
-        homeSearch,
         passwords,
         passwordStatus,
         cardStatus,

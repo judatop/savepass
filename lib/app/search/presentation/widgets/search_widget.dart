@@ -34,7 +34,7 @@ class _SearchWidgetState extends State<SearchWidget> {
       errorText: null,
       enableSuggestions: true,
       onChanged: (value) {},
-      textInputAction: TextInputAction.done,
+      textInputAction: TextInputAction.search,
       onSubmitted: (String? value) {
         debugPrint('Submitted: $value');
       },

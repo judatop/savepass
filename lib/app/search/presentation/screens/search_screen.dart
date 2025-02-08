@@ -2,15 +2,37 @@ import 'package:atomic_design_system/foundations/ads_foundation_sizes.dart';
 import 'package:atomic_design_system/molecules/text/ads_headline.dart';
 import 'package:atomic_design_system/templates/ads_screen_template.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:savepass/app/search/presentation/blocs/search_bloc.dart';
+import 'package:savepass/app/search/presentation/blocs/search_event.dart';
+import 'package:savepass/app/search/presentation/blocs/search_state.dart';
 import 'package:savepass/app/search/presentation/widgets/search_header_widget.dart';
 import 'package:savepass/app/search/presentation/widgets/search_list_widget.dart';
 import 'package:savepass/app/search/presentation/widgets/search_widget.dart';
 
 class SearchScreen extends StatelessWidget {
-  const SearchScreen({
-    super.key,
-  });
+  const SearchScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Modular.get<SearchBloc>();
+ return BlocProvider.value(
+      value: bloc..add(const SearchInitialEvent()),
+      child: const BlocListener<SearchBloc, SearchState>(
+        listener: _listener,
+        child: _Body(),
+      ),
+    );
+  }
+}
+
+void _listener(context, state) {}
+
+
+class _Body extends StatelessWidget {
+  const _Body();
 
   @override
   Widget build(BuildContext context) {

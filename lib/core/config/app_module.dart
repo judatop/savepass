@@ -39,6 +39,7 @@ import 'package:savepass/app/profile/domain/datasources/profile_datasource.dart'
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/app/profile/infraestructure/datasources/supabase_profile_datasource.dart';
 import 'package:savepass/app/profile/infraestructure/repositories_impl/profile_repository_impl.dart';
+import 'package:savepass/app/search/presentation/blocs/search_bloc.dart';
 import 'package:savepass/app/search/presentation/screens/search_screen.dart';
 import 'package:savepass/app/splash/presentation/blocs/splash_bloc.dart';
 import 'package:savepass/app/splash/presentation/splash_screen.dart';
@@ -83,6 +84,7 @@ class AppModule extends Module {
     i.addSingleton(DashboardBloc.new);
     i.addSingleton(PasswordBloc.new);
     i.addSingleton(CardBloc.new);
+    i.addSingleton(SearchBloc.new);
   }
 
   @override

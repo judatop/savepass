@@ -6,7 +6,6 @@ class DbUtils {
   static const checkMasterPasswordFunction = 'check_master_password';
   static const isEmailExists = 'is_email_exist';
   static const insertMasterPassword = 'insert_master_password';
-  static const updateMasterPassword = 'update_master_password';
   static const publicParameters = 'public_parameters';
   static const passwordsParameters = 'passwords_parameters';
   static const cardParameters = 'card_parameters';

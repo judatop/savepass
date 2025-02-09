@@ -42,25 +42,39 @@ class CardNumberWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Flexible(child: _Card()),
-                if (!isUpdating)
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: deviceWidth * 0.03,
+                isUpdating
+                    ? Row(
+                        children: [
+                          SizedBox(
+                            width: deviceWidth * 0.03,
+                          ),
+                          AdsFilledRoundIconButton(
+                            icon: const Icon(Icons.copy),
+                            onPressedCallback: () {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                              bloc.add(const CopyCardNumberClipboardEvent());
+                            },
+                          ),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          SizedBox(
+                            width: deviceWidth * 0.03,
+                          ),
+                          AdsFilledRoundIconButton(
+                            backgroundColor: colorScheme.primary,
+                            icon: const Icon(
+                              Icons.check,
+                              color: Colors.white,
+                            ),
+                            onPressedCallback: () {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                              bloc.add(const SubmitCardNumberEvent());
+                            },
+                          ),
+                        ],
                       ),
-                      AdsFilledRoundIconButton(
-                        backgroundColor: colorScheme.primary,
-                        icon: const Icon(
-                          Icons.check,
-                          color: Colors.white,
-                        ),
-                        onPressedCallback: () {
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          bloc.add(const SubmitCardNumberEvent());
-                        },
-                      ),
-                    ],
-                  ),
               ],
             ),
           ],

@@ -42,25 +42,41 @@ class CardHolderWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Flexible(child: _CardHolder()),
-                if (!isUpdating)
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: deviceWidth * 0.03,
+                isUpdating
+                    ? Row(
+                        children: [
+                          SizedBox(
+                            width: deviceWidth * 0.03,
+                          ),
+                          AdsFilledRoundIconButton(
+                            icon: const Icon(Icons.copy),
+                            onPressedCallback: () {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                              bloc.add(
+                                const CopyCardHoldernameClipboardEvent(),
+                              );
+                            },
+                          ),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          SizedBox(
+                            width: deviceWidth * 0.03,
+                          ),
+                          AdsFilledRoundIconButton(
+                            backgroundColor: colorScheme.primary,
+                            icon: const Icon(
+                              Icons.check,
+                              color: Colors.white,
+                            ),
+                            onPressedCallback: () {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                              bloc.add(const SubmitCardHolderEvent());
+                            },
+                          ),
+                        ],
                       ),
-                      AdsFilledRoundIconButton(
-                        backgroundColor: colorScheme.primary,
-                        icon: const Icon(
-                          Icons.check,
-                          color: Colors.white,
-                        ),
-                        onPressedCallback: () {
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          bloc.add(const SubmitCardHolderEvent());
-                        },
-                      ),
-                    ],
-                  ),
               ],
             ),
           ],

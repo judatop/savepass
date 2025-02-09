@@ -263,5 +263,11 @@
     "cardEdited": "Tarjeta actualizada exitosamente",
     "@cardEdited": {},
     "card": "Tarjeta",
-    "@card": {}
+    "@card": {},
+    "noResults": "Sin resultados",
+    "@noResults": {},
+    "cardNumberCopiedClipboard": "Número de tarjeta copiado al portapapeles",
+    "@cardNumberCopiedClipboard": {},
+    "cardholderNameCopiedClipboard": "Titular de tarjeta copiado al portapapeles",
+    "@cardholderNameCopiedClipboard": {}
 }

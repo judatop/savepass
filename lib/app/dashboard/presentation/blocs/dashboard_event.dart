@@ -51,12 +51,6 @@ class LogOutEvent extends DashboardEvent {
   const LogOutEvent() : super();
 }
 
-class ChangeHomeSearchEvent extends DashboardEvent {
-  final String search;
-
-  const ChangeHomeSearchEvent({required this.search}) : super();
-}
-
 class OnClickNewPassword extends DashboardEvent {
   const OnClickNewPassword() : super();
 }
@@ -69,6 +63,10 @@ class CopyPasswordEvent extends DashboardEvent {
   final String passwordUuid;
 
   const CopyPasswordEvent({required this.passwordUuid}) : super();
+}
+
+class OpenSearchEvent extends DashboardEvent{
+  const OpenSearchEvent() : super();
 }
 
 class GetCardValueEvent extends DashboardEvent {

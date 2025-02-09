@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
-import 'package:savepass/app/card/infrastructure/models/dashboard_card_model.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -9,12 +8,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CopyCardValueBottomSheetWidget extends StatelessWidget {
   final FormzSubmissionStatus status;
-  final DashboardCardModel card;
+  final String vaultId;
 
   const CopyCardValueBottomSheetWidget({
     super.key,
     required this.status,
-    required this.card,
+    required this.vaultId,
   });
 
   @override
@@ -70,7 +69,7 @@ class CopyCardValueBottomSheetWidget extends StatelessWidget {
                       Modular.to.pop();
                       bloc.add(
                         GetCardValueEvent(
-                          vaultId: card.vaultId,
+                          vaultId: vaultId,
                           index: 1,
                         ),
                       );
@@ -91,7 +90,7 @@ class CopyCardValueBottomSheetWidget extends StatelessWidget {
                       Modular.to.pop();
                       bloc.add(
                         GetCardValueEvent(
-                          vaultId: card.vaultId,
+                          vaultId: vaultId,
                           index: 2,
                         ),
                       );
@@ -112,7 +111,7 @@ class CopyCardValueBottomSheetWidget extends StatelessWidget {
                       Modular.to.pop();
                       bloc.add(
                         GetCardValueEvent(
-                          vaultId: card.vaultId,
+                          vaultId: vaultId,
                           index: 3,
                         ),
                       );
@@ -133,7 +132,7 @@ class CopyCardValueBottomSheetWidget extends StatelessWidget {
                       Modular.to.pop();
                       bloc.add(
                         GetCardValueEvent(
-                          vaultId: card.vaultId,
+                          vaultId: vaultId,
                           index: 4,
                         ),
                       );

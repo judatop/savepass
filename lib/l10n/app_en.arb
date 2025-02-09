@@ -263,5 +263,11 @@
     "cardEdited": "Card updated successfully",
     "@cardEdited": {},
     "card": "Card",
-    "@card": {}
+    "@card": {},
+    "noResults": "No results",
+    "@noResults": {},
+    "cardNumberCopiedClipboard": "Card Number copied to clipboard",
+    "@cardNumberCopiedClipboard": {},
+    "cardholderNameCopiedClipboard": "Cardholder Name copied to clipboard",
+    "@cardholderNameCopiedClipboard": {}
 }

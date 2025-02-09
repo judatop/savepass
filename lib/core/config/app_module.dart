@@ -39,6 +39,12 @@ import 'package:savepass/app/profile/domain/datasources/profile_datasource.dart'
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/app/profile/infraestructure/datasources/supabase_profile_datasource.dart';
 import 'package:savepass/app/profile/infraestructure/repositories_impl/profile_repository_impl.dart';
+import 'package:savepass/app/search/domain/datasources/search_datasource.dart';
+import 'package:savepass/app/search/domain/repositories/search_repository.dart';
+import 'package:savepass/app/search/infrastructure/datasources/supabase_search_datasource.dart';
+import 'package:savepass/app/search/infrastructure/repositories_impl/search_repository_impl.dart';
+import 'package:savepass/app/search/presentation/blocs/search_bloc.dart';
+import 'package:savepass/app/search/presentation/screens/search_screen.dart';
 import 'package:savepass/app/splash/presentation/blocs/splash_bloc.dart';
 import 'package:savepass/app/splash/presentation/splash_screen.dart';
 import 'package:savepass/app/sync_pass/presentation/blocs/sync_bloc.dart';
@@ -74,6 +80,8 @@ class AppModule extends Module {
     i.addSingleton<PasswordRepository>(PasswordRepositoryImpl.new);
     i.addSingleton<CardDatasource>(SupabaseCardDatasource.new);
     i.addSingleton<CardRepository>(CardRepositoryImpl.new);
+    i.addSingleton<SearchDatasource>(SupabaseSearchDatasource.new);
+    i.addSingleton<SearchRepository>(SearchRepositoryImpl.new);
     i.addSingleton(GetStartedBloc.new);
     i.addSingleton(AuthInitBloc.new);
     i.addSingleton(SyncBloc.new);
@@ -82,6 +90,7 @@ class AppModule extends Module {
     i.addSingleton(DashboardBloc.new);
     i.addSingleton(PasswordBloc.new);
     i.addSingleton(CardBloc.new);
+    i.addSingleton(SearchBloc.new);
   }
 
   @override
@@ -129,6 +138,10 @@ class AppModule extends Module {
     r.child(
       Routes.cardRoute,
       child: (context) => CardScreen(cardId: r.args.data),
+    );
+    r.child(
+      Routes.searchRoute,
+      child: (context) => const SearchScreen(),
     );
   }
 }

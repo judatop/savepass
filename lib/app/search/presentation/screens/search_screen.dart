@@ -1,16 +1,17 @@
-import 'package:atomic_design_system/foundations/ads_foundation_sizes.dart';
-import 'package:atomic_design_system/molecules/text/ads_headline.dart';
-import 'package:atomic_design_system/templates/ads_screen_template.dart';
+import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:formz/formz.dart';
+import 'package:lottie/lottie.dart';
 import 'package:savepass/app/search/presentation/blocs/search_bloc.dart';
 import 'package:savepass/app/search/presentation/blocs/search_event.dart';
 import 'package:savepass/app/search/presentation/blocs/search_state.dart';
 import 'package:savepass/app/search/presentation/widgets/search_header_widget.dart';
 import 'package:savepass/app/search/presentation/widgets/search_list_widget.dart';
-import 'package:savepass/app/search/presentation/widgets/search_widget.dart';
+import 'package:savepass/core/lottie/lottie_paths.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -18,7 +19,7 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Modular.get<SearchBloc>();
- return BlocProvider.value(
+    return BlocProvider.value(
       value: bloc..add(const SearchInitialEvent()),
       child: const BlocListener<SearchBloc, SearchState>(
         listener: _listener,
@@ -29,7 +30,6 @@ class SearchScreen extends StatelessWidget {
 }
 
 void _listener(context, state) {}
-
 
 class _Body extends StatelessWidget {
   const _Body();
@@ -54,8 +54,54 @@ class _Body extends StatelessWidget {
         child: Column(
           children: [
             const SearchHeaderWidget(),
-            SizedBox(height: deviceHeight * 0.02),
-            const Expanded(child: SearchListWidget()),
+            SizedBox(height: deviceHeight * 0.03),
+            BlocBuilder<SearchBloc, SearchState>(
+              buildWhen: (previous, current) =>
+                  (previous.model.status != current.model.status) ||
+                  (previous.model.searchItems != current.model.searchItems),
+              builder: (context, state) {
+                final status = state.model.status;
+
+                if (status.isInitial) {
+                  return Container();
+                }
+
+                if (state.model.searchItems.isEmpty && !status.isInitial) {
+                  return Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Lottie.asset(
+                          width: deviceWidth * 0.5,
+                          LottiePaths.noData,
+                        ),
+                        SizedBox(height: deviceHeight * 0.02),
+                        AdsHeadline(text: intl.noResults),
+                      ],
+                    ),
+                  );
+                }
+
+                return Expanded(
+                  child: Column(
+                    children: [
+                      Text(intl.tipDashboard),
+                      SizedBox(
+                        height: deviceHeight * 0.03,
+                      ),
+                      Expanded(
+                        child: Skeletonizer(
+                          enabled: status.isInProgress,
+                          child: const SearchListWidget(),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),

@@ -22,4 +22,5 @@ class DbUtils {
   static const getCardsFunction = 'get_cards';
   static const editCardFunction = 'edit_card';
   static const deleteCardFunction = 'delete_card';
+  static const searchFunction = 'search';
 }

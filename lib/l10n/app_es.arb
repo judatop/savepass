@@ -263,5 +263,7 @@
     "cardEdited": "Tarjeta actualizada exitosamente",
     "@cardEdited": {},
     "card": "Tarjeta",
-    "@card": {}
+    "@card": {},
+    "noResults": "Sin resultados",
+    "@noResults": {}
 }

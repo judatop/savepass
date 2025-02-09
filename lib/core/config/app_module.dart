@@ -39,6 +39,10 @@ import 'package:savepass/app/profile/domain/datasources/profile_datasource.dart'
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/app/profile/infraestructure/datasources/supabase_profile_datasource.dart';
 import 'package:savepass/app/profile/infraestructure/repositories_impl/profile_repository_impl.dart';
+import 'package:savepass/app/search/domain/datasources/search_datasource.dart';
+import 'package:savepass/app/search/domain/repositories/search_repository.dart';
+import 'package:savepass/app/search/infrastructure/datasources/supabase_search_datasource.dart';
+import 'package:savepass/app/search/infrastructure/repositories_impl/search_repository_impl.dart';
 import 'package:savepass/app/search/presentation/blocs/search_bloc.dart';
 import 'package:savepass/app/search/presentation/screens/search_screen.dart';
 import 'package:savepass/app/splash/presentation/blocs/splash_bloc.dart';
@@ -76,6 +80,8 @@ class AppModule extends Module {
     i.addSingleton<PasswordRepository>(PasswordRepositoryImpl.new);
     i.addSingleton<CardDatasource>(SupabaseCardDatasource.new);
     i.addSingleton<CardRepository>(CardRepositoryImpl.new);
+    i.addSingleton<SearchDatasource>(SupabaseSearchDatasource.new);
+    i.addSingleton<SearchRepository>(SearchRepositoryImpl.new);
     i.addSingleton(GetStartedBloc.new);
     i.addSingleton(AuthInitBloc.new);
     i.addSingleton(SyncBloc.new);

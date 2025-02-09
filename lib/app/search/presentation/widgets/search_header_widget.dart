@@ -1,8 +1,6 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:savepass/app/password/presentation/blocs/password_bloc.dart';
 import 'package:savepass/app/search/presentation/widgets/search_widget.dart';
 
 class SearchHeaderWidget extends StatelessWidget {
@@ -10,8 +8,6 @@ class SearchHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Modular.get<PasswordBloc>();
-    final intl = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 

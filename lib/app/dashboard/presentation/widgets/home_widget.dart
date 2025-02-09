@@ -1,11 +1,12 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/home/home_search_widget.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/home/last_cards_widget.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/home/last_passwords_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:savepass/core/config/routes.dart';
 
 class HomeWidget extends StatelessWidget {
   const HomeWidget({super.key});
@@ -15,6 +16,7 @@ class HomeWidget extends StatelessWidget {
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
     final intl = AppLocalizations.of(context)!;
+    final bloc = Modular.get<DashboardBloc>();
 
     return SingleChildScrollView(
       child: Padding(
@@ -27,9 +29,7 @@ class HomeWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             InkWell(
-              onTap: () {
-                Modular.to.pushNamed(Routes.searchRoute);
-              },
+              onTap: () => bloc.add(const OpenSearchEvent()),
               child: const HomeSearchWidget(),
             ),
             SizedBox(

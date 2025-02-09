@@ -5,6 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/search/presentation/blocs/search_bloc.dart';
 import 'package:savepass/app/search/presentation/blocs/search_event.dart';
 import 'package:savepass/core/utils/regex_utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SearchWidget extends StatefulWidget {
   const SearchWidget({super.key});
@@ -45,6 +46,7 @@ class _SearchWidgetState extends State<SearchWidget> {
   @override
   Widget build(BuildContext context) {
     final bloc = Modular.get<SearchBloc>();
+    final intl = AppLocalizations.of(context)!;
 
     return AdsTextFormField(
       key: const Key('search_textField'),
@@ -54,14 +56,18 @@ class _SearchWidgetState extends State<SearchWidget> {
       errorText: null,
       enableSuggestions: false,
       textInputAction: TextInputAction.search,
-      onSubmitted: (String? value) => _search(bloc, value),
+      onSubmitted: (String? value) => _search(bloc, value?.trim()),
       suffixIcon: Icons.search,
       inputFormatters: [
         FilteringTextInputFormatter.allow(
           RegexUtils.lettersWithSpace,
         ),
       ],
-      onTapSuffixIcon: () => _search(bloc, _controller.text),
+      onTapSuffixIcon: () => _search(bloc, _controller.text.trim()),
+      onChanged: (value) {
+        bloc.add(ChangeSearchTxtEvent(searchText: value));
+      },
+      hintText: intl.homeSearch,
     );
   }
 }

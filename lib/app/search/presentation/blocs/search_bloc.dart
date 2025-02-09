@@ -49,6 +49,16 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     SubmitSearchEvent event,
     Emitter<SearchState> emit,
   ) async {
+    final searchParam = event.search;
+    final searchSaved = state.model.searchForm.value;
+
+    final search = searchParam ?? searchSaved;
+
+    if (search.isEmpty) {
+      return;
+    }
+
+
     emit(
       ChangeSearchState(
         state.model.copyWith(
@@ -57,7 +67,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       ),
     );
 
-    final response = await searchRepository.search(event.search);
+    final response = await searchRepository.search(search);
 
     response.fold(
       (l) {

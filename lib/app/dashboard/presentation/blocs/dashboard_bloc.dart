@@ -45,6 +45,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<CopyPasswordEvent>(_onCopyPasswordEvent);
     on<GetCardValueEvent>(_onGetCardValueEvent);
     on<OnClickNewCard>(_onOnClickNewCard);
+    on<OpenSearchEvent>(_onOpenSearchEvent);
   }
 
   FutureOr<void> _onDashboardInitialEvent(
@@ -616,5 +617,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   ) {
     emit(LoadingDashboardState(state.model));
     emit(OpenCardState(state.model));
+  }
+
+  FutureOr<void> _onOpenSearchEvent(
+    OpenSearchEvent event,
+    Emitter<DashboardState> emit,
+  ) {
+    emit(LoadingDashboardState(state.model));
+    emit(OpenSearchState(state.model));
   }
 }

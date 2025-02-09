@@ -96,7 +96,7 @@ class LastCardsWidget extends StatelessWidget {
                                     height: deviceHeight * 0.70,
                                     child: CopyCardValueBottomSheetWidget(
                                       status: cardStatus,
-                                      card: card,
+                                      vaultId: card.vaultId,
                                     ),
                                   );
                                 },

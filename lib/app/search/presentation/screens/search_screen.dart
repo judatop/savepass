@@ -66,7 +66,7 @@ class _Body extends StatelessWidget {
                   return Container();
                 }
 
-                if (state.model.searchItems.isEmpty && !status.isInitial) {
+                if (state.model.searchItems.isEmpty && status.isSuccess) {
                   return Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -86,8 +86,9 @@ class _Body extends StatelessWidget {
 
                 return Expanded(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(intl.tipDashboard),
+                      if (!status.isInProgress) Text(intl.tipDashboard),
                       SizedBox(
                         height: deviceHeight * 0.03,
                       ),

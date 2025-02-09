@@ -62,6 +62,10 @@ class CardValueCopiedState extends DashboardState{
   const CardValueCopiedState(super.model);
 }
 
+class OpenSearchState extends DashboardState{
+  const OpenSearchState(super.model);
+}
+
 class DashboardStateModel extends Equatable {
   final int currentIndex;
   final TextForm displayName;

@@ -18,7 +18,7 @@ class ChangeSearchTxtEvent extends SearchEvent {
 }
 
 class SubmitSearchEvent extends SearchEvent {
-  final String search;
+  final String? search;
 
-  const SubmitSearchEvent({required this.search}) : super();
+  const SubmitSearchEvent({this.search}) : super();
 }

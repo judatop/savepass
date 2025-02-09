@@ -265,5 +265,9 @@
     "card": "Card",
     "@card": {},
     "noResults": "No results",
-    "@noResults": {}
+    "@noResults": {},
+    "cardNumberCopiedClipboard": "Card Number copied to clipboard",
+    "@cardNumberCopiedClipboard": {},
+    "cardholderNameCopiedClipboard": "Cardholder Name copied to clipboard",
+    "@cardholderNameCopiedClipboard": {}
 }

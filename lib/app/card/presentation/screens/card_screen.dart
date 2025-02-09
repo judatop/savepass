@@ -78,6 +78,16 @@ void _listener(context, state) {
     SnackBarUtils.showSuccessSnackBar(context, intl.cardDeleted);
     Modular.to.pop();
   }
+
+  if(state is CardNumberCopiedState){
+    SnackBarUtils.showSuccessSnackBar(context, intl.cardNumberCopiedClipboard);
+
+  }
+
+  if(state is CardHoldernameCopiedState){
+    SnackBarUtils.showSuccessSnackBar(context, intl.cardholderNameCopiedClipboard);
+
+  }
 }
 
 class _Body extends StatelessWidget {
@@ -160,7 +170,7 @@ class _Body extends StatelessWidget {
                             );
                           },
                         ),
-                        SizedBox(height: deviceHeight * 0.9),
+                        SizedBox(height: deviceHeight * 0.3),
                       ],
                     ),
                   ),

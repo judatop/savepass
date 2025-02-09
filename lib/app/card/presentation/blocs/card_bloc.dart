@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:logger/logger.dart';
@@ -38,6 +39,8 @@ class CardBloc extends Bloc<CardEvent, CardState> {
     on<SubmitCardEvent>(_onSubmitCardEvent);
     on<SubmitEditCardEvent>(_onSubmitEditCardEvent);
     on<DeleteCardEvent>(_onDeleteCardEvent);
+    on<CopyCardNumberClipboardEvent>(_onCopyCardNumberClipboardEvent);
+    on<CopyCardHoldernameClipboardEvent>(_onCopyCardHoldernameClipboardEvent);
   }
 
   CardType getCardType(String number) {
@@ -520,5 +523,39 @@ class CardBloc extends Bloc<CardEvent, CardState> {
         },
       );
     }
+  }
+
+  FutureOr<void> _onCopyCardNumberClipboardEvent(
+    CopyCardNumberClipboardEvent event,
+    Emitter<CardState> emit,
+  ) async {
+    final user = state.model.cardNumber.value;
+
+    await Clipboard.setData(ClipboardData(text: user));
+
+    emit(
+      CardNumberCopiedState(
+        state.model.copyWith(
+          status: FormzSubmissionStatus.success,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onCopyCardHoldernameClipboardEvent(
+    CopyCardHoldernameClipboardEvent event,
+    Emitter<CardState> emit,
+  ) async {
+    final user = state.model.cardHolderName.value;
+
+    await Clipboard.setData(ClipboardData(text: user));
+
+    emit(
+      CardHoldernameCopiedState(
+        state.model.copyWith(
+          status: FormzSubmissionStatus.success,
+        ),
+      ),
+    );
   }
 }

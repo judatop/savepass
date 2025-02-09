@@ -81,3 +81,12 @@ class GetCardValueEvent extends CardEvent {
 class DeleteCardEvent extends CardEvent{
   const DeleteCardEvent() : super();
 }
+
+
+class CopyCardNumberClipboardEvent extends CardEvent{
+  const CopyCardNumberClipboardEvent() : super();
+}
+
+class CopyCardHoldernameClipboardEvent extends CardEvent{
+  const CopyCardHoldernameClipboardEvent() : super();
+}

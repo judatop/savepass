@@ -79,6 +79,10 @@ void _listener(context, state) {
     cardBloc.add(const CardInitialEvent());
     Modular.to.pushNamed(Routes.cardRoute);
   }
+
+  if (state is OpenSearchState) {
+    Modular.to.pushNamed(Routes.searchRoute);
+  }
 }
 
 class _Body extends StatelessWidget {
@@ -87,7 +91,7 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: true,
+      canPop: false,
       child: AdsScreenTemplate(
         safeAreaBottom: false,
         safeAreaTop: true,

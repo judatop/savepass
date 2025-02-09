@@ -57,6 +57,14 @@ class CardDeletedState extends CardState{
   const CardDeletedState(super.model);
 }
 
+class CardNumberCopiedState extends CardState{
+  const CardNumberCopiedState(super.model);
+}
+
+class CardHoldernameCopiedState extends CardState{
+  const CardHoldernameCopiedState(super.model);
+}
+
 class CardStateModel extends Equatable {
   final CardNumberForm cardNumber;
   final TextForm cardHolderName;

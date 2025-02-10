@@ -11,4 +11,5 @@ abstract class PasswordDatasource {
     String clearPassword,
   );
   Future<Either<Fail, Unit>> deletePassword(String passwordId, String vaultId);
+  Future<Either<Fail, List<PasswordModel>>> searchPasswords(String search);
 }

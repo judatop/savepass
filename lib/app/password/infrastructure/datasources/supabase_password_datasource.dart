@@ -152,4 +152,31 @@ class SupabasePasswordDatasource implements PasswordDatasource {
       );
     }
   }
+
+  @override
+  Future<Either<Fail, List<PasswordModel>>> searchPasswords(String search) async {
+    try {
+      final response = await supabase.rpc(
+        DbUtils.searchPasswordFunction,
+        params: {
+          'search': search,
+        },
+      );
+
+      if (response == null) {
+        return Left(Fail('Error in search'));
+      }
+
+      List<PasswordModel> items = (response as List<dynamic>).map((e) {
+        return PasswordModel.fromJson(e as Map<String, dynamic>);
+      }).toList();
+
+      return Right(items);
+    } catch (e) {
+      log.e('search: $e');
+      return Left(
+        Fail('Error occurred while searching'),
+      );
+    }
+  }
 }

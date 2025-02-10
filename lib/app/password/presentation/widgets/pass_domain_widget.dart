@@ -4,9 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:savepass/app/password/presentation/blocs/password_bloc.dart';
-import 'package:savepass/app/password/presentation/blocs/password_event.dart';
-import 'package:savepass/app/password/presentation/blocs/password_state.dart';
+import 'package:savepass/app/password/presentation/blocs/password/password_bloc.dart';
+import 'package:savepass/app/password/presentation/blocs/password/password_event.dart';
+import 'package:savepass/app/password/presentation/blocs/password/password_state.dart';
 import 'package:savepass/core/utils/regex_utils.dart';
 
 class PassDomainWidget extends StatelessWidget {

@@ -196,7 +196,7 @@
     "@domainHint": {},
     "passwordCreated": "Password saved",
     "@passwordCreated": {},
-    "tipDashboard": "Press and hold a card to copy its password",
+    "tipDashboard": "Press and hold a card to copy",
     "@tipDashboard": {},
     "passwordsTitleDashboard": "Passwords",
     "@passwordsTitleDashboard": {},
@@ -269,5 +269,7 @@
     "cardNumberCopiedClipboard": "Card Number copied to clipboard",
     "@cardNumberCopiedClipboard": {},
     "cardholderNameCopiedClipboard": "Cardholder Name copied to clipboard",
-    "@cardholderNameCopiedClipboard": {}
+    "@cardholderNameCopiedClipboard": {},
+    "searchPassReport": "Search by name or username",
+    "@searchPassReport": {}
 }

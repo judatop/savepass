@@ -45,4 +45,10 @@ class PasswordRepositoryImpl implements PasswordRepository {
   ) async {
     return await datasource.deletePassword(passwordId, vaultId);
   }
+
+  @override
+  Future<Either<Fail, List<PasswordModel>>> searchPasswords(
+      String search) async {
+    return await datasource.searchPasswords(search);
+  }
 }

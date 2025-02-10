@@ -8,5 +8,6 @@ abstract class PasswordRepository {
   Future<Either<Fail, PasswordModel>> getPasswordModel(String passwordId);
   Future<Either<Fail, Unit>> editPassword(PasswordModel model, String clearPassword);
   Future<Either<Fail, Unit>> deletePassword(String passwordId, String vaultId);
+  Future<Either<Fail, List<PasswordModel>>> searchPasswords(String search);
 
 }

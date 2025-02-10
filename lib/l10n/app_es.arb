@@ -196,7 +196,7 @@
     "@domainHint": {},
     "passwordCreated": "Contraseña guardada",
     "@passwordCreated": {},
-    "tipDashboard": "Mantén presionada una tarjeta para copiar su contraseña",
+    "tipDashboard": "Mantén presionada una tarjeta para copiar",
     "@tipDashboard": {},
     "passwordsTitleDashboard": "Contraseñas",
     "@passwordsTitleDashboard": {},
@@ -269,5 +269,7 @@
     "cardNumberCopiedClipboard": "Número de tarjeta copiado al portapapeles",
     "@cardNumberCopiedClipboard": {},
     "cardholderNameCopiedClipboard": "Titular de tarjeta copiado al portapapeles",
-    "@cardholderNameCopiedClipboard": {}
+    "@cardholderNameCopiedClipboard": {},
+    "searchPassReport": "Busque por nombre o usuario",
+    "@searchPassReport": {}
 }

@@ -2,8 +2,10 @@ import 'package:atomic_design_system/foundations/ads_foundations_colors.dart';
 import 'package:atomic_design_system/molecules/card/ads_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
+import 'package:savepass/core/config/routes.dart';
 
 class PasswordsWidget extends StatelessWidget {
   const PasswordsWidget({super.key});
@@ -15,7 +17,9 @@ class PasswordsWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return AdsCard(
-      onTap: () {},
+      onTap: () async {
+        await Modular.to.pushNamed(Routes.passwordReport);
+      },
       elevation: 1,
       bgColor: ADSFoundationsColors.primaryColor,
       child: Padding(

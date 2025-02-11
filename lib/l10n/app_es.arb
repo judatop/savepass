@@ -271,5 +271,7 @@
     "cardholderNameCopiedClipboard": "Titular de tarjeta copiado al portapapeles",
     "@cardholderNameCopiedClipboard": {},
     "searchPassReport": "Busque por nombre o usuario",
-    "@searchPassReport": {}
+    "@searchPassReport": {},
+    "searchCardReport": "Busque por tipo",
+    "@searchCardReport": {}
 }

@@ -43,4 +43,9 @@ class CardRepositoryImpl implements CardRepository {
   Future<Either<Fail, String>> getCardValue(int index, String vaultId) async {
     return await datasource.getCardValue(index, vaultId);
   }
+  
+  @override
+  Future<Either<Fail, List<DashboardCardModel>>> searchCards(String search) async {
+    return await datasource.searchCards(search);
+  }
 }

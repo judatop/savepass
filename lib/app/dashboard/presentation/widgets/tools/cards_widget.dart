@@ -1,7 +1,9 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
+import 'package:savepass/core/config/routes.dart';
 
 import '../../blocs/dashboard_bloc.dart';
 
@@ -15,7 +17,9 @@ class CardsWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return AdsCard(
-      onTap: () {},
+      onTap: () async {
+        await Modular.to.pushNamed(Routes.cardReport);
+      },
       elevation: 1,
       bgColor: Colors.green,
       child: Padding(

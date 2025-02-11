@@ -271,5 +271,7 @@
     "cardholderNameCopiedClipboard": "Cardholder Name copied to clipboard",
     "@cardholderNameCopiedClipboard": {},
     "searchPassReport": "Search by name or username",
-    "@searchPassReport": {}
+    "@searchPassReport": {},
+    "searchCardReport": "Search by type",
+    "@searchCardReport": {}
 }

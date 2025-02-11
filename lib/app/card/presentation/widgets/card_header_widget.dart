@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:savepass/app/card/presentation/blocs/card_bloc.dart';
-import 'package:savepass/app/card/presentation/blocs/card_event.dart';
-import 'package:savepass/app/card/presentation/blocs/card_state.dart';
+import 'package:savepass/app/card/presentation/blocs/card/card_bloc.dart';
+import 'package:savepass/app/card/presentation/blocs/card/card_event.dart';
+import 'package:savepass/app/card/presentation/blocs/card/card_state.dart';
 
 class CardHeaderWidget extends StatelessWidget {
   const CardHeaderWidget({super.key});

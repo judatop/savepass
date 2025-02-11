@@ -152,4 +152,31 @@ class SupabaseCardDatasource implements CardDatasource {
       );
     }
   }
+  
+  @override
+  Future<Either<Fail, List<DashboardCardModel>>> searchCards(String search) async {
+     try {
+      final response = await supabase.rpc(
+        DbUtils.searchCardFunction,
+        params: {
+          'search': search,
+        },
+      );
+
+      if (response == null) {
+        return Left(Fail('Error in search'));
+      }
+
+      List<DashboardCardModel> items = (response as List<dynamic>).map((e) {
+        return DashboardCardModel.fromJson(e as Map<String, dynamic>);
+      }).toList();
+
+      return Right(items);
+    } catch (e) {
+      log.e('search: $e');
+      return Left(
+        Fail('Error occurred while searching'),
+      );
+    }
+  }
 }

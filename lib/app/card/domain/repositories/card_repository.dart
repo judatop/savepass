@@ -10,4 +10,5 @@ abstract class CardRepository {
   Future<Either<Fail, Unit>> editCard(CardModel model, String vaultId);
   Future<Either<Fail, Unit>> deleteCard(String cardId, String vaultId);
   Future<Either<Fail, String>> getCardValue(int index, String vaultId);
+  Future<Either<Fail, List<DashboardCardModel>>> searchCards(String search);
 }

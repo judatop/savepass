@@ -18,7 +18,9 @@ import 'package:savepass/app/card/domain/datasources/card_datasource.dart';
 import 'package:savepass/app/card/domain/repositories/card_repository.dart';
 import 'package:savepass/app/card/infrastructure/datasources/supabase_card_datasource.dart';
 import 'package:savepass/app/card/infrastructure/repositories_impl/card_repository_impl.dart';
-import 'package:savepass/app/card/presentation/blocs/card_bloc.dart';
+import 'package:savepass/app/card/presentation/blocs/card/card_bloc.dart';
+import 'package:savepass/app/card/presentation/blocs/card_report/card_report_bloc.dart';
+import 'package:savepass/app/card/presentation/screens/card_report_screen.dart';
 import 'package:savepass/app/card/presentation/screens/card_screen.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/get_started/presentation/blocs/get_started_bloc.dart';
@@ -94,6 +96,7 @@ class AppModule extends Module {
     i.addSingleton(CardBloc.new);
     i.addSingleton(SearchBloc.new);
     i.addSingleton(PassReportBloc.new);
+    i.addSingleton(CardReportBloc.new);
   }
 
   @override
@@ -149,6 +152,10 @@ class AppModule extends Module {
     r.child(
       Routes.passwordReport,
       child: (context) => const PasswordReportScreen(),
+    );
+    r.child(
+      Routes.cardReport,
+      child: (context) => const CardReportScreen(),
     );
   }
 }

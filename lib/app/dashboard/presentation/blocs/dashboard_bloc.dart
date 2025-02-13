@@ -14,6 +14,7 @@ import 'package:savepass/app/password/domain/repositories/password_repository.da
 import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/core/form/text_form.dart';
+import 'package:savepass/core/utils/biometric_utils.dart';
 import 'package:savepass/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -122,6 +123,15 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           ),
         );
       },
+    );
+
+    final hasBiometrics = await BiometricUtils.canAuthenticateWithBiometrics();
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(
+          hasBiometrics: hasBiometrics,
+        ),
+      ),
     );
   }
 

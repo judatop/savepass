@@ -65,7 +65,7 @@ class CopyPasswordEvent extends DashboardEvent {
   const CopyPasswordEvent({required this.passwordUuid}) : super();
 }
 
-class OpenSearchEvent extends DashboardEvent{
+class OpenSearchEvent extends DashboardEvent {
   const OpenSearchEvent() : super();
 }
 
@@ -77,4 +77,8 @@ class GetCardValueEvent extends DashboardEvent {
     required this.vaultId,
     required this.index,
   }) : super();
+}
+
+class EnableBiometricsEvent extends DashboardEvent {
+  const EnableBiometricsEvent() : super();
 }

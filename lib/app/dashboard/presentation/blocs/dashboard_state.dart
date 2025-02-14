@@ -66,6 +66,14 @@ class OpenSearchState extends DashboardState {
   const OpenSearchState(super.model);
 }
 
+class UnauthenticatedBiometricsState extends DashboardState{
+  const UnauthenticatedBiometricsState(super.model);
+}
+
+class AuthenticatedBiometricsState extends DashboardState{
+  const AuthenticatedBiometricsState(super.model);
+}
+
 class DashboardStateModel extends Equatable {
   final int currentIndex;
   final TextForm displayName;
@@ -79,6 +87,8 @@ class DashboardStateModel extends Equatable {
   final FormzSubmissionStatus cardStatus;
   final FormzSubmissionStatus statusCardValue;
   final bool hasBiometrics;
+  final bool canAuthenticate;
+
 
   const DashboardStateModel({
     this.currentIndex = 0,
@@ -93,6 +103,7 @@ class DashboardStateModel extends Equatable {
     this.cardStatus = FormzSubmissionStatus.initial,
     this.statusCardValue = FormzSubmissionStatus.initial,
     this.hasBiometrics = false,
+    this.canAuthenticate = false,
   });
 
   DashboardStateModel copyWith({
@@ -108,6 +119,7 @@ class DashboardStateModel extends Equatable {
     FormzSubmissionStatus? cardStatus,
     FormzSubmissionStatus? statusCardValue,
     bool? hasBiometrics,
+    bool? canAuthenticate,
   }) {
     return DashboardStateModel(
       currentIndex: currentIndex ?? this.currentIndex,
@@ -122,6 +134,7 @@ class DashboardStateModel extends Equatable {
       cardStatus: cardStatus ?? this.cardStatus,
       statusCardValue: statusCardValue ?? this.statusCardValue,
       hasBiometrics: hasBiometrics ?? this.hasBiometrics,
+      canAuthenticate: canAuthenticate ?? this.canAuthenticate,
     );
   }
 
@@ -138,5 +151,6 @@ class DashboardStateModel extends Equatable {
         cardStatus,
         statusCardValue,
         hasBiometrics,
+        canAuthenticate,
       ];
 }

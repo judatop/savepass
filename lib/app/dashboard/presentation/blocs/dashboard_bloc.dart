@@ -47,6 +47,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<GetCardValueEvent>(_onGetCardValueEvent);
     on<OnClickNewCard>(_onOnClickNewCard);
     on<OpenSearchEvent>(_onOpenSearchEvent);
+    on<EnableBiometricsEvent>(_onEnableBiometricsEvent);
   }
 
   FutureOr<void> _onDashboardInitialEvent(
@@ -125,11 +126,15 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       },
     );
 
-    final hasBiometrics = await BiometricUtils.canAuthenticateWithBiometrics();
+    final hasBiometrics = await BiometricUtils.hasBiometricsSaved();
+    final canAuthenticate =
+        await BiometricUtils.canAuthenticateWithBiometrics();
+
     emit(
       ChangeDashboardState(
         state.model.copyWith(
           hasBiometrics: hasBiometrics,
+          canAuthenticate: canAuthenticate,
         ),
       ),
     );
@@ -635,5 +640,36 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   ) {
     emit(LoadingDashboardState(state.model));
     emit(OpenSearchState(state.model));
+  }
+
+  FutureOr<void> _onEnableBiometricsEvent(
+    EnableBiometricsEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    final canAuthenticate =
+        await BiometricUtils.canAuthenticateWithBiometrics();
+
+    if (!canAuthenticate) {
+      emit(GeneralErrorState(state.model));
+      return;
+    }
+
+    final authenticated = await BiometricUtils.authenticate();
+
+    if (authenticated) {
+      final biometricsSaved = await BiometricUtils.saveBiometrics();
+      if (biometricsSaved) {
+        emit(
+          AuthenticatedBiometricsState(
+            state.model.copyWith(
+              hasBiometrics: true,
+              canAuthenticate: true,
+            ),
+          ),
+        );
+      }
+    } else {
+      emit(UnauthenticatedBiometricsState(state.model));
+    }
   }
 }

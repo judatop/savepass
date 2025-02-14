@@ -1,9 +1,12 @@
-import 'package:atomic_design_system/molecules/card/ads_card.dart';
-import 'package:atomic_design_system/molecules/text/ads_title.dart';
+import 'dart:io';
+
+import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
 
 class BiometricSettingsWidget extends StatelessWidget {
@@ -13,14 +16,16 @@ class BiometricSettingsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final intl = AppLocalizations.of(context)!;
     final deviceHeight = MediaQuery.of(context).size.height;
+    final bloc = Modular.get<DashboardBloc>();
 
     return BlocBuilder<DashboardBloc, DashboardState>(
       buildWhen: (previous, current) =>
           previous.model.hasBiometrics != current.model.hasBiometrics,
       builder: (context, state) {
         final hasBiometrics = state.model.hasBiometrics;
+        final canAuthenticate = state.model.canAuthenticate;
 
-        if (hasBiometrics) {
+        if (hasBiometrics || !canAuthenticate) {
           return Container();
         }
 
@@ -38,11 +43,17 @@ class BiometricSettingsWidget extends StatelessWidget {
                       textAlign: TextAlign.start,
                     ),
                     const SizedBox(height: 10),
-                    Text(
-                      intl.appLanguageDesc,
+                    const Text(
+                      'Sign in with biometrics for a faster and more secure experience.',
                       textAlign: TextAlign.start,
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: deviceHeight * 0.02),
+                    AdsFilledIconButton(
+                      onPressedCallback: () =>
+                          bloc.add(const EnableBiometricsEvent()),
+                      text: 'Enable Biometrics',
+                      icon: Platform.isAndroid ? Icons.fingerprint : Icons.face,
+                    ),
                   ],
                 ),
               ),

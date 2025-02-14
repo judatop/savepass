@@ -1,3 +1,4 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
 
 class BiometricUtils {
@@ -8,6 +9,15 @@ class BiometricUtils {
     final bool canAuthenticate =
         canAuthenticateWithBiometrics || await auth.isDeviceSupported();
     return canAuthenticate;
+  }
+
+  static Future<bool> hasBiometricsSaved() async {
+    AndroidOptions androidOptions() => const AndroidOptions(
+          encryptedSharedPreferences: true,
+        );
+    final storage = FlutterSecureStorage(aOptions: androidOptions());
+    final val = await storage.read(key: 'biometrics');
+    return val != null;
   }
 
   static Future<bool> authenticate() async {
@@ -24,5 +34,14 @@ class BiometricUtils {
     );
 
     return didAuthenticate;
+  }
+
+  static Future<bool> saveBiometrics() async {
+    AndroidOptions androidOptions() => const AndroidOptions(
+          encryptedSharedPreferences: true,
+        );
+    final storage = FlutterSecureStorage(aOptions: androidOptions());
+    await storage.write(key: 'biometrics', value: true.toString());
+    return true;
   }
 }

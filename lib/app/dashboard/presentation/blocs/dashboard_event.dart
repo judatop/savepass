@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:savepass/app/card/infrastructure/models/card_model.dart';
+import 'package:savepass/app/password/infrastructure/models/password_model.dart';
 
 abstract class DashboardEvent extends Equatable {
   const DashboardEvent();
@@ -60,9 +62,9 @@ class OnClickNewCard extends DashboardEvent {
 }
 
 class CopyPasswordEvent extends DashboardEvent {
-  final String passwordUuid;
+  final PasswordModel password;
 
-  const CopyPasswordEvent({required this.passwordUuid}) : super();
+  const CopyPasswordEvent({required this.password}) : super();
 }
 
 class OpenSearchEvent extends DashboardEvent {
@@ -70,11 +72,11 @@ class OpenSearchEvent extends DashboardEvent {
 }
 
 class GetCardValueEvent extends DashboardEvent {
-  final String vaultId;
+  final CardModel card;
   final int index;
 
   const GetCardValueEvent({
-    required this.vaultId,
+    required this.card,
     required this.index,
   }) : super();
 }

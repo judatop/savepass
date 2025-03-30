@@ -47,6 +47,14 @@ void _listener(context, state) {
   if (state is GeneralErrorState) {
     SnackBarUtils.showErrroSnackBar(context, intl.genericError);
   }
+
+  if (state is DeviceAlreadyEnrolledState) {
+    Modular.to.pushNamed(Routes.enrollRoute);
+  }
+
+  if (state is DeviceNotEnrolledState) {
+    Modular.to.pushNamed(Routes.enrollRoute);
+  }
 }
 
 class _Body extends StatelessWidget {

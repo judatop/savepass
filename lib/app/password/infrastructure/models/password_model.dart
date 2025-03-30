@@ -8,6 +8,7 @@ class PasswordModel extends PasswordEntity with EquatableMixin {
     super.name,
     required super.username,
     required super.password,
+    super.vaultId,
     super.description,
     super.domain,
   });
@@ -19,20 +20,33 @@ class PasswordModel extends PasswordEntity with EquatableMixin {
       name: json['name'],
       username: json['username'],
       password: json['password'],
+      vaultId: json['vault_id'],
       description: json['description'],
       domain: json['domain'],
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toInsertJson() {
     return {
-      'id': id,
-      'type_img': typeImg,
-      'name': name,
-      'username': username,
-      'password': password,
-      'description': description,
-      'domain': domain,
+      'type_img_param': typeImg,
+      'name_param': name,
+      'username_param': username,
+      'password_param': password,
+      'description_param': description,
+      'domain_param': domain,
+    };
+  }
+
+  Map<String, dynamic> toEditJson() {
+    return {
+      'type_img_param': typeImg,
+      'name_param': name,
+      'username_param': username,
+      'password_param': password,
+      'description_param': description,
+      'domain_param': domain,
+      'password_id_param': id,
+      'vault_id_param': vaultId,
     };
   }
 
@@ -42,6 +56,7 @@ class PasswordModel extends PasswordEntity with EquatableMixin {
     String? name,
     String? username,
     String? password,
+    String? vaultId,
     String? description,
     String? domain,
   }) {
@@ -51,6 +66,7 @@ class PasswordModel extends PasswordEntity with EquatableMixin {
       name: name ?? this.name,
       username: username ?? this.username,
       password: password ?? this.password,
+      vaultId: vaultId ?? this.vaultId,
       description: description ?? this.description,
       domain: domain ?? this.domain,
     );
@@ -63,6 +79,7 @@ class PasswordModel extends PasswordEntity with EquatableMixin {
         name,
         username,
         password,
+        vaultId,
         description,
         domain,
       ];

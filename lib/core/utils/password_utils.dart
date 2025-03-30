@@ -65,7 +65,7 @@ class PasswordUtils {
       return allowedChars[random.nextInt(allowedChars.length)];
     }).join();
 
-     if (!containsLowerCase(password) ||
+    if (!containsLowerCase(password) ||
         !containsUpperCase(password) ||
         !containsNumber(password) ||
         !containsSpecialCharacter(password) ||
@@ -81,5 +81,12 @@ class PasswordUtils {
     }
 
     return password;
+  }
+
+  static String formatCard(String card) {
+    if (card.length != 16) {
+      return card;
+    }
+    return '${card.substring(0, 4)} XXXX XXXX ${card.substring(12, 16)}';
   }
 }

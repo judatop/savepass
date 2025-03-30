@@ -273,5 +273,15 @@
     "searchPassReport": "Busque por nombre o usuario",
     "@searchPassReport": {},
     "searchCardReport": "Busque por tipo",
-    "@searchCardReport": {}
+    "@searchCardReport": {},
+    "successfullyLink": "Vinculado con éxito",
+    "@successfullyLink": {},
+    "deviceNotRegistered": "Dispositivo no registrado",
+    "@deviceNotRegistered": {},
+    "currentSessionWith": "Mantienes una sesión registrada con ",
+    "@currentSessionWith": {},
+    "wantToLink": "Si deseas continuar con este dispositivo, puedes registrarlo y desvincularemos el anterior.",
+    "@wantToLink": {},
+    "linkDevice": "Registrar dispositivo",
+    "@linkDevice": {}
 }

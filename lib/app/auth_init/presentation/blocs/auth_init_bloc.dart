@@ -1,12 +1,18 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
 import 'package:savepass/app/auth_init/domain/repositories/auth_init_repository.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_event.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_state.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile_event.dart';
+import 'package:savepass/core/api/api_codes.dart';
 import 'package:savepass/core/form/password_form.dart';
+import 'package:savepass/core/utils/device_info.dart';
+import 'package:savepass/core/utils/security_utils.dart';
 
 class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
   final ProfileRepository profileRepository;
@@ -86,10 +92,45 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
       return;
     }
 
-    final masterPassword = state.model.password.value;
+    final saltResponse = await authInitRepository.getUserSalt();
+    late String? salt;
+    saltResponse.fold(
+      (l) {
+        salt = null;
+      },
+      (r) {
+        salt = r.data?['salt'];
+      },
+    );
+
+    if (salt == null) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
+    final clearMasterPassword = state.model.password.value;
+    final derivedKey =
+        SecurityUtils.deriveMasterKey(clearMasterPassword, salt!, 32);
+    final hashedPassword = SecurityUtils.hashMasterKey(derivedKey);
+    final deviceId = await DeviceInfo.getDeviceId();
+    final profileBloc = Modular.get<ProfileBloc>();
+
+    if (deviceId == null) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
 
     final response = await authInitRepository.checkMasterPassword(
-      inputPassword: masterPassword,
+      inputSecret: hashedPassword,
+      deviceId: deviceId,
     );
 
     response.fold(
@@ -101,16 +142,41 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
         );
       },
       (r) {
-        if (r) {
+        if (r.data == null) {
           emit(
-            OpenHomeState(
-              state.model.copyWith(status: FormzSubmissionStatus.success),
+            GeneralErrorState(
+              state.model.copyWith(status: FormzSubmissionStatus.failure),
             ),
           );
-        } else {
+          return;
+        }
+
+        if (r.code == ApiCodes.invalidMasterPassword) {
           emit(
             InvalidMasterPasswordState(
               state.model.copyWith(status: FormzSubmissionStatus.failure),
+            ),
+          );
+          return;
+        }
+
+        if (r.code == ApiCodes.alreadyHasDeviceEnrolled ||
+            r.code == ApiCodes.success) {
+          profileBloc.add(SaveDerivedKeyEvent(derivedKey: derivedKey));
+          profileBloc.add(SaveJwtEvent(jwt: r.data!['jwt']));
+
+          if (r.code == ApiCodes.alreadyHasDeviceEnrolled) {
+            emit(
+              DeviceAlreadyEnrolledState(
+                state.model.copyWith(status: FormzSubmissionStatus.failure),
+              ),
+            );
+            return;
+          }
+
+          emit(
+            OpenHomeState(
+              state.model.copyWith(status: FormzSubmissionStatus.success),
             ),
           );
         }

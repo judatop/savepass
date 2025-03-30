@@ -14,6 +14,7 @@ import 'package:savepass/app/dashboard/presentation/widgets/home/no_cards_widget
 import 'package:savepass/core/config/routes.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:savepass/core/image/image_paths.dart';
+import 'package:savepass/core/utils/password_utils.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class LastCardsWidget extends StatelessWidget {
@@ -96,7 +97,7 @@ class LastCardsWidget extends StatelessWidget {
                                     height: deviceHeight * 0.70,
                                     child: CopyCardValueBottomSheetWidget(
                                       status: cardStatus,
-                                      vaultId: card.vaultId,
+                                      card: card,
                                     ),
                                   );
                                 },
@@ -128,9 +129,9 @@ class LastCardsWidget extends StatelessWidget {
                                       textAlign: TextAlign.start,
                                     ),
                                   ),
-                                  card.url != null
+                                  card.imgUrl != null
                                       ? CachedNetworkImage(
-                                          imageUrl: card.url!,
+                                          imageUrl: card.imgUrl!,
                                           width: deviceWidth *
                                               (card.type ==
                                                       CardType.dinersClub
@@ -158,7 +159,9 @@ class LastCardsWidget extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        card.cardNumber,
+                                        PasswordUtils.formatCard(
+                                          card.card.split('|').first,
+                                        ),
                                         style: textTheme.titleMedium?.copyWith(
                                           fontWeight: FontWeight.w600,
                                           wordSpacing: deviceWidth * 0.025,
@@ -166,7 +169,7 @@ class LastCardsWidget extends StatelessWidget {
                                         ),
                                       ),
                                       Text(
-                                        card.cardHolderName,
+                                        card.card.split('|')[1],
                                         style: textTheme.titleMedium?.copyWith(
                                           fontWeight: FontWeight.w400,
                                           wordSpacing: deviceWidth * 0.01,

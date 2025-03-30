@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
 import 'package:logger/logger.dart';
 import 'package:savepass/app/password/domain/repositories/password_repository.dart';
@@ -11,9 +12,13 @@ import 'package:savepass/app/password/presentation/blocs/password/password_event
 import 'package:savepass/app/password/presentation/blocs/password/password_state.dart';
 import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
 import 'package:savepass/app/preferences/infrastructure/models/pass_image_model.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
+import 'package:savepass/core/api/api_codes.dart';
+import 'package:savepass/core/api/savepass_response_model.dart';
 import 'package:savepass/core/form/password_form.dart';
 import 'package:savepass/core/form/text_form.dart';
 import 'package:savepass/core/utils/password_utils.dart';
+import 'package:savepass/core/utils/security_utils.dart';
 
 class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
   final Logger log;
@@ -62,8 +67,21 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
         ),
       );
 
-      final response =
-          await passwordRepository.getPasswordModel(event.selectedPassId!);
+      final profileBloc = Modular.get<ProfileBloc>();
+      final derivedKey = profileBloc.state.model.derivedKey;
+
+      if (derivedKey == null) {
+        emit(
+          ChangePasswordState(
+            state.model.copyWith(status: FormzSubmissionStatus.failure),
+          ),
+        );
+        return;
+      }
+
+      final response = await passwordRepository.getPasswordById(
+        passwordId: event.selectedPassId!,
+      );
 
       late PasswordModel? passModel;
       response.fold(
@@ -71,35 +89,13 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
           passModel = null;
         },
         (r) {
-          passModel = r;
+          if (r.data != null) {
+            passModel = PasswordModel.fromJson(r.data!);
+          }
         },
       );
 
-      if (passModel == null) {
-        emit(
-          ErrorLoadingPasswordState(
-            state.model.copyWith(
-              status: FormzSubmissionStatus.failure,
-            ),
-          ),
-        );
-        return;
-      }
-
-      final passRes = await passwordRepository.getPassword(passModel!.password);
-
-      late String? clearPassword;
-
-      passRes.fold(
-        (l) {
-          clearPassword = null;
-        },
-        (r) {
-          clearPassword = r;
-        },
-      );
-
-      if (clearPassword == null) {
+      if (passModel == null || passModel?.password == null) {
         emit(
           ErrorLoadingPasswordState(
             state.model.copyWith(
@@ -117,7 +113,12 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
             passwordSelected: passModel,
             name: TextForm.dirty(passModel!.name ?? ''),
             email: TextForm.dirty(passModel!.username),
-            password: PasswordForm.dirty(clearPassword!),
+            password: PasswordForm.dirty(
+              SecurityUtils.decryptPassword(
+                passModel!.password,
+                derivedKey,
+              ),
+            ),
             singleTag: TextForm.dirty(passModel!.domain ?? ''),
             desc: TextForm.dirty(passModel!.description ?? ''),
             imgUrl: passModel!.typeImg,
@@ -315,27 +316,49 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
 
     final isUpdating = state.model.isUpdating;
 
-    late final Either<Fail, Unit> response;
-    if (isUpdating && state.model.passwordSelected != null) {
+    final profileBloc = Modular.get<ProfileBloc>();
+    final derivedKey = profileBloc.state.model.derivedKey;
+
+    if (derivedKey == null) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(
+            status: FormzSubmissionStatus.failure,
+          ),
+        ),
+      );
+      return;
+    }
+
+    late final Either<Fail, SavePassResponseModel> response;
+
+    PasswordModel? passwordSelected = state.model.passwordSelected;
+    if (isUpdating && passwordSelected != null) {
       response = await passwordRepository.editPassword(
-        PasswordModel(
-          id: state.model.passwordSelected!.id,
+        model: PasswordModel(
+          id: passwordSelected.id,
           typeImg: state.model.imgUrl,
           name: state.model.name.value,
           username: state.model.email.value,
-          password: state.model.passwordSelected!.password,
+          password: SecurityUtils.encryptPassword(
+            state.model.password.value,
+            derivedKey,
+          ),
           description: state.model.desc.value,
           domain: state.model.singleTag.value,
+          vaultId: passwordSelected.vaultId,
         ),
-        state.model.password.value,
       );
     } else {
       response = await passwordRepository.insertPassword(
-        PasswordModel(
+        model: PasswordModel(
           typeImg: state.model.imgUrl,
           name: state.model.name.value,
           username: state.model.email.value,
-          password: state.model.password.value,
+          password: SecurityUtils.encryptPassword(
+            state.model.password.value,
+            derivedKey,
+          ),
           description: state.model.desc.value,
           domain: state.model.singleTag.value,
         ),
@@ -353,6 +376,17 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
         );
       },
       (r) {
+        if (r.code != ApiCodes.success) {
+          emit(
+            GeneralErrorState(
+              state.model.copyWith(
+                status: FormzSubmissionStatus.failure,
+              ),
+            ),
+          );
+          return;
+        }
+
         emit(
           PasswordCreatedState(
             state.model.copyWith(
@@ -411,11 +445,35 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
         ),
       );
 
-      final passwordId = state.model.passwordSelected!.id!;
-      final vaultId = state.model.passwordSelected!.password;
+      if (state.model.passwordSelected == null) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.failure,
+            ),
+          ),
+        );
+        return;
+      }
 
-      final response =
-          await passwordRepository.deletePassword(passwordId, vaultId);
+      final passwordId = state.model.passwordSelected!.id;
+      final vaultId = state.model.passwordSelected!.vaultId;
+
+      if (passwordId == null || vaultId == null) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.failure,
+            ),
+          ),
+        );
+        return;
+      }
+
+      final response = await passwordRepository.deletePassword(
+        passwordId: passwordId,
+        vaultId: vaultId,
+      );
 
       response.fold(
         (l) {
@@ -428,6 +486,17 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
           );
         },
         (r) {
+          if (r.code != ApiCodes.success) {
+            emit(
+              GeneralErrorState(
+                state.model.copyWith(
+                  status: FormzSubmissionStatus.failure,
+                ),
+              ),
+            );
+            return;
+          }
+
           emit(
             PasswordDeletedState(
               state.model.copyWith(

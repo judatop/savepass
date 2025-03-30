@@ -2,6 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:savepass/app/profile/domain/datasources/profile_datasource.dart';
 import 'package:savepass/app/profile/domain/entities/profile_entity.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
+import 'package:savepass/app/profile/infraestructure/models/insert_master_password_model.dart';
+import 'package:savepass/core/api/savepass_response_model.dart';
 
 class ProfileRepositoryImpl implements ProfileRepository {
   final ProfileDatasource datasource;
@@ -25,18 +27,14 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  Future<Either<Fail, Unit>> insertMasterPassword({
-    required String masterPassword,
-    required String name,
+  Future<Either<Fail, SavePassResponseModel>> insertMasterPassword({
+    required InsertMasterPasswordModel model,
   }) async {
-    return await datasource.insertMasterPassword(
-      masterPassword: masterPassword,
-      name: name,
-    );
+    return await datasource.insertMasterPassword(model: model);
   }
 
   @override
-  Future<Either<Fail, bool>> checkIfHasMasterPassword() async {
+  Future<Either<Fail, SavePassResponseModel>> checkIfHasMasterPassword() async {
     return await datasource.checkIfHasMasterPassword();
   }
 
@@ -46,12 +44,14 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  Future<Either<Fail, String?>> isEmailExists(String email) async {
-    return await datasource.isEmailExists(email);
+  Future<Either<Fail, SavePassResponseModel>> isEmailExists({
+    required String email,
+  }) async {
+    return await datasource.isEmailExists(email: email);
   }
 
   @override
-  Future<Either<Fail, Unit>> deleteAccount() async {
+  Future<Either<Fail, SavePassResponseModel>> deleteAccount() async {
     return await datasource.deleteAccount();
   }
 }

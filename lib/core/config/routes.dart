@@ -19,5 +19,6 @@ class Routes {
   static const String cardRoute = '/card';
   static const String searchRoute = '/search';
   static const String passwordReport = '/passwordReport';
-  static const String cardReport = '/passwordReport';
+  static const String cardReport = '/cardReport';
+  static const String enrollRoute = '/enroll';
 }

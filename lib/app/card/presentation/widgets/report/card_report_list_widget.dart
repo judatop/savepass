@@ -44,7 +44,7 @@ class CardReportListWidget extends StatelessWidget {
                       height: deviceHeight * 0.70,
                       child: CopyCardValueBottomSheetWidget(
                         status: FormzSubmissionStatus.initial,
-                        vaultId: item.vaultId,
+                        card: item,
                       ),
                     );
                   },
@@ -59,20 +59,20 @@ class CardReportListWidget extends StatelessWidget {
                 bloc.add(const CardReportInitialEvent());
               },
               title: AdsSubtitle(
-                text: item.cardNumber,
+                text: item.card.split('|').first,
                 textAlign: TextAlign.start,
               ),
               subtitle: Text(
-                item.cardHolderName,
+                item.card.split('|')[1],
                 textAlign: TextAlign.start,
                 style: const TextStyle(
                   fontWeight: FontWeight.w200,
                 ),
               ),
               trailing: const Icon(Icons.chevron_right),
-              leading: item.url != null
+              leading: item.imgUrl != null
                   ? CachedNetworkImage(
-                      imageUrl: item.url!,
+                      imageUrl: item.imgUrl!,
                       width: deviceWidth * 0.11,
                       placeholder: (context, url) => Skeletonizer(
                         child: Container(

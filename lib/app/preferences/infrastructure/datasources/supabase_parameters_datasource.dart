@@ -15,7 +15,7 @@ class SupabaseParametersDatasource implements ParametersDatasource {
   Future<Either<Fail, String>> getPrivacyUrl() async {
     try {
       final response = await supabase
-          .from(DbUtils.publicParameters)
+          .from(DbUtils.publicParametersTable)
           .select()
           .eq('key', 'policy');
       return Right(response[0]['value'] as String);
@@ -31,7 +31,7 @@ class SupabaseParametersDatasource implements ParametersDatasource {
   Future<Either<Fail, String>> getTermsUrl() async {
     try {
       final response = await supabase
-          .from(DbUtils.publicParameters)
+          .from(DbUtils.publicParametersTable)
           .select()
           .eq('key', 'terms');
 
@@ -48,7 +48,7 @@ class SupabaseParametersDatasource implements ParametersDatasource {
   Future<Either<Fail, List<PassImageModel>>> getPassImages() async {
     try {
       final response =
-          await supabase.from(DbUtils.passwordsParameters).select();
+          await supabase.from(DbUtils.passwordsParametersTable).select();
 
       List<PassImageModel> passImages = response.map((e) {
         PassImageModel model = PassImageModel.fromJson(e);
@@ -76,7 +76,8 @@ class SupabaseParametersDatasource implements ParametersDatasource {
   @override
   Future<Either<Fail, List<CardImageModel>>> getCardImages() async {
     try {
-      final response = await supabase.from(DbUtils.cardParameters).select();
+      final response =
+          await supabase.from(DbUtils.cardParametersTable).select();
 
       List<CardImageModel> cardImgs = response.map((e) {
         CardImageModel model = CardImageModel.fromJson(e);

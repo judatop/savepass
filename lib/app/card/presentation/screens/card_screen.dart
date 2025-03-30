@@ -21,10 +21,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CardScreen extends StatelessWidget {
-  final String? cardId;
+  final String? selectedCardId;
 
   const CardScreen({
-    this.cardId,
+    this.selectedCardId,
     super.key,
   });
 
@@ -33,8 +33,7 @@ class CardScreen extends StatelessWidget {
     final bloc = Modular.get<CardBloc>();
     return BlocProvider.value(
       value: bloc
-        ..add(const CardInitialEvent())
-        ..add(CardInitDataEvent(cardId: cardId)),
+        ..add( CardInitialEvent(selectedCardId: selectedCardId)),
       child: const BlocListener<CardBloc, CardState>(
         listener: _listener,
         child: _Body(),
@@ -79,14 +78,13 @@ void _listener(context, state) {
     Modular.to.pop();
   }
 
-  if(state is CardNumberCopiedState){
+  if (state is CardNumberCopiedState) {
     SnackBarUtils.showSuccessSnackBar(context, intl.cardNumberCopiedClipboard);
-
   }
 
-  if(state is CardHoldernameCopiedState){
-    SnackBarUtils.showSuccessSnackBar(context, intl.cardholderNameCopiedClipboard);
-
+  if (state is CardHoldernameCopiedState) {
+    SnackBarUtils.showSuccessSnackBar(
+        context, intl.cardholderNameCopiedClipboard);
   }
 }
 
@@ -170,7 +168,7 @@ class _Body extends StatelessWidget {
                             );
                           },
                         ),
-                        SizedBox(height: deviceHeight * 0.3),
+                        SizedBox(height: deviceHeight * 0.5),
                       ],
                     ),
                   ),

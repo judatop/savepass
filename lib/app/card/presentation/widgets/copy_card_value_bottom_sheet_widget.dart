@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
+import 'package:savepass/app/card/infrastructure/models/card_model.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -8,12 +9,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CopyCardValueBottomSheetWidget extends StatelessWidget {
   final FormzSubmissionStatus status;
-  final String vaultId;
+  final CardModel card;
 
   const CopyCardValueBottomSheetWidget({
     super.key,
     required this.status,
-    required this.vaultId,
+    required this.card,
   });
 
   @override
@@ -69,7 +70,7 @@ class CopyCardValueBottomSheetWidget extends StatelessWidget {
                       Modular.to.pop();
                       bloc.add(
                         GetCardValueEvent(
-                          vaultId: vaultId,
+                          card: card,
                           index: 1,
                         ),
                       );
@@ -90,7 +91,7 @@ class CopyCardValueBottomSheetWidget extends StatelessWidget {
                       Modular.to.pop();
                       bloc.add(
                         GetCardValueEvent(
-                          vaultId: vaultId,
+                          card: card,
                           index: 2,
                         ),
                       );
@@ -111,7 +112,7 @@ class CopyCardValueBottomSheetWidget extends StatelessWidget {
                       Modular.to.pop();
                       bloc.add(
                         GetCardValueEvent(
-                          vaultId: vaultId,
+                          card: card,
                           index: 3,
                         ),
                       );
@@ -132,7 +133,7 @@ class CopyCardValueBottomSheetWidget extends StatelessWidget {
                       Modular.to.pop();
                       bloc.add(
                         GetCardValueEvent(
-                          vaultId: vaultId,
+                          card: card,
                           index: 4,
                         ),
                       );

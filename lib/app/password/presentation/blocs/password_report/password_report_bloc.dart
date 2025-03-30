@@ -1,12 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
 import 'package:logger/logger.dart';
 import 'package:savepass/app/password/domain/repositories/password_repository.dart';
+import 'package:savepass/app/password/infrastructure/models/password_model.dart';
 import 'package:savepass/app/password/presentation/blocs/password_report/password_report_event.dart';
 import 'package:savepass/app/password/presentation/blocs/password_report/password_report_state.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
 import 'package:savepass/core/form/text_form.dart';
+import 'package:savepass/core/utils/security_utils.dart';
 
 class PassReportBloc extends Bloc<PassReportEvent, PassReportState> {
   final Logger log;
@@ -31,6 +35,18 @@ class PassReportBloc extends Bloc<PassReportEvent, PassReportState> {
       ),
     );
 
+    final profileBloc = Modular.get<ProfileBloc>();
+    final derivedKey = profileBloc.state.model.derivedKey;
+
+    if (derivedKey == null) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
     final response = await passwordRepository.getPasswords();
 
     response.fold(
@@ -42,11 +58,30 @@ class PassReportBloc extends Bloc<PassReportEvent, PassReportState> {
         );
       },
       (r) {
+        List<PasswordModel> passwords = [];
+
+        if (r.data != null && r.data!['list'] != null) {
+          final passwordsList = r.data!['list'] as List;
+          passwords.addAll(
+            passwordsList.map(
+              (e) {
+                final model = PasswordModel.fromJson(e);
+                model.copyWith(
+                  password:
+                      SecurityUtils.decryptPassword(model.password, derivedKey),
+                );
+
+                return PasswordModel.fromJson(e);
+              },
+            ),
+          );
+        }
+
         emit(
           ChangePassReportState(
             state.model.copyWith(
               status: FormzSubmissionStatus.success,
-              passwords: r,
+              passwords: passwords,
             ),
           ),
         );
@@ -90,7 +125,21 @@ class PassReportBloc extends Bloc<PassReportEvent, PassReportState> {
       ),
     );
 
-    final response = await passwordRepository.searchPasswords(search);
+    final profileBloc = Modular.get<ProfileBloc>();
+    final derivedKey = profileBloc.state.model.derivedKey;
+
+    if (derivedKey == null) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
+    final response = await passwordRepository.searchPasswords(
+      search: search,
+    );
 
     response.fold(
       (l) {
@@ -103,11 +152,30 @@ class PassReportBloc extends Bloc<PassReportEvent, PassReportState> {
         );
       },
       (r) {
+        List<PasswordModel> passwords = [];
+
+        if (r.data != null && r.data!['list'] != null) {
+          final passwordsList = r.data!['list'] as List;
+          passwords.addAll(
+            passwordsList.map(
+              (e) {
+                final model = PasswordModel.fromJson(e);
+                model.copyWith(
+                  password:
+                      SecurityUtils.decryptPassword(model.password, derivedKey),
+                );
+
+                return PasswordModel.fromJson(e);
+              },
+            ),
+          );
+        }
+
         emit(
           ChangePassReportState(
             state.model.copyWith(
               status: FormzSubmissionStatus.success,
-              passwords: r,
+              passwords: passwords,
             ),
           ),
         );

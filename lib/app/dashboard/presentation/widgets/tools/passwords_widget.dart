@@ -18,7 +18,7 @@ class PasswordsWidget extends StatelessWidget {
 
     return AdsCard(
       onTap: () async {
-        await Modular.to.pushNamed(Routes.passwordReport);
+         Modular.to.pushNamed(Routes.passwordReport);
       },
       elevation: 1,
       bgColor: ADSFoundationsColors.primaryColor,

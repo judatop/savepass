@@ -82,11 +82,11 @@ class LastPasswordsWidget extends StatelessWidget {
                         builder: (BuildContext context) {
                           return AdsCard(
                             onLongPress: () {
-                              bloc.add(
-                                CopyPasswordEvent(
-                                  passwordUuid: item.password,
-                                ),
-                              );
+                                bloc.add(
+                                  CopyPasswordEvent(
+                                    password: item,
+                                  ),
+                                );
                             },
                             onTap: () {
                               Modular.to.pushNamed(

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -8,13 +9,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:savepass/app/card/domain/repositories/card_repository.dart';
+import 'package:savepass/app/card/infrastructure/models/card_model.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
 import 'package:savepass/app/password/domain/repositories/password_repository.dart';
+import 'package:savepass/app/password/infrastructure/models/password_model.dart';
 import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
 import 'package:savepass/core/form/text_form.dart';
 import 'package:savepass/core/utils/biometric_utils.dart';
+import 'package:savepass/core/utils/security_utils.dart';
 import 'package:savepass/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -76,9 +81,21 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       ),
     );
 
-    final res2 = await passwordRepository.getPasswords();
+    final profileBloc = Modular.get<ProfileBloc>();
+    final derivedKey = profileBloc.state.model.derivedKey;
 
-    res2.fold(
+    if (derivedKey == null) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(passwordStatus: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
+    final passwordsResponse = await passwordRepository.getPasswords();
+
+    passwordsResponse.fold(
       (l) {
         emit(
           ChangeDashboardState(
@@ -87,11 +104,30 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         );
       },
       (r) {
+        List<PasswordModel> passwords = [];
+
+        if (r.data != null && r.data!['list'] != null) {
+          final passwordsList = r.data!['list'] as List;
+          passwords.addAll(
+            passwordsList.map(
+              (e) {
+                final model = PasswordModel.fromJson(e);
+                model.copyWith(
+                  password:
+                      SecurityUtils.decryptPassword(model.password, derivedKey),
+                );
+
+                return PasswordModel.fromJson(e);
+              },
+            ),
+          );
+        }
+
         emit(
           ChangeDashboardState(
             state.model.copyWith(
               passwordStatus: FormzSubmissionStatus.success,
-              passwords: r,
+              passwords: passwords,
             ),
           ),
         );
@@ -115,29 +151,46 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         );
       },
       (r) {
+        List<CardModel> cards = [];
+
+        if (r.data != null && r.data!['list'] != null) {
+          final cardsList = r.data!['list'] as List;
+          cards.addAll(
+            cardsList.map(
+              (e) {
+                CardModel model = CardModel.fromJson(e);
+                model = model.copyWith(
+                  card: SecurityUtils.decryptPassword(model.card, derivedKey),
+                );
+                return model;
+              },
+            ),
+          );
+        }
+
         emit(
           ChangeDashboardState(
             state.model.copyWith(
               cardStatus: FormzSubmissionStatus.success,
-              cards: r,
+              cards: cards,
             ),
           ),
         );
       },
     );
 
-    final hasBiometrics = await BiometricUtils.hasBiometricsSaved();
-    final canAuthenticate =
-        await BiometricUtils.canAuthenticateWithBiometrics();
+    // final hasBiometrics = await BiometricUtils.hasBiometricsSaved();
+    // final canAuthenticate =
+    //     await BiometricUtils.canAuthenticateWithBiometrics();
 
-    emit(
-      ChangeDashboardState(
-        state.model.copyWith(
-          hasBiometrics: hasBiometrics,
-          canAuthenticate: canAuthenticate,
-        ),
-      ),
-    );
+    // emit(
+    //   ChangeDashboardState(
+    //     state.model.copyWith(
+    //       hasBiometrics: hasBiometrics,
+    //       canAuthenticate: canAuthenticate,
+    //     ),
+    //   ),
+    // );
   }
 
   FutureOr<void> _onChangeIndexEvent(
@@ -540,30 +593,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       ),
     );
 
-    final response = await passwordRepository.getPassword(event.passwordUuid);
+    String cleanPassword = event.password.password;
 
-    String? cleanPassword;
-
-    response.fold(
-      (l) {
-        emit(
-          GeneralErrorState(
-            state.model.copyWith(
-              status: FormzSubmissionStatus.failure,
-            ),
-          ),
-        );
-      },
-      (r) {
-        cleanPassword = r;
-      },
-    );
-
-    if (cleanPassword == null) {
-      return;
-    }
-
-    await Clipboard.setData(ClipboardData(text: cleanPassword!));
+    await Clipboard.setData(ClipboardData(text: cleanPassword));
 
     emit(
       PasswordObtainedState(
@@ -586,37 +618,29 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       ),
     );
 
-    final index = event.index;
+    final derivedKey = Modular.get<ProfileBloc>().state.model.derivedKey;
 
-    final response = await cardRepository.getCardValue(
-      index,
-      event.vaultId,
-    );
-
-    late String? value;
-
-    response.fold(
-      (l) {
-        value = null;
-      },
-      (r) {
-        value = r;
-      },
-    );
-
-    if (value == null) {
+    if (derivedKey == null) {
       emit(
         GeneralErrorState(
           state.model.copyWith(
-            statusCardValue: FormzSubmissionStatus.failure,
+            deleteStatus: FormzSubmissionStatus.failure,
           ),
         ),
       );
-
       return;
     }
 
-    await Clipboard.setData(ClipboardData(text: value!));
+    final index = event.index;
+    final card = event.card.card;
+
+    if (card.isEmpty) {
+      return;
+    }
+
+    final txt = card.split('|')[index - 1];
+
+    await Clipboard.setData(ClipboardData(text: txt));
     emit(
       CardValueCopiedState(
         state.model.copyWith(

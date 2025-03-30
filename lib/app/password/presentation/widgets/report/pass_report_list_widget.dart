@@ -37,7 +37,7 @@ class PassReportListWidget extends StatelessWidget {
                 final bloc = Modular.get<DashboardBloc>();
                 bloc.add(
                   CopyPasswordEvent(
-                    passwordUuid: item.password,
+                    password: item,
                   ),
                 );
               },

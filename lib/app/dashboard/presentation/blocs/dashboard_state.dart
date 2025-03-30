@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
-import 'package:savepass/app/card/infrastructure/models/dashboard_card_model.dart';
+import 'package:savepass/app/card/infrastructure/models/card_model.dart';
 import 'package:savepass/app/password/infrastructure/models/password_model.dart';
 import 'package:savepass/app/profile/domain/entities/profile_entity.dart';
 import 'package:savepass/core/form/text_form.dart';
@@ -83,7 +83,7 @@ class DashboardStateModel extends Equatable {
   final ProfileEntity? profile;
   final List<PasswordModel> passwords;
   final FormzSubmissionStatus passwordStatus;
-  final List<DashboardCardModel> cards;
+  final List<CardModel> cards;
   final FormzSubmissionStatus cardStatus;
   final FormzSubmissionStatus statusCardValue;
   final bool hasBiometrics;
@@ -115,7 +115,7 @@ class DashboardStateModel extends Equatable {
     FormzSubmissionStatus? deleteStatus,
     List<PasswordModel>? passwords,
     FormzSubmissionStatus? passwordStatus,
-    List<DashboardCardModel>? cards,
+    List<CardModel>? cards,
     FormzSubmissionStatus? cardStatus,
     FormzSubmissionStatus? statusCardValue,
     bool? hasBiometrics,

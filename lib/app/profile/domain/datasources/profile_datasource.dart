@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:savepass/app/profile/domain/entities/profile_entity.dart';
+import 'package:savepass/app/profile/infraestructure/models/insert_master_password_model.dart';
+import 'package:savepass/core/api/savepass_response_model.dart';
 
 abstract class ProfileDatasource {
   Future<Either<Fail, String>> uploadAvatar(String imgPath);
@@ -9,16 +11,17 @@ abstract class ProfileDatasource {
     String? avatarUuid,
   });
 
-  Future<Either<Fail, Unit>> insertMasterPassword({
-    required String masterPassword,
-    required String name,
+  Future<Either<Fail, SavePassResponseModel>> insertMasterPassword({
+    required InsertMasterPasswordModel model,
   });
 
-  Future<Either<Fail, bool>> checkIfHasMasterPassword();
+  Future<Either<Fail, SavePassResponseModel>> checkIfHasMasterPassword();
 
   Future<Either<Fail, ProfileEntity>> getProfile();
 
-  Future<Either<Fail, String?>> isEmailExists(String email);
+  Future<Either<Fail, SavePassResponseModel>> isEmailExists({
+    required String email,
+  });
 
-  Future<Either<Fail, Unit>> deleteAccount();
+  Future<Either<Fail, SavePassResponseModel>> deleteAccount();
 }

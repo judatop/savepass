@@ -36,6 +36,14 @@ class GeneralErrorState extends AuthInitState {
   const GeneralErrorState(super.model);
 }
 
+class DeviceAlreadyEnrolledState extends AuthInitState {
+  const DeviceAlreadyEnrolledState(super.model);
+}
+
+class DeviceNotEnrolledState extends AuthInitState {
+  const DeviceNotEnrolledState(super.model);
+}
+
 class AuthInitStateModel extends Equatable {
   final PasswordForm password;
   final bool alreadySubmitted;

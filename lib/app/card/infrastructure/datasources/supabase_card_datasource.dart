@@ -2,181 +2,124 @@ import 'package:dartz/dartz.dart';
 import 'package:logger/logger.dart';
 import 'package:savepass/app/card/domain/datasources/card_datasource.dart';
 import 'package:savepass/app/card/infrastructure/models/card_model.dart';
-import 'package:savepass/app/card/infrastructure/models/dashboard_card_model.dart';
+import 'package:savepass/core/api/savepass_response_model.dart';
+import 'package:savepass/core/api/supabase_middleware.dart';
 import 'package:savepass/core/utils/db_utils.dart';
-import 'package:savepass/main.dart';
+import 'package:savepass/core/utils/snackbar_utils.dart';
 
 class SupabaseCardDatasource implements CardDatasource {
   final Logger log;
+  final SupabaseMiddleware middleware;
 
-  SupabaseCardDatasource({required this.log});
+  SupabaseCardDatasource({
+    required this.log,
+    required this.middleware,
+  });
 
   @override
-  Future<Either<Fail, Unit>> deleteCard(String cardId, String vaultId) async {
+  Future<Either<Fail, SavePassResponseModel>> deleteCard({
+    required String cardId,
+    required String vaultId,
+  }) async {
     try {
-      await supabase.rpc(
-        DbUtils.deleteCardFunction,
+      final response = await middleware.doHttp(
+        rpc: DbUtils.deleteCardFunction,
         params: {
           'card_id_param': cardId,
           'vault_id_param': vaultId,
         },
       );
 
-      return const Right(unit);
+      return Right(response);
     } catch (e) {
       log.e('deleteCard: $e');
-      return Left(
-        Fail('Error occurred while deleting your card'),
-      );
+      return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
 
   @override
-  Future<Either<Fail, Unit>> editCard(CardModel model, String vaultId) async {
+  Future<Either<Fail, SavePassResponseModel>> editCard({
+    required CardModel model,
+  }) async {
     try {
-      await supabase.rpc(
-        DbUtils.editCardFunction,
-        params: {
-          'type_param': model.type,
-          'card_param': model.card,
-          'description_param': '',
-          'card_id_param': model.id,
-          'vault_id_param': vaultId,
-        },
+      final response = await middleware.doHttp(
+        rpc: DbUtils.editCardFunction,
+        params: model.toEditJson(),
       );
 
-      return const Right(unit);
+      return Right(response);
     } catch (e) {
       log.e('editCard: $e');
-      return Left(
-        Fail('Error occurred while editting card'),
-      );
+      return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
 
   @override
-  Future<Either<Fail, String>> getCard(String cardId) async {
+  Future<Either<Fail, SavePassResponseModel>> getCards() async {
     try {
-      final response = await supabase.rpc(
-        DbUtils.getCardFunction,
-        params: {
-          'secret_uuid': cardId,
-        },
+      final response = await middleware.doHttp(
+        rpc: DbUtils.getCardsFunction,
       );
 
-      if (response == null) {
-        return Left(Fail('Card not found'));
-      }
-
-      return Right(response as String);
-    } catch (e) {
-      log.e('getCard: $e');
-      return Left(
-        Fail('Error occurred while getting the card'),
-      );
-    }
-  }
-
-  @override
-  Future<Either<Fail, CardModel>> getCardModel(String cardId) async {
-    try {
-      final response =
-          await supabase.from(DbUtils.cardsTable).select().eq('id', cardId);
-
-      CardModel card = CardModel.fromJson(response.first);
-
-      return Right(card);
-    } catch (e) {
-      log.e('getCardModel: $e');
-      return Left(
-        Fail('Error occurred while getting your card model'),
-      );
-    }
-  }
-
-  @override
-  Future<Either<Fail, List<DashboardCardModel>>> getCards() async {
-    try {
-      final response = await supabase.rpc(DbUtils.getCardsFunction);
-
-      List<DashboardCardModel> cards = (response as List<dynamic>).map((e) {
-        return DashboardCardModel.fromJson(e as Map<String, dynamic>);
-      }).toList();
-
-      return Right(cards);
+      return Right(response);
     } catch (e) {
       log.e('getCards: $e');
-      return Left(
-        Fail('Error occurred while gettings cards'),
-      );
+      return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
 
   @override
-  Future<Either<Fail, Unit>> insertCard(CardModel model) async {
+  Future<Either<Fail, SavePassResponseModel>> insertCard({
+    required CardModel model,
+  }) async {
     try {
-      await supabase.rpc(
-        DbUtils.insertCardFunction,
-        params: {
-          'type': model.type,
-          'card': model.card,
-          'description': '',
-        },
+      final response = await middleware.doHttp(
+        rpc: DbUtils.insertCardFunction,
+        params: model.toInsertJson(),
       );
 
-      return const Right(unit);
+      return Right(response);
     } catch (e) {
       log.e('insertCard: $e');
-      return Left(
-        Fail('Error occurred while inserting card'),
-      );
+      return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
 
   @override
-  Future<Either<Fail, String>> getCardValue(int index, String vaultId) async {
+  Future<Either<Fail, SavePassResponseModel>> searchCards({
+    required String search,
+  }) async {
     try {
-      final response = await supabase.rpc(
-        DbUtils.getCardValueFunction,
+      final response = await middleware.doHttp(
+        rpc: DbUtils.searchCardFunction,
         params: {
-          'index_val': index,
-          'secret_uuid': vaultId,
+          'search_param': search,
         },
       );
 
-      return Right(response as String);
+      return Right(response);
     } catch (e) {
-      log.e('getCardValue: $e');
-      return Left(
-        Fail('Error occurred while getting card value'),
-      );
+      log.e('searchCards: $e');
+      return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
-  
+
   @override
-  Future<Either<Fail, List<DashboardCardModel>>> searchCards(String search) async {
-     try {
-      final response = await supabase.rpc(
-        DbUtils.searchCardFunction,
+  Future<Either<Fail, SavePassResponseModel>> getCardById({
+    required String cardId,
+  }) async {
+    try {
+      final response = await middleware.doHttp(
+        rpc: DbUtils.getCardByIdFunction,
         params: {
-          'search': search,
+          'card_id_param': cardId,
         },
       );
 
-      if (response == null) {
-        return Left(Fail('Error in search'));
-      }
-
-      List<DashboardCardModel> items = (response as List<dynamic>).map((e) {
-        return DashboardCardModel.fromJson(e as Map<String, dynamic>);
-      }).toList();
-
-      return Right(items);
+      return Right(response);
     } catch (e) {
-      log.e('search: $e');
-      return Left(
-        Fail('Error occurred while searching'),
-      );
+      log.e('getCardById: $e');
+      return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
 }

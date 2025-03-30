@@ -43,10 +43,6 @@ class PasswordScreen extends StatelessWidget {
 void _listener(context, state) {
   final intl = AppLocalizations.of(context)!;
 
-  if (state is GeneratedPasswordState) {
-    SnackBarUtils.showSuccessSnackBar(context, intl.passwordGenerated);
-  }
-
   if (state is PasswordCreatedState) {
     final bloc = Modular.get<DashboardBloc>();
     bloc.add(const DashboardInitialEvent());

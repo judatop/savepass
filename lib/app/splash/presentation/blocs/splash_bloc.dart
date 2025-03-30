@@ -42,7 +42,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
         hasMasterPassword = null;
       },
       (r) {
-        hasMasterPassword = r;
+        hasMasterPassword = r.data?['result'];
       },
     );
 

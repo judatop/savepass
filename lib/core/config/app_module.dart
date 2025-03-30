@@ -23,6 +23,12 @@ import 'package:savepass/app/card/presentation/blocs/card_report/card_report_blo
 import 'package:savepass/app/card/presentation/screens/card_report_screen.dart';
 import 'package:savepass/app/card/presentation/screens/card_screen.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
+import 'package:savepass/app/enroll/domain/datasources/enroll_datasource.dart';
+import 'package:savepass/app/enroll/domain/repositories/enroll_repository.dart';
+import 'package:savepass/app/enroll/infrastructure/datasources/supabase_enroll_datasource.dart';
+import 'package:savepass/app/enroll/infrastructure/repositories/enroll_repository_impl.dart';
+import 'package:savepass/app/enroll/presentation/blocs/enroll_bloc.dart';
+import 'package:savepass/app/enroll/presentation/screens/enroll_screen.dart';
 import 'package:savepass/app/get_started/presentation/blocs/get_started_bloc.dart';
 import 'package:savepass/app/get_started/presentation/screens/get_started_screen.dart';
 import 'package:savepass/app/dashboard/presentation/screens/dashboard_screen.dart';
@@ -43,10 +49,7 @@ import 'package:savepass/app/profile/domain/datasources/profile_datasource.dart'
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/app/profile/infraestructure/datasources/supabase_profile_datasource.dart';
 import 'package:savepass/app/profile/infraestructure/repositories_impl/profile_repository_impl.dart';
-import 'package:savepass/app/search/domain/datasources/search_datasource.dart';
-import 'package:savepass/app/search/domain/repositories/search_repository.dart';
-import 'package:savepass/app/search/infrastructure/datasources/supabase_search_datasource.dart';
-import 'package:savepass/app/search/infrastructure/repositories_impl/search_repository_impl.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
 import 'package:savepass/app/search/presentation/blocs/search_bloc.dart';
 import 'package:savepass/app/search/presentation/screens/search_screen.dart';
 import 'package:savepass/app/splash/presentation/blocs/splash_bloc.dart';
@@ -56,11 +59,8 @@ import 'package:savepass/app/sync_pass/presentation/screens/sync_pass_screen.dar
 import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
 import 'package:savepass/app/preferences/infrastructure/repositories_impl/preferences_irepository.dart';
 import 'package:savepass/app/preferences/presentation/blocs/preferences_bloc.dart';
+import 'package:savepass/core/api/supabase_middleware.dart';
 import 'package:savepass/core/config/routes.dart';
-import 'package:savepass/core/global/domain/datasources/secret_datasource.dart';
-import 'package:savepass/core/global/domain/repositories/secret_repository.dart';
-import 'package:savepass/core/global/infrastructure/datasources/supabase_secret_datasource.dart';
-import 'package:savepass/core/global/infrastructure/repositories/secret_repository_impl.dart';
 import 'package:savepass/core/global/presentation/screens/photo_permission_screen.dart';
 
 class AppModule extends Module {
@@ -69,13 +69,12 @@ class AppModule extends Module {
     i.addSingleton(FlutterSecureStorage.new);
     i.addSingleton(PreferencesBloc.new);
     i.addSingleton(Logger.new);
+    i.addSingleton(SupabaseMiddleware.new);
     i.addSingleton<ProfileRepository>(ProfileRepositoryImpl.new);
     i.addSingleton<ProfileDatasource>(SupabaseProfileDatasource.new);
     i.addSingleton<PreferencesRepository>(PreferencesIRepository.new);
     i.addSingleton<PreferencesDatasource>(LocalPreferencesDatasource.new);
     i.addSingleton<ParametersDatasource>(SupabaseParametersDatasource.new);
-    i.addSingleton<SecretDatasource>(SupabaseSecretDatasource.new);
-    i.addSingleton<SecretRepository>(SecretRepositoryImpl.new);
     i.addSingleton<AuthInitDatasource>(SupabaseAuthInitDatasource.new);
     i.addSingleton<AuthInitRepository>(AuthInitRepositoryImpl.new);
     i.addSingleton<AuthDatasource>(SupabaseAuthDatasource.new);
@@ -84,8 +83,8 @@ class AppModule extends Module {
     i.addSingleton<PasswordRepository>(PasswordRepositoryImpl.new);
     i.addSingleton<CardDatasource>(SupabaseCardDatasource.new);
     i.addSingleton<CardRepository>(CardRepositoryImpl.new);
-    i.addSingleton<SearchDatasource>(SupabaseSearchDatasource.new);
-    i.addSingleton<SearchRepository>(SearchRepositoryImpl.new);
+    i.addSingleton<EnrollDatasource>(SupabaseEnrollDatasource.new);
+    i.addSingleton<EnrollRepository>(EnrollRepositoryImpl.new);
     i.addSingleton(GetStartedBloc.new);
     i.addSingleton(AuthInitBloc.new);
     i.addSingleton(SyncBloc.new);
@@ -97,6 +96,8 @@ class AppModule extends Module {
     i.addSingleton(SearchBloc.new);
     i.addSingleton(PassReportBloc.new);
     i.addSingleton(CardReportBloc.new);
+    i.addSingleton(EnrollBloc.new);
+    i.addSingleton(ProfileBloc.new);
   }
 
   @override
@@ -143,7 +144,7 @@ class AppModule extends Module {
     );
     r.child(
       Routes.cardRoute,
-      child: (context) => CardScreen(cardId: r.args.data),
+      child: (context) => CardScreen(selectedCardId: r.args.data),
     );
     r.child(
       Routes.searchRoute,
@@ -156,6 +157,10 @@ class AppModule extends Module {
     r.child(
       Routes.cardReport,
       child: (context) => const CardReportScreen(),
+    );
+    r.child(
+      Routes.enrollRoute,
+      child: (context) => const EnrollScreen(),
     );
   }
 }

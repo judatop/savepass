@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:savepass/app/card/infrastructure/models/card_model.dart';
+import 'package:savepass/app/password/infrastructure/models/password_model.dart';
 import 'package:savepass/app/search/infrastructure/models/search_model.dart';
 import 'package:savepass/core/form/text_form.dart';
 
@@ -31,22 +33,30 @@ class LoadingPasswordState extends SearchState {
 class SearchStateModel extends Equatable {
   final TextForm searchForm;
   final List<SearchModel> searchItems;
+  final List<CardModel> cards;
+  final List<PasswordModel> passwords;
   final FormzSubmissionStatus status;
 
   const SearchStateModel({
     this.searchForm = const TextForm.pure(),
     this.searchItems = const [],
+    this.cards = const [],
+    this.passwords = const [],
     this.status = FormzSubmissionStatus.initial,
   });
 
   SearchStateModel copyWith({
     TextForm? searchForm,
     List<SearchModel>? searchItems,
+    List<CardModel>? cards,
+    List<PasswordModel>? passwords,
     FormzSubmissionStatus? status,
   }) {
     return SearchStateModel(
       searchForm: searchForm ?? this.searchForm,
       searchItems: searchItems ?? this.searchItems,
+      cards: cards ?? this.cards,
+      passwords: passwords ?? this.passwords,
       status: status ?? this.status,
     );
   }
@@ -55,6 +65,8 @@ class SearchStateModel extends Equatable {
   List<Object?> get props => [
         searchForm,
         searchItems,
+        cards,
+        passwords,
         status,
       ];
 }

@@ -14,6 +14,7 @@ class DbUtils {
   static const isEmailExistsFunction = 'is_email_exist';
   static const insertMasterPassword = 'insert_master_password';
   static const deleteAccountFunction = 'delete_account';
+  static const enrollBiometricFunction = 'enroll_biometric';
 
   static const insertPasswordFunction = 'insert_password';
   static const editPasswordFunction = 'edit_password';

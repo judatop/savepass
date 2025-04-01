@@ -12,8 +12,6 @@ import 'package:savepass/app/dashboard/presentation/widgets/settings/policy_sett
 import 'package:savepass/app/dashboard/presentation/widgets/settings/terms_settings_widget.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/settings/theme_settings_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:savepass/core/utils/biometric_utils.dart';
-import 'package:savepass/main.dart';
 
 class SettingsWidget extends StatelessWidget {
   const SettingsWidget({super.key});

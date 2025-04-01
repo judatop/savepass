@@ -16,7 +16,6 @@ class BiometricSettingsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final intl = AppLocalizations.of(context)!;
     final deviceHeight = MediaQuery.of(context).size.height;
-    final bloc = Modular.get<DashboardBloc>();
 
     return BlocBuilder<DashboardBloc, DashboardState>(
       buildWhen: (previous, current) =>
@@ -39,20 +38,20 @@ class BiometricSettingsWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const AdsTitle(
-                      text: 'Biometrics',
+                    AdsTitle(
+                      text: intl.biometrics,
                       textAlign: TextAlign.start,
                     ),
                     const SizedBox(height: 10),
-                    const Text(
-                      'Sign in with biometrics for a faster and more secure experience.',
+                    Text(
+                      intl.biometricsTip,
                       textAlign: TextAlign.start,
                     ),
                     SizedBox(height: deviceHeight * 0.02),
                     AdsFilledIconButton(
                       onPressedCallback: () =>
                           Modular.to.pushNamed(Routes.biometricRoute),
-                      text: 'Enable Biometrics',
+                      text: intl.enableBiometricsTitle,
                       icon: Platform.isAndroid ? Icons.fingerprint : Icons.face,
                     ),
                   ],

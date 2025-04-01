@@ -28,4 +28,7 @@ final class Env {
 
   @EnviedField(varName: 'SUPABASE_PARAMETERS_BUCKET', obfuscate: true)
   static final String supabaseParametersBucket = _Env.supabaseParametersBucket;
+
+  @EnviedField(varName: 'BIOMETRIC_HASH_KEY', obfuscate: true)
+  static final String biometricHashKey = _Env.biometricHashKey;
 }

@@ -283,5 +283,13 @@
     "wantToLink": "If you want to continue with this device, you can register it and we will unlink the previous one.",
     "@wantToLink": {},
     "linkDevice": "Register device",
-    "@linkDevice": {}
+    "@linkDevice": {},
+    "enableBiometricsTitle": "Enable your biometrics",
+    "@enableBiometricsTitle": {},
+    "enableBiometricsText": "By activating your biometrics, you do not need to enter your master password at every sign in.",
+    "@enableBiometricsText": {},
+    "biometrics": "Biometrics",
+    "@biometrics": {},
+    "biometricsTip": "Sign in with biometrics for a faster experience",
+    "@biometricsTip": {}
 }

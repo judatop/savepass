@@ -19,6 +19,18 @@ class ChangeBiometricState extends BiometricState {
   const ChangeBiometricState(super.model);
 }
 
+class GeneralErrorState extends BiometricState {
+  const GeneralErrorState(super.model);
+}
+
+class InvalidMasterPasswordState extends BiometricState {
+  const InvalidMasterPasswordState(super.model);
+}
+
+class EnrolledSuccessfulState extends BiometricState{
+  const EnrolledSuccessfulState(super.model);
+}
+
 class BiometricStateModel extends Equatable {
   final MasterPasswordForm masterPassword;
   final bool showPassword;

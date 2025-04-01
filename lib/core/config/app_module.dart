@@ -14,9 +14,13 @@ import 'package:savepass/app/auth_init/infrastructure/datasources/supabase_auth_
 import 'package:savepass/app/auth_init/infrastructure/repositories/auth_init_repository_impl.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_bloc.dart';
 import 'package:savepass/app/auth_init/presentation/screens/auth_init_screen.dart';
+import 'package:savepass/app/biometric/domain/datasources/biometric_datasource.dart';
+import 'package:savepass/app/biometric/domain/repositories/biometric_repository.dart';
+import 'package:savepass/app/biometric/infrastructure/repositories_impl/biometric_repository_impl.dart';
 import 'package:savepass/app/biometric/presentation/blocs/biometric_bloc.dart';
 import 'package:savepass/app/biometric/presentation/screens/biometric_screen.dart';
 import 'package:savepass/app/card/domain/datasources/card_datasource.dart';
+import 'package:savepass/app/card/domain/datasources/supabase_biometric_datasource.dart';
 import 'package:savepass/app/card/domain/repositories/card_repository.dart';
 import 'package:savepass/app/card/infrastructure/datasources/supabase_card_datasource.dart';
 import 'package:savepass/app/card/infrastructure/repositories_impl/card_repository_impl.dart';
@@ -87,6 +91,8 @@ class AppModule extends Module {
     i.addSingleton<CardRepository>(CardRepositoryImpl.new);
     i.addSingleton<EnrollDatasource>(SupabaseEnrollDatasource.new);
     i.addSingleton<EnrollRepository>(EnrollRepositoryImpl.new);
+    i.addSingleton<BiometricDatasource>(SupabaseBiometricDatasource.new);
+    i.addSingleton<BiometricRepository>(BiometricRepositoryImpl.new);
     i.addSingleton(GetStartedBloc.new);
     i.addSingleton(AuthInitBloc.new);
     i.addSingleton(SyncBloc.new);

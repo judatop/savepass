@@ -44,7 +44,6 @@ class _Body extends StatelessWidget {
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
-    final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
     final intl = AppLocalizations.of(context)!;
 
@@ -82,11 +81,9 @@ class _Body extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: deviceHeight * 0.015),
-                        const AdsHeadline(text: 'Enable your biometrics'),
+                        AdsHeadline(text: intl.enableBiometricsTitle),
                         SizedBox(height: deviceHeight * 0.05),
-                        const Text(
-                          'By activating your biometrics, you do not need to enter your master password at every sign in.',
-                        ),
+                        Text(intl.enableBiometricsText),
                         SizedBox(height: deviceHeight * 0.025),
                         const BiometricMasterPasswordWidget(),
                         SizedBox(height: deviceHeight * 0.05),

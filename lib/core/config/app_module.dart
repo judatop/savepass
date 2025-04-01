@@ -14,6 +14,8 @@ import 'package:savepass/app/auth_init/infrastructure/datasources/supabase_auth_
 import 'package:savepass/app/auth_init/infrastructure/repositories/auth_init_repository_impl.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_bloc.dart';
 import 'package:savepass/app/auth_init/presentation/screens/auth_init_screen.dart';
+import 'package:savepass/app/biometric/presentation/blocs/biometric_bloc.dart';
+import 'package:savepass/app/biometric/presentation/screens/biometric_screen.dart';
 import 'package:savepass/app/card/domain/datasources/card_datasource.dart';
 import 'package:savepass/app/card/domain/repositories/card_repository.dart';
 import 'package:savepass/app/card/infrastructure/datasources/supabase_card_datasource.dart';
@@ -98,6 +100,7 @@ class AppModule extends Module {
     i.addSingleton(CardReportBloc.new);
     i.addSingleton(EnrollBloc.new);
     i.addSingleton(ProfileBloc.new);
+    i.addSingleton(BiometricBloc.new);
   }
 
   @override
@@ -161,6 +164,10 @@ class AppModule extends Module {
     r.child(
       Routes.enrollRoute,
       child: (context) => const EnrollScreen(),
+    );
+    r.child(
+      Routes.biometricRoute,
+      child: (context) => const BiometricScreen(),
     );
   }
 }

@@ -80,7 +80,3 @@ class GetCardValueEvent extends DashboardEvent {
     required this.index,
   }) : super();
 }
-
-class EnableBiometricsEvent extends DashboardEvent {
-  const EnableBiometricsEvent() : super();
-}

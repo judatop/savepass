@@ -6,8 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
-import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
+import 'package:savepass/core/config/routes.dart';
 
 class BiometricSettingsWidget extends StatelessWidget {
   const BiometricSettingsWidget({super.key});
@@ -20,12 +20,13 @@ class BiometricSettingsWidget extends StatelessWidget {
 
     return BlocBuilder<DashboardBloc, DashboardState>(
       buildWhen: (previous, current) =>
-          previous.model.hasBiometrics != current.model.hasBiometrics,
+          (previous.model.hasBiometrics != current.model.hasBiometrics) ||
+          (previous.model.canAuthenticate != current.model.canAuthenticate),
       builder: (context, state) {
         final hasBiometrics = state.model.hasBiometrics;
         final canAuthenticate = state.model.canAuthenticate;
 
-        if (hasBiometrics || !canAuthenticate) {
+        if (!hasBiometrics || !canAuthenticate) {
           return Container();
         }
 
@@ -50,7 +51,7 @@ class BiometricSettingsWidget extends StatelessWidget {
                     SizedBox(height: deviceHeight * 0.02),
                     AdsFilledIconButton(
                       onPressedCallback: () =>
-                          bloc.add(const EnableBiometricsEvent()),
+                          Modular.to.pushNamed(Routes.biometricRoute),
                       text: 'Enable Biometrics',
                       icon: Platform.isAndroid ? Icons.fingerprint : Icons.face,
                     ),

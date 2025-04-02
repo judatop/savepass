@@ -13,7 +13,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:savepass/app/biometric/presentation/widgets/biometric_header_widget.dart';
 import 'package:savepass/app/biometric/presentation/widgets/biometric_master_password_widget.dart';
 import 'package:savepass/app/biometric/presentation/widgets/submit_biometric_widget.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/core/lottie/lottie_paths.dart';
+import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class BiometricScreen extends StatelessWidget {
@@ -35,7 +38,24 @@ class BiometricScreen extends StatelessWidget {
   }
 }
 
-void _listener(context, state) {}
+void _listener(context, state) {
+  final intl = AppLocalizations.of(context)!;
+
+  if (state is InvalidMasterPasswordState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.invalidCredentials);
+  }
+
+  if (state is GeneralErrorState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.genericError);
+  }
+
+  if (state is EnrolledSuccessfulState) {
+    SnackBarUtils.showSuccessSnackBar(context, intl.biometricsEnrolled);
+    final bloc = Modular.get<DashboardBloc>();
+    bloc.add(const CheckBiometricsEvent());
+    Modular.to.pop();
+  }
+}
 
 class _Body extends StatelessWidget {
   const _Body();

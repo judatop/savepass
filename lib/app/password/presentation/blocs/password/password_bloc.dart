@@ -340,7 +340,7 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
           typeImg: state.model.imgUrl,
           name: state.model.name.value,
           username: state.model.email.value,
-          password: SecurityUtils.encryptPassword(
+          password: await SecurityUtils.encryptPassword(
             state.model.password.value,
             derivedKey,
           ),
@@ -355,7 +355,7 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
           typeImg: state.model.imgUrl,
           name: state.model.name.value,
           username: state.model.email.value,
-          password: SecurityUtils.encryptPassword(
+          password: await SecurityUtils.encryptPassword(
             state.model.password.value,
             derivedKey,
           ),

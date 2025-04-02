@@ -92,7 +92,7 @@
     "@hello": {},
     "authInitText": "Por favor, ingresa tu contraseña maestra",
     "@authInitText": {},
-    "useBiometrics": "Usar biometría",
+    "useBiometrics": "Usar biométricos",
     "@useBiometrics": {},
     "passwordTitle": "Nueva contraseña",
     "@passwordTitle": {},
@@ -291,5 +291,7 @@
     "biometrics": "Biométricos",
     "@biometrics": {},
     "biometricsTip": "Inicia con biométricos para una rápida experiencia",
-    "@biometricsTip": {}
+    "@biometricsTip": {},
+    "biometricsEnrolled": "Biométricos registrados",
+    "@biometricsEnrolled": {}
 }

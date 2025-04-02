@@ -11,16 +11,19 @@ import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
 import 'package:savepass/app/profile/presentation/blocs/profile_event.dart';
 import 'package:savepass/core/api/api_codes.dart';
 import 'package:savepass/core/form/password_form.dart';
+import 'package:savepass/core/utils/biometric_utils.dart';
 import 'package:savepass/core/utils/device_info.dart';
 import 'package:savepass/core/utils/security_utils.dart';
 
 class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
   final ProfileRepository profileRepository;
   final AuthInitRepository authInitRepository;
+  final BiometricUtils biometricUtils;
 
   AuthInitBloc({
     required this.profileRepository,
     required this.authInitRepository,
+    required this.biometricUtils,
   }) : super(const AuthInitInitialState()) {
     on<AuthInitInitialEvent>(_onAuthInitInitial);
     on<PasswordChangedEvent>(_onPasswordChanged);
@@ -46,6 +49,19 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
           ),
         );
       },
+    );
+
+    final hasBiometrics = await biometricUtils.hasBiometricsSaved();
+    final canAuthenticate =
+        await biometricUtils.canAuthenticateWithBiometrics();
+
+    emit(
+      ChangeAuthInitState(
+        state.model.copyWith(
+          hasBiometricsSaved: hasBiometrics,
+          canAuthenticateWithBiometrics: canAuthenticate,
+        ),
+      ),
     );
   }
 

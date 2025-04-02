@@ -131,9 +131,17 @@ class _Body extends StatelessWidget {
         child: BlocBuilder<AuthInitBloc, AuthInitState>(
           buildWhen: (previous, current) =>
               (previous.model.status != current.model.status) ||
-              (previous.model.profile != current.model.profile),
+              (previous.model.profile != current.model.profile) ||
+              (previous.model.canAuthenticateWithBiometrics !=
+                  current.model.canAuthenticateWithBiometrics) ||
+              (previous.model.hasBiometricsSaved !=
+                  current.model.hasBiometricsSaved),
           builder: (context, state) {
             final profile = state.model.profile;
+            final hasBiometricsSaved = state.model.hasBiometricsSaved;
+            final canAuthenticateWithBiometrics =
+                state.model.canAuthenticateWithBiometrics;
+
             String? displayName;
             String? photoURL;
 
@@ -185,18 +193,19 @@ class _Body extends StatelessWidget {
                           ),
                           SizedBox(height: deviceHeight * 0.02),
                           const MasterPasswordWidget(),
-                          SizedBox(height: deviceHeight * 0.05),
+                          SizedBox(height: deviceHeight * 0.03),
                           const SubmitButtonWidget(),
                         ],
                       ),
                     ),
                   ),
                   SizedBox(height: deviceHeight * 0.01),
-                  // AdsOutlinedIconButton(
-                  //   onPressedCallback: () => _openBiometrics(context),
-                  //   text: intl.useBiometrics,
-                  //   icon: Platform.isIOS ? Icons.face : Icons.fingerprint,
-                  // ),
+                  if (canAuthenticateWithBiometrics && hasBiometricsSaved)
+                    AdsOutlinedIconButton(
+                      onPressedCallback: () => _openBiometrics(context),
+                      text: intl.useBiometrics,
+                      icon: Platform.isIOS ? Icons.face : Icons.fingerprint,
+                    ),
                 ],
               ),
             );

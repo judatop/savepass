@@ -7,9 +7,10 @@ import 'package:savepass/app/auth_init/domain/repositories/auth_init_repository.
 import 'package:savepass/app/biometric/domain/repositories/biometric_repository.dart';
 import 'package:savepass/app/biometric/presentation/blocs/biometric_event.dart';
 import 'package:savepass/app/biometric/presentation/blocs/biometric_state.dart';
-import 'package:savepass/app/sync_pass/infrastructure/models/master_password_form.dart';
 import 'package:savepass/core/api/api_codes.dart';
 import 'package:savepass/core/env/env.dart';
+import 'package:savepass/core/form/password_form.dart';
+import 'package:savepass/core/utils/biometric_utils.dart';
 import 'package:savepass/core/utils/device_info.dart';
 import 'package:savepass/core/utils/security_utils.dart';
 
@@ -17,11 +18,13 @@ class BiometricBloc extends Bloc<BiometricEvent, BiometricState> {
   final AuthInitRepository authInitRepository;
   final BiometricRepository biometricRepository;
   final FlutterSecureStorage secureStorage;
+  final BiometricUtils biometricUtils;
 
   BiometricBloc({
     required this.authInitRepository,
     required this.biometricRepository,
     required this.secureStorage,
+    required this.biometricUtils,
   }) : super(const BiometricInitialState()) {
     on<BiometricInitialEvent>(_onBiometricInitialEvent);
     on<SubmitBiometricEvent>(_onSubmitBiometricEvent);
@@ -31,6 +34,13 @@ class BiometricBloc extends Bloc<BiometricEvent, BiometricState> {
 
   FutureOr<void> _onBiometricInitialEvent(
     BiometricInitialEvent event,
+    Emitter<BiometricState> emit,
+  ) {
+    emit(const BiometricInitialState());
+  }
+
+  FutureOr<void> _onSubmitBiometricEvent(
+    SubmitBiometricEvent event,
     Emitter<BiometricState> emit,
   ) async {
     emit(
@@ -48,6 +58,17 @@ class BiometricBloc extends Bloc<BiometricEvent, BiometricState> {
       emit(
         ChangeBiometricState(
           state.model.copyWith(status: FormzSubmissionStatus.initial),
+        ),
+      );
+      return;
+    }
+
+    final isAuthenticated = await biometricUtils.authenticate();
+
+    if (!isAuthenticated) {
+      emit(
+        ChangeBiometricState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
         ),
       );
       return;
@@ -93,49 +114,63 @@ class BiometricBloc extends Bloc<BiometricEvent, BiometricState> {
       deviceId: deviceId,
     );
 
+    late final String? code;
+    late final Map<String, dynamic>? data;
     response.fold(
       (l) {
-        emit(
-          GeneralErrorState(
-            state.model.copyWith(status: FormzSubmissionStatus.failure),
-          ),
-        );
+        code = null;
       },
       (r) {
-        if (r.data == null || r.code == ApiCodes.alreadyHasDeviceEnrolled) {
-          emit(
-            GeneralErrorState(
-              state.model.copyWith(status: FormzSubmissionStatus.failure),
-            ),
-          );
-          return;
-        }
-
-        if (r.code == ApiCodes.invalidMasterPassword) {
-          emit(
-            InvalidMasterPasswordState(
-              state.model.copyWith(status: FormzSubmissionStatus.failure),
-            ),
-          );
-          return;
-        }
-
-        final biometricHash = r.data!['hash'];
-        secureStorage.write(key: Env.biometricHashKey, value: biometricHash);
-
-        emit(
-          EnrolledSuccessfulState(
-            state.model.copyWith(status: FormzSubmissionStatus.success),
-          ),
-        );
+        code = r.code;
+        data = r.data;
       },
     );
-  }
 
-  FutureOr<void> _onSubmitBiometricEvent(
-    SubmitBiometricEvent event,
-    Emitter<BiometricState> emit,
-  ) {}
+    if (code == null) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
+    if (data == null || code == ApiCodes.alreadyHasDeviceEnrolled) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
+    if (code == ApiCodes.invalidMasterPassword) {
+      emit(
+        InvalidMasterPasswordState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
+    if (code != ApiCodes.success) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
+    final biometricHash = data!['hash'];
+    await secureStorage.write(key: Env.biometricHashKey, value: biometricHash);
+
+    emit(
+      EnrolledSuccessfulState(
+        state.model.copyWith(status: FormzSubmissionStatus.success),
+      ),
+    );
+  }
 
   FutureOr<void> _onToggleMasterPasswordEvent(
     ToggleMasterPasswordEvent event,
@@ -155,7 +190,7 @@ class BiometricBloc extends Bloc<BiometricEvent, BiometricState> {
     emit(
       ChangeBiometricState(
         state.model.copyWith(
-          masterPassword: MasterPasswordForm.dirty(event.password),
+          masterPassword: PasswordForm.dirty(event.password),
         ),
       ),
     );

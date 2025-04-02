@@ -291,5 +291,7 @@
     "biometrics": "Biometrics",
     "@biometrics": {},
     "biometricsTip": "Sign in with biometrics for a faster experience",
-    "@biometricsTip": {}
+    "@biometricsTip": {},
+    "biometricsEnrolled": "Biometrics enrolled successfully",
+    "@biometricsEnrolled": {}
 }

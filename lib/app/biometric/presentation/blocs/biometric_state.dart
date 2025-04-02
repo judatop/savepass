@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
-import 'package:savepass/app/sync_pass/infrastructure/models/master_password_form.dart';
+import 'package:savepass/core/form/password_form.dart';
 
 abstract class BiometricState extends Equatable {
   final BiometricStateModel model;
@@ -32,20 +32,20 @@ class EnrolledSuccessfulState extends BiometricState{
 }
 
 class BiometricStateModel extends Equatable {
-  final MasterPasswordForm masterPassword;
+  final PasswordForm masterPassword;
   final bool showPassword;
   final FormzSubmissionStatus status;
   final bool alreadySubmitted;
 
   const BiometricStateModel({
-    this.masterPassword = const MasterPasswordForm.pure(),
+    this.masterPassword = const PasswordForm.pure(),
     this.status = FormzSubmissionStatus.initial,
     this.alreadySubmitted = false,
     this.showPassword = false,
   });
 
   BiometricStateModel copyWith({
-    MasterPasswordForm? masterPassword,
+    PasswordForm? masterPassword,
     FormzSubmissionStatus? status,
     bool? alreadySubmitted,
     bool? showPassword,

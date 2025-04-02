@@ -20,7 +20,7 @@ class SupabaseBiometricDatasource implements BiometricDatasource {
     required String inputSecret,
     required String deviceId,
   }) async {
-     try {
+    try {
       final response = await middleware.doHttp(
         rpc: DbUtils.enrollBiometricFunction,
         params: {

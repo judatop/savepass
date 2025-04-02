@@ -1,45 +1,57 @@
-import 'dart:io';
-
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:logger/logger.dart';
+import 'package:savepass/core/env/env.dart';
 
 class BiometricUtils {
-  static LocalAuthentication auth = LocalAuthentication();
+  final LocalAuthentication localAuth;
+  final Logger log;
 
-  static Future<bool> canAuthenticateWithBiometrics() async {
-    final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
+  const BiometricUtils({
+    required this.localAuth,
+    required this.log,
+  });
+
+  Future<bool> canAuthenticateWithBiometrics() async {
+    final bool canAuthenticateWithBiometrics =
+        await localAuth.canCheckBiometrics;
     final bool canAuthenticate =
-        canAuthenticateWithBiometrics || await auth.isDeviceSupported();
+        canAuthenticateWithBiometrics || await localAuth.isDeviceSupported();
     return canAuthenticate;
   }
 
-  static Future<bool> hasBiometricsSaved() async {
+  Future<bool> hasBiometricsSaved() async {
     AndroidOptions androidOptions() => const AndroidOptions(
           encryptedSharedPreferences: true,
         );
     final storage = FlutterSecureStorage(aOptions: androidOptions());
-    final val = await storage.read(key: 'biometrics');
+    final val = await storage.read(key: Env.biometricHashKey);
     return val != null;
   }
 
-  static Future<bool> authenticate() async {
-    final List<BiometricType> availableBiometrics =
-        await auth.getAvailableBiometrics();
+  Future<bool> authenticate() async {
+    bool isAuthenticated = false;
 
-    if (availableBiometrics.isEmpty) {
-      throw Exception('Register biometrics');
+    try {
+      final List<BiometricType> availableBiometrics =
+          await localAuth.getAvailableBiometrics();
+
+      if (availableBiometrics.isEmpty) {
+        throw Exception('Register biometrics');
+      }
+
+      isAuthenticated = await localAuth.authenticate(
+        localizedReason: 'Please authenticate to show account balance',
+        options: const AuthenticationOptions(biometricOnly: true),
+      );
+    } catch (e) {
+      log.e('Biometric utils authenticate error: $e');
     }
 
-    final bool didAuthenticate = await auth.authenticate(
-      localizedReason: 'Please authenticate to show account balance',
-      options: const AuthenticationOptions(biometricOnly: true),
-    );
-
-    return didAuthenticate;
+    return isAuthenticated;
   }
 
-  static Future<bool> saveBiometrics() async {
+  Future<bool> saveBiometrics() async {
     AndroidOptions androidOptions() => const AndroidOptions(
           encryptedSharedPreferences: true,
         );

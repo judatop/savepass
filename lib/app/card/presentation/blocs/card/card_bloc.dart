@@ -413,7 +413,7 @@ class CardBloc extends Bloc<CardEvent, CardState> {
     final response = await cardRepository.insertCard(
       model: CardModel(
         typeId: typeId,
-        card: SecurityUtils.encryptPassword(
+        card: await SecurityUtils.encryptPassword(
           card,
           derivedKey,
         ),
@@ -494,7 +494,7 @@ class CardBloc extends Bloc<CardEvent, CardState> {
     final response = await cardRepository.editCard(
       model: cardSelected.copyWith(
         typeId: type,
-        card: SecurityUtils.encryptPassword(card, derivedKey),
+        card: await SecurityUtils.encryptPassword(card, derivedKey),
       ),
     );
 

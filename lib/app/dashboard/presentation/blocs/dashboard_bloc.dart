@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:formz/formz.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -29,6 +30,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final PreferencesRepository preferencesRepository;
   final PasswordRepository passwordRepository;
   final CardRepository cardRepository;
+  final BiometricUtils biometricUtils;
+  final FlutterSecureStorage secureStorage;
 
   DashboardBloc({
     required this.log,
@@ -36,6 +39,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     required this.preferencesRepository,
     required this.passwordRepository,
     required this.cardRepository,
+    required this.biometricUtils,
+    required this.secureStorage,
   }) : super(const DashboardInitialState()) {
     on<DashboardInitialEvent>(_onDashboardInitialEvent);
     on<ChangeIndexEvent>(_onChangeIndexEvent);
@@ -52,6 +57,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<GetCardValueEvent>(_onGetCardValueEvent);
     on<OnClickNewCard>(_onOnClickNewCard);
     on<OpenSearchEvent>(_onOpenSearchEvent);
+    on<CheckBiometricsEvent>(_onCheckBiometricsEvent);
   }
 
   FutureOr<void> _onDashboardInitialEvent(
@@ -178,9 +184,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       },
     );
 
-    final hasBiometrics = await BiometricUtils.hasBiometricsSaved();
+    final hasBiometrics = await biometricUtils.hasBiometricsSaved();
     final canAuthenticate =
-        await BiometricUtils.canAuthenticateWithBiometrics();
+        await biometricUtils.canAuthenticateWithBiometrics();
 
     emit(
       ChangeDashboardState(
@@ -486,6 +492,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       ),
     );
 
+    await secureStorage.deleteAll();
     final response = await profileRepository.deleteAccount();
 
     response.fold(
@@ -663,5 +670,23 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   ) {
     emit(LoadingDashboardState(state.model));
     emit(OpenSearchState(state.model));
+  }
+
+  FutureOr<void> _onCheckBiometricsEvent(
+    CheckBiometricsEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    final hasBiometrics = await biometricUtils.hasBiometricsSaved();
+    final canAuthenticate =
+        await biometricUtils.canAuthenticateWithBiometrics();
+
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(
+          hasBiometrics: hasBiometrics,
+          canAuthenticate: canAuthenticate,
+        ),
+      ),
+    );
   }
 }

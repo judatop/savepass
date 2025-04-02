@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:encrypt/encrypt.dart';
+import 'package:flutter/foundation.dart' as computefoundation;
 import 'package:pointycastle/key_derivators/api.dart';
 import 'package:pointycastle/key_derivators/pbkdf2.dart';
 import 'package:pointycastle/digests/sha256.dart';
@@ -30,10 +31,20 @@ class SecurityUtils {
     return base64Encode(bytes);
   }
 
-  static String encryptPassword(String password, Uint8List derivedKey) {
+  static Future<String> encryptPassword(
+    String password,
+    Uint8List derivedKey,
+  ) async {
+    return computefoundation
+        .compute(_encryptPasswordComputed, [password, derivedKey]);
+  }
+
+  static String _encryptPasswordComputed(List<dynamic> args) {
+    final password = args[0] as String;
+    final derivedKey = args[1] as Uint8List;
+
     final key = Key(derivedKey.sublist(0, 32));
     final iv = IV.fromLength(16);
-
     final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
     final encrypted = encrypter.encrypt(password, iv: iv);
 

@@ -25,9 +25,13 @@ class BiometricSettingsWidget extends StatelessWidget {
         final hasBiometrics = state.model.hasBiometrics;
         final canAuthenticate = state.model.canAuthenticate;
 
-        if (!hasBiometrics || !canAuthenticate) {
+        if (hasBiometrics || !canAuthenticate) {
           return Container();
         }
+
+        debugPrint(
+          'hasBiometrics: $hasBiometrics, canAuthenticate: $canAuthenticate',
+        );
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

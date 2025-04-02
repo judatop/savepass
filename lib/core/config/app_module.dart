@@ -1,5 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:logger/logger.dart';
 import 'package:savepass/app/auth/domain/datasources/auth_datasource.dart';
 import 'package:savepass/app/auth/domain/repositories/auth_repository.dart';
@@ -68,6 +69,8 @@ import 'package:savepass/app/preferences/presentation/blocs/preferences_bloc.dar
 import 'package:savepass/core/api/supabase_middleware.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/global/presentation/screens/photo_permission_screen.dart';
+import 'package:savepass/core/utils/biometric_utils.dart';
+import 'package:savepass/core/utils/security_utils.dart';
 
 class AppModule extends Module {
   @override
@@ -76,6 +79,9 @@ class AppModule extends Module {
     i.addSingleton(PreferencesBloc.new);
     i.addSingleton(Logger.new);
     i.addSingleton(SupabaseMiddleware.new);
+    i.addSingleton(SecurityUtils.new);
+    i.addSingleton(BiometricUtils.new);
+    i.addSingleton(LocalAuthentication.new);
     i.addSingleton<ProfileRepository>(ProfileRepositoryImpl.new);
     i.addSingleton<ProfileDatasource>(SupabaseProfileDatasource.new);
     i.addSingleton<PreferencesRepository>(PreferencesIRepository.new);

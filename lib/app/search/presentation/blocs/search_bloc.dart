@@ -13,6 +13,7 @@ import 'package:savepass/app/search/infrastructure/models/search_model.dart';
 import 'package:savepass/app/search/infrastructure/models/search_type_enum.dart';
 import 'package:savepass/app/search/presentation/blocs/search_event.dart';
 import 'package:savepass/app/search/presentation/blocs/search_state.dart';
+import 'package:savepass/core/api/savepass_response_model.dart';
 import 'package:savepass/core/form/text_form.dart';
 import 'package:savepass/core/utils/password_utils.dart';
 import 'package:savepass/core/utils/security_utils.dart';
@@ -92,28 +93,43 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       search: search,
     );
 
+    late final SavePassResponseModel? passwordModelResponse;
+
     passwordResponse.fold(
       (l) {
-        emit(
-          GeneralErrorState(
-            state.model.copyWith(
-              status: FormzSubmissionStatus.failure,
-            ),
-          ),
-        );
+        passwordModelResponse = null;
       },
       (r) {
-        List<PasswordModel> passwords = [];
+        passwordModelResponse = r;
+      },
+    );
 
-        if (r.data != null && r.data!['list'] != null) {
-          final passwordsList = r.data!['list'] as List;
+    if (passwordModelResponse == null) {
+      emit(
+        ChangeSearchState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
 
-          final result = passwordsList.map(
-            (e) {
+    List<PasswordModel> passwords = [];
+
+    final data = passwordModelResponse?.data;
+
+    if (data != null && data['list'] != null) {
+      final passwordsList = data['list'] as List;
+
+      passwords.addAll(
+        await Future.wait(
+          passwordsList.map(
+            (e) async {
               PasswordModel model = PasswordModel.fromJson(e);
               model = model.copyWith(
-                password:
-                    SecurityUtils.decryptPassword(model.password, derivedKey),
+                password: await SecurityUtils.decryptPassword(
+                  model.password,
+                  derivedKey,
+                ),
               );
 
               if (model.id != null &&
@@ -133,81 +149,83 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
               return model;
             },
-          );
-
-          passwords.addAll(result);
-        }
-
-        emit(
-          ChangeSearchState(
-            state.model.copyWith(
-              passwords: passwords,
-            ),
           ),
-        );
-      },
+        ),
+      );
+    }
+
+    emit(
+      ChangeSearchState(
+        state.model.copyWith(
+          passwords: passwords,
+        ),
+      ),
     );
 
     final cardResponse = await cardRepository.searchCards(
       search: search,
     );
 
+    late final SavePassResponseModel? cardResponseModel;
     cardResponse.fold(
       (l) {
-        emit(
-          GeneralErrorState(
-            state.model.copyWith(
-              status: FormzSubmissionStatus.failure,
-            ),
-          ),
-        );
+        cardResponseModel = null;
       },
       (r) {
-        List<CardModel> cards = [];
-
-        if (r.data != null && r.data!['list'] != null) {
-          final cardsList = r.data!['list'] as List;
-          cards.addAll(
-            cardsList.map(
-              (e) {
-                CardModel model = CardModel.fromJson(e);
-                model = model.copyWith(
-                  card: SecurityUtils.decryptPassword(model.card, derivedKey),
-                );
-
-                if (model.id != null &&
-                    model.type != null &&
-                    model.vaultId != null) {
-                  final values = model.card.split('|');
-                  final cardNumber = PasswordUtils.formatCard(values[0]);
-
-                  searchList.add(
-                    SearchModel(
-                      id: model.id!,
-                      title: model.type!,
-                      subtitle: cardNumber,
-                      type: SearchType.card.name,
-                      vaultId: model.vaultId!,
-                      imgUrl: model.imgUrl,
-                    ),
-                  );
-                }
-
-                return model;
-              },
-            ),
-          );
-        }
-        emit(
-          ChangeSearchState(
-            state.model.copyWith(
-              status: FormzSubmissionStatus.success,
-              cards: cards,
-            ),
-          ),
-        );
+        cardResponseModel = r;
       },
     );
+
+    if (cardResponseModel == null) {
+      emit(
+        ChangeSearchState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
+    List<CardModel> cards = [];
+
+    final cardData = cardResponseModel?.data;
+
+    if (cardData != null && cardData['list'] != null) {
+      final cardsList = cardData['list'] as List;
+
+      cards.addAll(
+        await Future.wait(
+          cardsList.map(
+            (e) async {
+              CardModel model = CardModel.fromJson(e);
+              model = model.copyWith(
+                card:
+                    await SecurityUtils.decryptPassword(model.card, derivedKey),
+              );
+
+              if (model.id != null &&
+                  model.type != null &&
+                  model.vaultId != null) {
+                final values = model.card.split('|');
+                final cardNumber = PasswordUtils.formatCard(values[0]);
+
+                searchList.add(
+                  SearchModel(
+                    id: model.id!,
+                    title: model.type!,
+                    subtitle: cardNumber,
+                    type: SearchType.card.name,
+                    vaultId: model.vaultId!,
+                    imgUrl: model.imgUrl,
+                  ),
+                );
+              }
+
+              return model;
+            },
+          ),
+        ),
+      );
+    }
 
     emit(
       ChangeSearchState(

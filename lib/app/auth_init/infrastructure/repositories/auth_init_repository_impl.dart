@@ -25,4 +25,11 @@ class AuthInitRepositoryImpl implements AuthInitRepository {
   Future<Either<Fail, SavePassResponseModel>> getUserSalt() async {
     return await datasource.getUserSalt();
   }
+
+  @override
+  Future<Either<Fail, SavePassResponseModel>> hasBiometrics({
+    required String deviceId,
+  }) async {
+    return await datasource.hasBiometrics(deviceId: deviceId);
+  }
 }

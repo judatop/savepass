@@ -22,7 +22,10 @@ class AuthInitScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = Modular.get<AuthInitBloc>();
     return BlocProvider.value(
-      value: bloc..add(const AuthInitInitialEvent()),
+      value: bloc
+        ..add(const AuthInitInitialEvent())
+        ..add(const GetProfileEvent())
+        ..add(const CheckSupabaseBiometricsEvent()),
       child: const BlocListener<AuthInitBloc, AuthInitState>(
         listener: _listener,
         child: _Body(),
@@ -69,89 +72,112 @@ class _Body extends StatelessWidget {
       wrapScroll: false,
       child: PopScope(
         canPop: false,
-        child: BlocBuilder<AuthInitBloc, AuthInitState>(
-          buildWhen: (previous, current) =>
-              (previous.model.status != current.model.status) ||
-              (previous.model.profile != current.model.profile) ||
-              (previous.model.canAuthenticateWithBiometrics !=
-                  current.model.canAuthenticateWithBiometrics) ||
-              (previous.model.hasBiometricsSaved !=
-                  current.model.hasBiometricsSaved),
-          builder: (context, state) {
-            final profile = state.model.profile;
-            final hasBiometricsSaved = state.model.hasBiometricsSaved;
-            final canAuthenticateWithBiometrics =
-                state.model.canAuthenticateWithBiometrics;
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(
+              height: deviceHeight * (Platform.isAndroid ? 0.05 : 0.02),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AdsHeadline(
+                              text: intl.hello,
+                            ),
+                            BlocBuilder<AuthInitBloc, AuthInitState>(
+                              buildWhen: (previous, current) =>
+                                  (previous.model.statusProfile !=
+                                      current.model.statusProfile) ||
+                                  (previous.model.profile?.displayName !=
+                                      current.model.profile?.displayName),
+                              builder: (context, state) {
+                                final displayName =
+                                    state.model.profile?.displayName;
+                                final status = state.model.statusProfile;
 
-            String? displayName;
-            String? photoURL;
-
-            if (profile != null) {
-              displayName = profile.displayName;
-              photoURL = profile.avatar;
-            }
-
-            return Skeletonizer(
-              enabled: state.model.status.isInProgress,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(
-                    height: deviceHeight * (Platform.isAndroid ? 0.05 : 0.02),
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AdsHeadline(
-                                    text: intl.hello,
-                                  ),
-                                  if (displayName != null)
-                                    Text(
-                                      displayName,
-                                      style: textTheme.titleMedium?.copyWith(
-                                        fontWeight: FontWeight.w400,
-                                      ),
+                                return Skeletonizer(
+                                  enabled: status.isInProgress,
+                                  child: Text(
+                                    displayName ?? '',
+                                    style: textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.w400,
                                     ),
-                                ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                        BlocBuilder<AuthInitBloc, AuthInitState>(
+                          buildWhen: (previous, current) =>
+                              (previous.model.statusProfile !=
+                                  current.model.statusProfile) ||
+                              (previous.model.profile?.avatar !=
+                                  current.model.profile?.avatar),
+                          builder: (context, state) {
+                            final avatar = state.model.profile?.avatar;
+                            final status = state.model.statusProfile;
+
+                            return Skeletonizer(
+                              enabled: status.isInProgress,
+                              child: AdsAvatar(
+                                imageUrl: avatar,
                               ),
-                              AdsAvatar(
-                                imageUrl: photoURL,
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: deviceHeight * 0.15),
-                          AdsSubtitle(
-                            text: intl.authInitText,
-                            textAlign: TextAlign.start,
-                          ),
-                          SizedBox(height: deviceHeight * 0.02),
-                          const MasterPasswordWidget(),
-                          SizedBox(height: deviceHeight * 0.03),
-                          const SubmitButtonWidget(),
-                        ],
-                      ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                  ),
-                  SizedBox(height: deviceHeight * 0.01),
-                  if (canAuthenticateWithBiometrics && hasBiometricsSaved)
-                    AdsOutlinedIconButton(
-                      onPressedCallback: () =>
-                          bloc.add(const SubmitWithBiometricsEvent()),
-                      text: intl.useBiometrics,
-                      icon: Platform.isIOS ? Icons.face : Icons.fingerprint,
+                    SizedBox(height: deviceHeight * 0.15),
+                    AdsSubtitle(
+                      text: intl.authInitText,
+                      textAlign: TextAlign.start,
                     ),
-                ],
+                    SizedBox(height: deviceHeight * 0.02),
+                    const MasterPasswordWidget(),
+                    SizedBox(height: deviceHeight * 0.03),
+                    const SubmitButtonWidget(),
+                  ],
+                ),
               ),
-            );
-          },
+            ),
+            SizedBox(height: deviceHeight * 0.01),
+            BlocBuilder<AuthInitBloc, AuthInitState>(
+              buildWhen: (previous, current) =>
+                  (previous.model.statusBiometrics !=
+                      current.model.statusBiometrics) ||
+                  (previous.model.hasBiometricsSaved !=
+                      current.model.hasBiometricsSaved),
+              builder: (context, state) {
+                final status = state.model.statusBiometrics;
+                final hasBiometricsSaved = state.model.hasBiometricsSaved;
+                final canAuthenticateWithBiometrics =
+                    state.model.canAuthenticateWithBiometrics;
+
+                if (!hasBiometricsSaved || !canAuthenticateWithBiometrics) {
+                  return Container();
+                }
+
+                return Skeletonizer(
+                  enabled: status.isInProgress,
+                  child: AdsOutlinedIconButton(
+                    onPressedCallback: () =>
+                        bloc.add(const SubmitWithBiometricsEvent()),
+                    text: intl.useBiometrics,
+                    icon: Platform.isIOS ? Icons.face : Icons.fingerprint,
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

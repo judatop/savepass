@@ -11,6 +11,10 @@ class AuthInitInitialEvent extends AuthInitEvent {
   const AuthInitInitialEvent() : super();
 }
 
+class CheckSupabaseBiometricsEvent extends AuthInitEvent{
+  const CheckSupabaseBiometricsEvent() : super();
+}
+
 class PasswordChangedEvent extends AuthInitEvent {
   final String password;
 
@@ -27,4 +31,8 @@ class SubmitEvent extends AuthInitEvent {
 
 class SubmitWithBiometricsEvent extends AuthInitEvent{
   const SubmitWithBiometricsEvent() : super();
+}
+
+class GetProfileEvent extends AuthInitEvent{
+  const GetProfileEvent() : super();
 }

@@ -51,4 +51,23 @@ class SupabaseAuthInitDatasource implements AuthInitDatasource {
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
+
+  @override
+  Future<Either<Fail, SavePassResponseModel>> hasBiometrics({
+    required String deviceId,
+  }) async {
+    try {
+      final response = await middleware.doHttp(
+        rpc: DbUtils.hasBiometricsFunction,
+        params: {
+          'device_id_param': deviceId,
+        },
+      );
+
+      return Right(response);
+    } catch (e) {
+      log.e('hasBiometrics: $e');
+      return Left(Fail(SnackBarErrors.generalErrorCode));
+    }
+  }
 }

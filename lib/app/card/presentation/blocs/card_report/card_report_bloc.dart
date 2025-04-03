@@ -9,6 +9,7 @@ import 'package:savepass/app/card/infrastructure/models/card_model.dart';
 import 'package:savepass/app/card/presentation/blocs/card_report/card_report_event.dart';
 import 'package:savepass/app/card/presentation/blocs/card_report/card_report_state.dart';
 import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
+import 'package:savepass/core/api/savepass_response_model.dart';
 import 'package:savepass/core/form/text_form.dart';
 import 'package:savepass/core/utils/security_utils.dart';
 
@@ -49,41 +50,55 @@ class CardReportBloc extends Bloc<CardReportEvent, CardReportState> {
 
     final response = await cardRepository.getCards();
 
+    late final SavePassResponseModel? savePassResponse;
     response.fold(
       (l) {
-        emit(
-          ChangeCardReportState(
-            state.model.copyWith(status: FormzSubmissionStatus.failure),
-          ),
-        );
+        savePassResponse = null;
       },
       (r) {
-        List<CardModel> cards = [];
-
-        if (r.data != null && r.data!['list'] != null) {
-          final cardsList = r.data!['list'] as List;
-          cards.addAll(
-            cardsList.map(
-              (e) {
-                CardModel model = CardModel.fromJson(e);
-                model = model.copyWith(
-                  card: SecurityUtils.decryptPassword(model.card, derivedKey),
-                );
-                return model;
-              },
-            ),
-          );
-        }
-
-        emit(
-          ChangeCardReportState(
-            state.model.copyWith(
-              status: FormzSubmissionStatus.success,
-              cards: cards,
-            ),
-          ),
-        );
+        savePassResponse = r;
       },
+    );
+
+    if (savePassResponse == null) {
+      emit(
+        ChangeCardReportState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
+    List<CardModel> cards = [];
+
+    final data = savePassResponse?.data;
+
+    if (data != null && data['list'] != null) {
+      final cardsList = data['list'] as List;
+
+      cards.addAll(
+        await Future.wait(
+          cardsList.map(
+            (e) async {
+              CardModel model = CardModel.fromJson(e);
+              model = model.copyWith(
+                card:
+                    await SecurityUtils.decryptPassword(model.card, derivedKey),
+              );
+              return model;
+            },
+          ),
+        ),
+      );
+    }
+
+    emit(
+      ChangeCardReportState(
+        state.model.copyWith(
+          status: FormzSubmissionStatus.success,
+          cards: cards,
+        ),
+      ),
     );
   }
 
@@ -141,42 +156,55 @@ class CardReportBloc extends Bloc<CardReportEvent, CardReportState> {
       search: search,
     );
 
+    late final SavePassResponseModel? savePassResponse;
     response.fold(
       (l) {
-        emit(
-          GeneralErrorState(
-            state.model.copyWith(
-              status: FormzSubmissionStatus.failure,
-            ),
-          ),
-        );
+        savePassResponse = null;
       },
       (r) {
-        List<CardModel> cards = [];
-
-        if (r.data != null && r.data!['list'] != null) {
-          final cardsList = r.data!['list'] as List;
-          cards.addAll(
-            cardsList.map(
-              (e) {
-                CardModel model = CardModel.fromJson(e);
-                model = model.copyWith(
-                  card: SecurityUtils.decryptPassword(model.card, derivedKey),
-                );
-                return model;
-              },
-            ),
-          );
-        }
-        emit(
-          ChangeCardReportState(
-            state.model.copyWith(
-              status: FormzSubmissionStatus.success,
-              cards: cards,
-            ),
-          ),
-        );
+        savePassResponse = r;
       },
+    );
+
+    if (savePassResponse == null) {
+      emit(
+        ChangeCardReportState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
+    List<CardModel> cards = [];
+
+    final data = savePassResponse?.data;
+
+    if (data != null && data['list'] != null) {
+      final cardsList = data['list'] as List;
+
+      cards.addAll(
+        await Future.wait(
+          cardsList.map(
+            (e) async {
+              CardModel model = CardModel.fromJson(e);
+              model = model.copyWith(
+                card:
+                    await SecurityUtils.decryptPassword(model.card, derivedKey),
+              );
+              return model;
+            },
+          ),
+        ),
+      );
+    }
+
+    emit(
+      ChangeCardReportState(
+        state.model.copyWith(
+          status: FormzSubmissionStatus.success,
+          cards: cards,
+        ),
+      ),
     );
   }
 }

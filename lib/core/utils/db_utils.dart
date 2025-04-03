@@ -15,6 +15,7 @@ class DbUtils {
   static const insertMasterPassword = 'insert_master_password';
   static const deleteAccountFunction = 'delete_account';
   static const enrollBiometricFunction = 'enroll_biometric';
+  static const hasBiometricsFunction = 'has_biometrics';
 
   static const insertPasswordFunction = 'insert_password';
   static const editPasswordFunction = 'edit_password';

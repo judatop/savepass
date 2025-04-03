@@ -10,9 +10,11 @@ import 'package:savepass/core/utils/device_info.dart';
 
 class EnrollBloc extends Bloc<EnrollEvent, EnrollState> {
   final EnrollRepository enrollRepository;
+  final DeviceInfo deviceInfo;
 
   EnrollBloc({
     required this.enrollRepository,
+    required this.deviceInfo,
   }) : super(const EnrollInitialState()) {
     on<EnrollInitialEvent>(_onEnrollInitialEvent);
     on<SubmitEnrollEvent>(_onSubmitEnrollEvent);
@@ -65,9 +67,9 @@ class EnrollBloc extends Bloc<EnrollEvent, EnrollState> {
       ),
     );
 
-    final deviceId = await DeviceInfo.getDeviceId();
-    final deviceName = await DeviceInfo.getDeviceName();
-    final type = DeviceInfo.getDeviceType();
+    final deviceId = await deviceInfo.getDeviceId();
+    final deviceName = await deviceInfo.getDeviceName();
+    final type = deviceInfo.getDeviceType();
 
     if (deviceId == null) {
       emit(

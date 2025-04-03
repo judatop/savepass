@@ -9,4 +9,8 @@ abstract class AuthInitRepository {
   });
 
   Future<Either<Fail, SavePassResponseModel>> getUserSalt();
+
+  Future<Either<Fail, SavePassResponseModel>> hasBiometrics({
+    required String deviceId,
+  });
 }

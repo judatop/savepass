@@ -25,6 +25,7 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
   final BiometricUtils biometricUtils;
   final Logger log;
   final FlutterSecureStorage secureStorage;
+  final DeviceInfo deviceInfo;
 
   AuthInitBloc({
     required this.profileRepository,
@@ -32,46 +33,22 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
     required this.biometricUtils,
     required this.log,
     required this.secureStorage,
+    required this.deviceInfo,
   }) : super(const AuthInitInitialState()) {
     on<AuthInitInitialEvent>(_onAuthInitInitial);
     on<PasswordChangedEvent>(_onPasswordChanged);
     on<ToggleMasterPasswordEvent>(_onToggleMasterPasswordEvent);
     on<SubmitEvent>(_onSubmitEvent);
     on<SubmitWithBiometricsEvent>(_onSubmitWithBiometricsEvent);
+    on<CheckSupabaseBiometricsEvent>(_onCheckSupabaseBiometricsEvent);
+    on<GetProfileEvent>(_onGetProfileEvent);
   }
 
   FutureOr<void> _onAuthInitInitial(
     AuthInitInitialEvent event,
     Emitter<AuthInitState> emit,
-  ) async {
+  ) {
     emit(const AuthInitInitialState());
-
-    final res = await profileRepository.getProfile();
-    res.fold(
-      (l) {},
-      (r) {
-        emit(
-          ChangeAuthInitState(
-            state.model.copyWith(
-              profile: r,
-            ),
-          ),
-        );
-      },
-    );
-
-    final hasBiometrics = await biometricUtils.hasBiometricsSaved();
-    final canAuthenticate =
-        await biometricUtils.canAuthenticateWithBiometrics();
-
-    emit(
-      ChangeAuthInitState(
-        state.model.copyWith(
-          hasBiometricsSaved: hasBiometrics,
-          canAuthenticateWithBiometrics: canAuthenticate,
-        ),
-      ),
-    );
   }
 
   FutureOr<void> _onPasswordChanged(
@@ -140,9 +117,9 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
 
       final clearMasterPassword = state.model.password.value;
       final derivedKey =
-          SecurityUtils.deriveMasterKey(clearMasterPassword, salt!, 32);
+          await SecurityUtils.deriveMasterKey(clearMasterPassword, salt!, 32);
       final hashedPassword = SecurityUtils.hashMasterKey(derivedKey);
-      final deviceId = await DeviceInfo.getDeviceId();
+      final deviceId = await deviceInfo.getDeviceId();
       final profileBloc = Modular.get<ProfileBloc>();
 
       if (deviceId == null) {
@@ -244,7 +221,7 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
       }
 
       final profileBloc = Modular.get<ProfileBloc>();
-      final deviceId = await DeviceInfo.getDeviceId();
+      final deviceId = await deviceInfo.getDeviceId();
       AndroidOptions androidOptions() => const AndroidOptions(
             encryptedSharedPreferences: true,
           );
@@ -340,5 +317,96 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
         ),
       );
     }
+  }
+
+  FutureOr<void> _onCheckSupabaseBiometricsEvent(
+    CheckSupabaseBiometricsEvent event,
+    Emitter<AuthInitState> emit,
+  ) async {
+    emit(
+      ChangeAuthInitState(
+        state.model.copyWith(
+          statusBiometrics: FormzSubmissionStatus.inProgress,
+        ),
+      ),
+    );
+
+    final deviceId = await deviceInfo.getDeviceId();
+
+    if (deviceId == null) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(
+            statusBiometrics: FormzSubmissionStatus.failure,
+          ),
+        ),
+      );
+      return;
+    }
+
+    final hasBiometricsSupabaseResponse =
+        await authInitRepository.hasBiometrics(deviceId: deviceId);
+    late final bool hasSupabaseBiometricsSaved;
+    hasBiometricsSupabaseResponse.fold(
+      (l) {
+        hasSupabaseBiometricsSaved = false;
+      },
+      (r) {
+        hasSupabaseBiometricsSaved = r.data?['hasBiometrics'];
+      },
+    );
+
+    final hasLocalBiometricsSaved = await biometricUtils.hasBiometricsSaved();
+    final canAuthenticate =
+        await biometricUtils.canAuthenticateWithBiometrics();
+
+    emit(
+      ChangeAuthInitState(
+        state.model.copyWith(
+          hasBiometricsSaved:
+              hasSupabaseBiometricsSaved && hasLocalBiometricsSaved,
+          canAuthenticateWithBiometrics: canAuthenticate,
+          statusBiometrics: FormzSubmissionStatus.success,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onGetProfileEvent(
+    GetProfileEvent event,
+    Emitter<AuthInitState> emit,
+  ) async {
+    emit(
+      ChangeAuthInitState(
+        state.model.copyWith(
+          statusProfile: FormzSubmissionStatus.inProgress,
+        ),
+      ),
+    );
+
+    await Future.delayed(const Duration(seconds: 5));
+
+    final res = await profileRepository.getProfile();
+    res.fold(
+      (l) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(
+              statusProfile: FormzSubmissionStatus.failure,
+            ),
+          ),
+        );
+      },
+      (r) {
+        emit(
+          ChangeAuthInitState(
+            state.model.copyWith(
+              statusProfile: FormzSubmissionStatus.success,
+              profile: r,
+            ),
+          ),
+        );
+      },
+    );
   }
 }

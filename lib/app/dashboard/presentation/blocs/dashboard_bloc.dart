@@ -18,6 +18,7 @@ import 'package:savepass/app/password/infrastructure/models/password_model.dart'
 import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
+import 'package:savepass/core/api/savepass_response_model.dart';
 import 'package:savepass/core/form/text_form.dart';
 import 'package:savepass/core/utils/biometric_utils.dart';
 import 'package:savepass/core/utils/security_utils.dart';
@@ -99,44 +100,58 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     }
 
     final passwordsResponse = await passwordRepository.getPasswords();
-
+    late final SavePassResponseModel? savePassResponse;
     passwordsResponse.fold(
       (l) {
-        emit(
-          ChangeDashboardState(
-            state.model.copyWith(passwordStatus: FormzSubmissionStatus.failure),
-          ),
-        );
+        savePassResponse = null;
       },
       (r) {
-        List<PasswordModel> passwords = [];
-
-        if (r.data != null && r.data!['list'] != null) {
-          final passwordsList = r.data!['list'] as List;
-          passwords.addAll(
-            passwordsList.map(
-              (e) {
-                final model = PasswordModel.fromJson(e);
-                model.copyWith(
-                  password:
-                      SecurityUtils.decryptPassword(model.password, derivedKey),
-                );
-
-                return PasswordModel.fromJson(e);
-              },
-            ),
-          );
-        }
-
-        emit(
-          ChangeDashboardState(
-            state.model.copyWith(
-              passwordStatus: FormzSubmissionStatus.success,
-              passwords: passwords,
-            ),
-          ),
-        );
+        savePassResponse = r;
       },
+    );
+
+    if (savePassResponse == null) {
+      emit(
+        ChangeDashboardState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
+    List<PasswordModel> passwords = [];
+
+    final data = savePassResponse?.data;
+
+    if (data != null && data['list'] != null) {
+      final passwordsList = data['list'] as List;
+
+      passwords.addAll(
+        await Future.wait(
+          passwordsList.map(
+            (e) async {
+              final model = PasswordModel.fromJson(e);
+              model.copyWith(
+                password: await SecurityUtils.decryptPassword(
+                  model.password,
+                  derivedKey,
+                ),
+              );
+
+              return PasswordModel.fromJson(e);
+            },
+          ),
+        ),
+      );
+    }
+
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(
+          passwordStatus: FormzSubmissionStatus.success,
+          passwords: passwords,
+        ),
+      ),
     );
 
     emit(
@@ -147,41 +162,55 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
     final cardsRes = await cardRepository.getCards();
 
+    late final SavePassResponseModel? modelResponse;
     cardsRes.fold(
       (l) {
-        emit(
-          ChangeDashboardState(
-            state.model.copyWith(cardStatus: FormzSubmissionStatus.failure),
-          ),
-        );
+        modelResponse = null;
       },
       (r) {
-        List<CardModel> cards = [];
-
-        if (r.data != null && r.data!['list'] != null) {
-          final cardsList = r.data!['list'] as List;
-          cards.addAll(
-            cardsList.map(
-              (e) {
-                CardModel model = CardModel.fromJson(e);
-                model = model.copyWith(
-                  card: SecurityUtils.decryptPassword(model.card, derivedKey),
-                );
-                return model;
-              },
-            ),
-          );
-        }
-
-        emit(
-          ChangeDashboardState(
-            state.model.copyWith(
-              cardStatus: FormzSubmissionStatus.success,
-              cards: cards,
-            ),
-          ),
-        );
+        modelResponse = r;
       },
+    );
+
+    if (modelResponse == null) {
+      emit(
+        ChangeDashboardState(
+          state.model.copyWith(cardStatus: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
+    List<CardModel> cards = [];
+
+    final cardsData = modelResponse?.data;
+
+    if (cardsData != null && cardsData['list'] != null) {
+      final cardsList = cardsData['list'] as List;
+
+      cards.addAll(
+        await Future.wait(
+          cardsList.map(
+            (e) async {
+              CardModel model = CardModel.fromJson(e);
+              model = model.copyWith(
+                card:
+                    await SecurityUtils.decryptPassword(model.card, derivedKey),
+              );
+              return model;
+            },
+          ),
+        ),
+      );
+    }
+
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(
+          cardStatus: FormzSubmissionStatus.success,
+          cards: cards,
+        ),
+      ),
     );
 
     final hasBiometrics = await biometricUtils.hasBiometricsSaved();

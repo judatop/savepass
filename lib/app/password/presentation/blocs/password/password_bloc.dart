@@ -114,7 +114,7 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
             name: TextForm.dirty(passModel!.name ?? ''),
             email: TextForm.dirty(passModel!.username),
             password: PasswordForm.dirty(
-              SecurityUtils.decryptPassword(
+              await SecurityUtils.decryptPassword(
                 passModel!.password,
                 derivedKey,
               ),

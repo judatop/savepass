@@ -12,6 +12,7 @@ import 'package:savepass/app/search/presentation/blocs/search_bloc.dart';
 import 'package:savepass/app/search/presentation/blocs/search_event.dart';
 import 'package:savepass/app/search/presentation/blocs/search_state.dart';
 import 'package:savepass/core/config/routes.dart';
+import 'package:savepass/core/utils/password_utils.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class SearchListWidget extends StatelessWidget {
@@ -25,7 +26,9 @@ class SearchListWidget extends StatelessWidget {
 
     return BlocBuilder<SearchBloc, SearchState>(
       buildWhen: (previous, current) =>
-          previous.model.searchItems != current.model.searchItems,
+          (previous.model.searchItems != current.model.searchItems) ||
+          (previous.model.cards != current.model.cards) ||
+          (previous.model.passwords != current.model.passwords),
       builder: (context, state) {
         final items = state.model.searchItems;
 
@@ -36,15 +39,22 @@ class SearchListWidget extends StatelessWidget {
             final item = items[index];
 
             return ListTile(
+              contentPadding: EdgeInsets.zero,
               onLongPress: () {
-                final bloc = Modular.get<DashboardBloc>();
                 if (item.type == SearchType.password.name) {
+                  final password = state.model.passwords
+                      .firstWhere((element) => element.id == item.id);
+                  final bloc = Modular.get<DashboardBloc>();
                   bloc.add(
                     CopyPasswordEvent(
-                      passwordUuid: item.vaultId,
+                      password: password,
                     ),
                   );
                 } else {
+                  final card = state.model.cards.firstWhere(
+                    (element) => element.id == item.id,
+                  );
+
                   showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
@@ -54,35 +64,40 @@ class SearchListWidget extends StatelessWidget {
                         height: deviceHeight * 0.70,
                         child: CopyCardValueBottomSheetWidget(
                           status: FormzSubmissionStatus.initial,
-                          vaultId: item.vaultId,
+                          card: card,
                         ),
                       );
                     },
                   );
                 }
               },
-              contentPadding: EdgeInsets.zero,
               onTap: () async {
                 if (item.type == SearchType.password.name) {
                   await Modular.to.pushNamed(
                     Routes.passwordRoute,
                     arguments: item.id,
                   );
-                  debugPrint('regreso!');
                 } else {
                   await Modular.to.pushNamed(
                     Routes.cardRoute,
                     arguments: item.id,
                   );
                 }
-                bloc.add(const SubmitSearchEvent());
+
+                bloc.add(
+                  const SubmitSearchEvent(
+                    search: '',
+                  ),
+                );
               },
               title: AdsSubtitle(
                 text: item.title,
                 textAlign: TextAlign.start,
               ),
               subtitle: Text(
-                item.subtitle,
+                item.type == SearchType.card.name
+                    ? PasswordUtils.formatCard(item.subtitle)
+                    : item.subtitle,
                 textAlign: TextAlign.start,
                 style: const TextStyle(
                   fontWeight: FontWeight.w200,

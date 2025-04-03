@@ -112,6 +112,9 @@ class _Card extends StatelessWidget {
             keyboardType: TextInputType.number,
             enableSuggestions: false,
             onChanged: (value) {
+              if (value.length == 16) {
+                FocusManager.instance.primaryFocus?.unfocus();
+              }
               bloc.add(ChangeCardNumberEvent(cardNumber: value));
             },
             textInputAction: TextInputAction.done,

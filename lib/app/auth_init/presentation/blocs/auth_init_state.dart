@@ -36,12 +36,22 @@ class GeneralErrorState extends AuthInitState {
   const GeneralErrorState(super.model);
 }
 
+class DeviceAlreadyEnrolledState extends AuthInitState {
+  const DeviceAlreadyEnrolledState(super.model);
+}
+
+class DeviceNotEnrolledState extends AuthInitState {
+  const DeviceNotEnrolledState(super.model);
+}
+
 class AuthInitStateModel extends Equatable {
   final PasswordForm password;
   final bool alreadySubmitted;
   final bool showPassword;
   final FormzSubmissionStatus status;
   final ProfileEntity? profile;
+  final bool hasBiometricsSaved;
+  final bool canAuthenticateWithBiometrics;
 
   const AuthInitStateModel({
     this.password = const PasswordForm.pure(),
@@ -49,6 +59,8 @@ class AuthInitStateModel extends Equatable {
     this.showPassword = false,
     this.status = FormzSubmissionStatus.initial,
     this.profile,
+    this.hasBiometricsSaved = false,
+    this.canAuthenticateWithBiometrics = false,
   });
 
   AuthInitStateModel copyWith({
@@ -57,6 +69,8 @@ class AuthInitStateModel extends Equatable {
     bool? alreadySubmitted,
     bool? showPassword,
     FormzSubmissionStatus? status,
+    bool? hasBiometricsSaved,
+    bool? canAuthenticateWithBiometrics,
   }) {
     return AuthInitStateModel(
       password: password ?? this.password,
@@ -64,6 +78,9 @@ class AuthInitStateModel extends Equatable {
       showPassword: showPassword ?? this.showPassword,
       status: status ?? this.status,
       profile: profile ?? this.profile,
+      hasBiometricsSaved: hasBiometricsSaved ?? this.hasBiometricsSaved,
+      canAuthenticateWithBiometrics:
+          canAuthenticateWithBiometrics ?? this.canAuthenticateWithBiometrics,
     );
   }
 
@@ -74,5 +91,7 @@ class AuthInitStateModel extends Equatable {
         showPassword,
         status,
         profile,
+        hasBiometricsSaved,
+        canAuthenticateWithBiometrics,
       ];
 }

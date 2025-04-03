@@ -1,21 +1,24 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
+import 'package:savepass/app/profile/infraestructure/models/insert_master_password_model.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile_event.dart';
 import 'package:savepass/app/sync_pass/infrastructure/models/master_password_form.dart';
 import 'package:savepass/app/sync_pass/presentation/blocs/sync_event.dart';
 import 'package:savepass/app/sync_pass/presentation/blocs/sync_state.dart';
-import 'package:savepass/core/global/domain/repositories/secret_repository.dart';
 import 'package:savepass/core/global/utils/secret_utils.dart';
+import 'package:savepass/core/utils/device_info.dart';
+import 'package:savepass/core/utils/security_utils.dart';
 import 'package:uuid/uuid.dart';
 
 class SyncBloc extends Bloc<SyncEvent, SyncState> {
-  final SecretRepository secretRepository;
   final ProfileRepository profileRepository;
 
   SyncBloc({
-    required this.secretRepository,
     required this.profileRepository,
   }) : super(const SyncInitialState()) {
     on<SyncInitialEvent>(_onSyncInitial);
@@ -27,7 +30,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   FutureOr<void> _onSyncInitial(
     SyncInitialEvent event,
     Emitter<SyncState> emit,
-  ) {}
+  ) {
+    emit(const SyncInitialState());
+  }
 
   FutureOr<void> _onSyncPasswordChanged(
     SyncPasswordChangedEvent event,
@@ -66,12 +71,34 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
       return;
     }
 
-    final masterPassword = state.model.masterPassword.value;
+    final clearMasterPassword = state.model.masterPassword.value;
     final name = '${const Uuid().v4()}-${SecretUtils.masterPasswordKey}';
+    final salt = SecurityUtils.generateSalt(16);
+    final derivedKey =
+        SecurityUtils.deriveMasterKey(clearMasterPassword, salt, 32);
+    final hashedPassword = SecurityUtils.hashMasterKey(derivedKey);
+    final deviceId = await DeviceInfo.getDeviceId();
+    final deviceName = await DeviceInfo.getDeviceName();
+    final deviceType = DeviceInfo.getDeviceType();
+
+    if (deviceId == null) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
 
     final updateProfileResponse = await profileRepository.insertMasterPassword(
-      masterPassword: masterPassword,
-      name: name,
+      model: InsertMasterPasswordModel(
+        secret: hashedPassword,
+        name: name,
+        deviceId: deviceId,
+        deviceName: deviceName,
+        type: deviceType,
+        salt: salt,
+      ),
     );
 
     updateProfileResponse.fold(
@@ -83,6 +110,19 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
         );
       },
       (r) {
+        if (r.data == null) {
+          emit(
+            GeneralErrorState(
+              state.model.copyWith(status: FormzSubmissionStatus.failure),
+            ),
+          );
+          return;
+        }
+
+        final profileBloc = Modular.get<ProfileBloc>();
+        profileBloc.add(SaveDerivedKeyEvent(derivedKey: derivedKey));
+        profileBloc.add(SaveJwtEvent(jwt: r.data!['jwt']));
+
         emit(
           OpenHomeState(
             state.model.copyWith(status: FormzSubmissionStatus.success),

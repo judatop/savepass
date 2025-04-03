@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
-import 'package:savepass/app/card/infrastructure/models/dashboard_card_model.dart';
+import 'package:savepass/app/card/infrastructure/models/card_model.dart';
 import 'package:savepass/core/form/text_form.dart';
 
 abstract class CardReportState extends Equatable {
@@ -31,7 +31,7 @@ class LoadingCardState extends CardReportState {
 class CardReportStateModel extends Equatable {
   final TextForm searchForm;
   final FormzSubmissionStatus status;
-  final List<DashboardCardModel> cards;
+  final List<CardModel> cards;
 
   const CardReportStateModel({
     this.searchForm = const TextForm.pure(),
@@ -42,7 +42,7 @@ class CardReportStateModel extends Equatable {
   CardReportStateModel copyWith({
     TextForm? searchForm,
     FormzSubmissionStatus? status,
-    List<DashboardCardModel>? cards,
+    List<CardModel>? cards,
   }) {
     return CardReportStateModel(
       searchForm: searchForm ?? this.searchForm,

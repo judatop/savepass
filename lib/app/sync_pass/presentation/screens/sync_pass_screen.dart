@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
 import 'package:savepass/app/sync_pass/presentation/blocs/sync_bloc.dart';
+import 'package:savepass/app/sync_pass/presentation/blocs/sync_event.dart';
 import 'package:savepass/app/sync_pass/presentation/blocs/sync_state.dart';
 import 'package:savepass/app/sync_pass/presentation/widgets/master_password_widget.dart';
 import 'package:savepass/app/sync_pass/presentation/widgets/submit_sync_pass_widget.dart';
@@ -19,7 +20,7 @@ class SyncPassScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = Modular.get<SyncBloc>();
     return BlocProvider.value(
-      value: bloc,
+      value: bloc..add(const SyncInitialEvent()),
       child: const BlocListener<SyncBloc, SyncState>(
         listener: _listener,
         child: _Body(),
@@ -67,7 +68,7 @@ class _Body extends StatelessWidget {
                   SizedBox(height: deviceHeight * 0.05),
                   Text(
                     intl.masterPasswordText,
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                   ),
                   SizedBox(height: deviceHeight * 0.025),
                   const MasterPasswordWidget(),

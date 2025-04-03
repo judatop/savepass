@@ -99,6 +99,9 @@ class _Month extends StatelessWidget {
                 : null,
             enableSuggestions: false,
             onChanged: (value) {
+              if (value.length == 2) {
+                FocusManager.instance.primaryFocus?.unfocus();
+              }
               bloc.add(ChangeExpirationMonth(expirationMonth: value));
             },
             textInputAction: TextInputAction.next,
@@ -141,6 +144,9 @@ class _Year extends StatelessWidget {
                 : null,
             enableSuggestions: false,
             onChanged: (value) {
+              if (value.length == 2) {
+                FocusManager.instance.primaryFocus?.unfocus();
+              }
               bloc.add(ChangeExpirationYear(expirationYear: value));
             },
             textInputAction: TextInputAction.done,

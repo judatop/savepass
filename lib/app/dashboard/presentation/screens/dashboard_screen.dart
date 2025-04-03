@@ -83,6 +83,20 @@ void _listener(context, state) {
   if (state is OpenSearchState) {
     Modular.to.pushNamed(Routes.searchRoute);
   }
+
+  if (state is UnauthenticatedBiometricsState) {
+    SnackBarUtils.showErrroSnackBar(
+      context,
+      'No pudimos autenticarte',
+    );
+  }
+
+  if (state is AuthenticatedBiometricsState) {
+    SnackBarUtils.showSuccessSnackBar(
+      context,
+      'Autenticación exitosa',
+    );
+  }
 }
 
 class _Body extends StatelessWidget {

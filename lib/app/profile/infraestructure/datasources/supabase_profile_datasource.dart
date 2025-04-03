@@ -1,11 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:logger/web.dart';
 import 'package:savepass/app/profile/domain/datasources/profile_datasource.dart';
 import 'package:savepass/app/profile/domain/entities/profile_entity.dart';
+import 'package:savepass/app/profile/infraestructure/models/insert_master_password_model.dart';
 import 'package:savepass/app/profile/infraestructure/models/profile_model.dart';
+import 'package:savepass/core/api/savepass_response_model.dart';
+import 'package:savepass/core/api/supabase_middleware.dart';
 import 'package:savepass/core/env/env.dart';
 import 'package:savepass/core/utils/db_utils.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
@@ -15,8 +17,12 @@ import 'package:uuid/uuid.dart';
 
 class SupabaseProfileDatasource implements ProfileDatasource {
   final Logger log;
+  final SupabaseMiddleware middleware;
 
-  SupabaseProfileDatasource({required this.log});
+  SupabaseProfileDatasource({
+    required this.log,
+    required this.middleware,
+  });
 
   @override
   Future<Either<Fail, String>> uploadAvatar(String imgPath) async {
@@ -32,9 +38,7 @@ class SupabaseProfileDatasource implements ProfileDatasource {
       return Right(avatarUuid);
     } catch (e) {
       log.e('uploadAvatar: $e');
-      return Left(
-        Fail('Error occurred while uploading avatar'),
-      );
+      return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
 
@@ -63,47 +67,38 @@ class SupabaseProfileDatasource implements ProfileDatasource {
       return const Right(unit);
     } catch (e) {
       log.e('createProfile: $e');
-      return Left(
-        Fail('Error occurred while creating your profile'),
-      );
+      return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
 
   @override
-  Future<Either<Fail, Unit>> insertMasterPassword({
-    required String masterPassword,
-    required String name,
+  Future<Either<Fail, SavePassResponseModel>> insertMasterPassword({
+    required InsertMasterPasswordModel model,
   }) async {
     try {
-      await supabase.rpc(
-        DbUtils.insertMasterPassword,
-        params: {
-          'secret': masterPassword,
-          'name': name,
-        },
+      final response = await middleware.doHttp(
+        rpc: DbUtils.insertMasterPassword,
+        params: model.toJson(),
       );
 
-      return const Right(unit);
+      return Right(response);
     } catch (e) {
       log.e('insertMasterPassword: $e');
-      return Left(
-        Fail('Error occurred while inserting your master password'),
-      );
+      return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
 
   @override
-  Future<Either<Fail, bool>> checkIfHasMasterPassword() async {
+  Future<Either<Fail, SavePassResponseModel>> checkIfHasMasterPassword() async {
     try {
-      final hasMasterPassword =
-          await supabase.rpc(DbUtils.hasMasterPasswordFunction);
+      final response = await middleware.doHttp(
+        rpc: DbUtils.hasMasterPasswordFunction,
+      );
 
-      return Right(hasMasterPassword as bool);
+      return Right(response);
     } catch (e) {
       log.e('checkIfHasMasterPassword: $e');
-      return Left(
-        Fail('Error occurred while checking if you have master password'),
-      );
+      return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
 
@@ -135,47 +130,40 @@ class SupabaseProfileDatasource implements ProfileDatasource {
       return Right(finalProfile);
     } catch (e) {
       log.e('getProfile: $e');
-      return Left(
-        Fail(SnackBarErrors.generalErrorCode),
-      );
+      return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
 
   @override
-  Future<Either<Fail, String?>> isEmailExists(String email) async {
+  Future<Either<Fail, SavePassResponseModel>> isEmailExists({
+    required String email,
+  }) async {
     try {
-      final emailAlreadyExists = await supabase.rpc(
-        DbUtils.isEmailExists,
+      final response = await middleware.doHttp(
+        rpc: DbUtils.isEmailExistsFunction,
         params: {
           'email_to_verify': email,
         },
       );
 
-      if (emailAlreadyExists == null) {
-        return const Right(null);
-      }
-
-      Map<String, dynamic> jsonMap = jsonDecode(emailAlreadyExists);
-
-      return Right(jsonMap['provider'] as String?);
+      return Right(response);
     } catch (e) {
       log.e('isEmailExists: $e');
-      return Left(
-        Fail('Error occurred while checking if email already exists'),
-      );
+      return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
 
   @override
-  Future<Either<Fail, Unit>> deleteAccount() async {
+  Future<Either<Fail, SavePassResponseModel>> deleteAccount() async {
     try {
-      await supabase.rpc(DbUtils.deleteAccountFunction);
-      return const Right(unit);
+      final response = await middleware.doHttp(
+        rpc: DbUtils.deleteAccountFunction,
+      );
+
+      return Right(response);
     } catch (e) {
       log.e('deleteAccount: $e');
-      return Left(
-        Fail('Error occurred while deleting account'),
-      );
+      return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
 }

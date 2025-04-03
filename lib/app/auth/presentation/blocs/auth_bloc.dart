@@ -369,7 +369,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         hasMasterPassword = null;
       },
       (r) {
-        hasMasterPassword = r;
+        hasMasterPassword = r.data!['result'];
       },
     );
 

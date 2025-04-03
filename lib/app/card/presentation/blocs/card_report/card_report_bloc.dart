@@ -1,12 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
 import 'package:logger/logger.dart';
 import 'package:savepass/app/card/domain/repositories/card_repository.dart';
+import 'package:savepass/app/card/infrastructure/models/card_model.dart';
 import 'package:savepass/app/card/presentation/blocs/card_report/card_report_event.dart';
 import 'package:savepass/app/card/presentation/blocs/card_report/card_report_state.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
 import 'package:savepass/core/form/text_form.dart';
+import 'package:savepass/core/utils/security_utils.dart';
 
 class CardReportBloc extends Bloc<CardReportEvent, CardReportState> {
   final Logger log;
@@ -31,6 +35,18 @@ class CardReportBloc extends Bloc<CardReportEvent, CardReportState> {
       ),
     );
 
+    final profileBloc = Modular.get<ProfileBloc>();
+    final derivedKey = profileBloc.state.model.derivedKey;
+
+    if (derivedKey == null) {
+      emit(
+        ChangeCardReportState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
     final response = await cardRepository.getCards();
 
     response.fold(
@@ -42,11 +58,28 @@ class CardReportBloc extends Bloc<CardReportEvent, CardReportState> {
         );
       },
       (r) {
+        List<CardModel> cards = [];
+
+        if (r.data != null && r.data!['list'] != null) {
+          final cardsList = r.data!['list'] as List;
+          cards.addAll(
+            cardsList.map(
+              (e) {
+                CardModel model = CardModel.fromJson(e);
+                model = model.copyWith(
+                  card: SecurityUtils.decryptPassword(model.card, derivedKey),
+                );
+                return model;
+              },
+            ),
+          );
+        }
+
         emit(
           ChangeCardReportState(
             state.model.copyWith(
               status: FormzSubmissionStatus.success,
-              cards: r,
+              cards: cards,
             ),
           ),
         );
@@ -73,7 +106,7 @@ class CardReportBloc extends Bloc<CardReportEvent, CardReportState> {
     SubmitSearchEvent event,
     Emitter<CardReportState> emit,
   ) async {
-     final searchParam = event.search;
+    final searchParam = event.search;
     final searchSaved = state.model.searchForm.value;
 
     final search = searchParam ?? searchSaved;
@@ -90,7 +123,23 @@ class CardReportBloc extends Bloc<CardReportEvent, CardReportState> {
       ),
     );
 
-    final response = await cardRepository.searchCards(search);
+    final profileBloc = Modular.get<ProfileBloc>();
+    final derivedKey = profileBloc.state.model.derivedKey;
+
+    if (derivedKey == null) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(
+            status: FormzSubmissionStatus.failure,
+          ),
+        ),
+      );
+      return;
+    }
+
+    final response = await cardRepository.searchCards(
+      search: search,
+    );
 
     response.fold(
       (l) {
@@ -103,11 +152,27 @@ class CardReportBloc extends Bloc<CardReportEvent, CardReportState> {
         );
       },
       (r) {
+        List<CardModel> cards = [];
+
+        if (r.data != null && r.data!['list'] != null) {
+          final cardsList = r.data!['list'] as List;
+          cards.addAll(
+            cardsList.map(
+              (e) {
+                CardModel model = CardModel.fromJson(e);
+                model = model.copyWith(
+                  card: SecurityUtils.decryptPassword(model.card, derivedKey),
+                );
+                return model;
+              },
+            ),
+          );
+        }
         emit(
           ChangeCardReportState(
             state.model.copyWith(
               status: FormzSubmissionStatus.success,
-              cards: r,
+              cards: cards,
             ),
           ),
         );

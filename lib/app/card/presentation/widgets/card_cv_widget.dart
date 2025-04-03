@@ -95,6 +95,9 @@ class _Cvv extends StatelessWidget {
                 : null,
             enableSuggestions: false,
             onChanged: (value) {
+              if (value.length == 3) {
+                FocusManager.instance.primaryFocus?.unfocus();
+              }
               bloc.add(ChangeCardCvvEvent(cardCvv: value));
             },
             textInputAction: TextInputAction.done,

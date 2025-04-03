@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
-import 'package:savepass/app/card/infrastructure/models/dashboard_card_model.dart';
+import 'package:savepass/app/card/infrastructure/models/card_model.dart';
 import 'package:savepass/app/password/infrastructure/models/password_model.dart';
 import 'package:savepass/app/profile/domain/entities/profile_entity.dart';
 import 'package:savepass/core/form/text_form.dart';
@@ -58,12 +58,20 @@ class PasswordObtainedState extends DashboardState {
   const PasswordObtainedState(super.model);
 }
 
-class CardValueCopiedState extends DashboardState{
+class CardValueCopiedState extends DashboardState {
   const CardValueCopiedState(super.model);
 }
 
-class OpenSearchState extends DashboardState{
+class OpenSearchState extends DashboardState {
   const OpenSearchState(super.model);
+}
+
+class UnauthenticatedBiometricsState extends DashboardState{
+  const UnauthenticatedBiometricsState(super.model);
+}
+
+class AuthenticatedBiometricsState extends DashboardState{
+  const AuthenticatedBiometricsState(super.model);
 }
 
 class DashboardStateModel extends Equatable {
@@ -75,9 +83,12 @@ class DashboardStateModel extends Equatable {
   final ProfileEntity? profile;
   final List<PasswordModel> passwords;
   final FormzSubmissionStatus passwordStatus;
-  final List<DashboardCardModel> cards;
+  final List<CardModel> cards;
   final FormzSubmissionStatus cardStatus;
   final FormzSubmissionStatus statusCardValue;
+  final bool hasBiometrics;
+  final bool canAuthenticate;
+
 
   const DashboardStateModel({
     this.currentIndex = 0,
@@ -91,6 +102,8 @@ class DashboardStateModel extends Equatable {
     this.cards = const [],
     this.cardStatus = FormzSubmissionStatus.initial,
     this.statusCardValue = FormzSubmissionStatus.initial,
+    this.hasBiometrics = false,
+    this.canAuthenticate = false,
   });
 
   DashboardStateModel copyWith({
@@ -102,9 +115,11 @@ class DashboardStateModel extends Equatable {
     FormzSubmissionStatus? deleteStatus,
     List<PasswordModel>? passwords,
     FormzSubmissionStatus? passwordStatus,
-    List<DashboardCardModel>? cards,
+    List<CardModel>? cards,
     FormzSubmissionStatus? cardStatus,
     FormzSubmissionStatus? statusCardValue,
+    bool? hasBiometrics,
+    bool? canAuthenticate,
   }) {
     return DashboardStateModel(
       currentIndex: currentIndex ?? this.currentIndex,
@@ -118,6 +133,8 @@ class DashboardStateModel extends Equatable {
       cards: cards ?? this.cards,
       cardStatus: cardStatus ?? this.cardStatus,
       statusCardValue: statusCardValue ?? this.statusCardValue,
+      hasBiometrics: hasBiometrics ?? this.hasBiometrics,
+      canAuthenticate: canAuthenticate ?? this.canAuthenticate,
     );
   }
 
@@ -133,6 +150,7 @@ class DashboardStateModel extends Equatable {
         passwordStatus,
         cardStatus,
         statusCardValue,
-
+        hasBiometrics,
+        canAuthenticate,
       ];
 }

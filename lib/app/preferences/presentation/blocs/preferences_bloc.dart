@@ -10,7 +10,7 @@ import 'package:savepass/app/preferences/presentation/blocs/preferences_state.da
 class PreferencesBloc extends Bloc<PreferencesEvent, PreferencesState> {
   final PreferencesRepository repository;
 
-  PreferencesBloc(this.repository) : super(ThemeInitialState()) {
+  PreferencesBloc(this.repository) : super(const ThemeInitialState()) {
     on<GetPreferencesEvent>(_onGetPreferencesEvent);
     on<ToggleBrightnessEvent>(onToggleBrightness);
     on<ChangeLocaleEvent>(_onChangeLocaleEvent);
@@ -23,7 +23,7 @@ class PreferencesBloc extends Bloc<PreferencesEvent, PreferencesState> {
     final theme = await repository.setTheme(event.brightness);
 
     theme.fold(
-      (fail) => emit(ThemeInitialState()),
+      (fail) => emit(const ThemeInitialState()),
       (right) => emit(
         ChangePreferencesState(
           state.model.copyWith(
@@ -41,7 +41,7 @@ class PreferencesBloc extends Bloc<PreferencesEvent, PreferencesState> {
     final themeResponse = await repository.getTheme();
     PreferencesModel? brightness;
     themeResponse.fold(
-      (fail) => emit(ThemeInitialState()),
+      (fail) => emit(const ThemeInitialState()),
       (right) {
         brightness = right;
       },
@@ -50,7 +50,7 @@ class PreferencesBloc extends Bloc<PreferencesEvent, PreferencesState> {
     final languageResponse = await repository.getLanguage();
     String? language;
     languageResponse.fold(
-      (fail) => emit(ThemeInitialState()),
+      (fail) => emit(const ThemeInitialState()),
       (right) {
         language = right;
       },

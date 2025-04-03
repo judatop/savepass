@@ -32,8 +32,7 @@ class CardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = Modular.get<CardBloc>();
     return BlocProvider.value(
-      value: bloc
-        ..add( CardInitialEvent(selectedCardId: selectedCardId)),
+      value: bloc..add(CardInitialEvent(selectedCardId: selectedCardId)),
       child: const BlocListener<CardBloc, CardState>(
         listener: _listener,
         child: _Body(),
@@ -84,7 +83,9 @@ void _listener(context, state) {
 
   if (state is CardHoldernameCopiedState) {
     SnackBarUtils.showSuccessSnackBar(
-        context, intl.cardholderNameCopiedClipboard);
+      context,
+      intl.cardholderNameCopiedClipboard,
+    );
   }
 }
 

@@ -7,7 +7,6 @@ import 'package:formz/formz.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
-import 'package:savepass/core/utils/device_info.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class DeleteAccountSettingsWidget extends StatelessWidget {

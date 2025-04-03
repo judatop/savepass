@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:logger/logger.dart';
@@ -180,7 +181,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
 
     final email = state.model.email.value.toLowerCase();
-    late final response;
+    late final Either<Fail, supabaseauth.AuthResponse> response;
     if (isSignUp) {
       response = await authRepository.signUpWithEmailAndPassword(
         email: email,
@@ -193,7 +194,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
     }
 
-    // late supabaseauth.User? user;
     response.fold(
       (l) {
         if (l.failure is String) {
@@ -229,19 +229,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           );
         }
       },
-      (r) {
-        // user = r.user;
-      },
+      (r) {},
     );
-
-    // if (user == null || user?.id == null) {
-    //   emit(
-    //     GeneralErrorState(
-    //       state.model.copyWith(status: FormzSubmissionStatus.failure),
-    //     ),
-    //   );
-    //   return;
-    // }
   }
 
   FutureOr<void> _onOpenPrivacyEvent(

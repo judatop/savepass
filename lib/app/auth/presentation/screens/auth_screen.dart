@@ -110,6 +110,7 @@ class _BodyState extends State<_Body> {
           case supabaseauth.AuthChangeEvent.userUpdated:
             break;
 
+          // ignore: deprecated_member_use
           case supabaseauth.AuthChangeEvent.userDeleted:
             break;
 

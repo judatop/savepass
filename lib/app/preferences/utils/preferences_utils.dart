@@ -3,7 +3,7 @@ import 'package:savepass/app/preferences/infrastructure/models/preferences_model
 import 'package:savepass/app/preferences/presentation/blocs/preferences_state.dart';
 
 class PreferencesUtils {
-  static final defaultAccountPreferencesModel = ThemeStateModel(
+  static const defaultAccountPreferencesModel = ThemeStateModel(
     theme: PreferencesModel(
       brightness: BrightnessType.dark,
     ),

@@ -24,3 +24,7 @@ class ToggleMasterPasswordEvent extends AuthInitEvent {
 class SubmitEvent extends AuthInitEvent {
   const SubmitEvent() : super();
 }
+
+class SubmitWithBiometricsEvent extends AuthInitEvent{
+  const SubmitWithBiometricsEvent() : super();
+}

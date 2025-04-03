@@ -12,7 +12,6 @@ class SupabaseMiddleware {
   final omitRpcs = [
     DbUtils.hasMasterPasswordFunction,
     DbUtils.checkMasterPasswordFunction,
-    DbUtils.deviceNameFunction,
     DbUtils.getUserSaltFunction,
     DbUtils.isEmailExistsFunction,
     DbUtils.insertMasterPassword,

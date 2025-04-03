@@ -98,6 +98,12 @@ class _Body extends StatelessWidget {
                                 (previous.model.enrolledDevice !=
                                     current.model.enrolledDevice),
                             builder: (context, state) {
+                              final device = state.model.enrolledDevice;
+
+                              if (device.isEmpty) {
+                                return Container();
+                              }
+
                               return RichText(
                                 text: TextSpan(
                                   text: intl.currentSessionWith,

@@ -19,6 +19,7 @@ class SupabaseAuthInitDatasource implements AuthInitDatasource {
   Future<Either<Fail, SavePassResponseModel>> checkMasterPassword({
     required String inputSecret,
     required String deviceId,
+    required String biometricHash,
   }) async {
     try {
       final response = await middleware.doHttp(
@@ -26,6 +27,7 @@ class SupabaseAuthInitDatasource implements AuthInitDatasource {
         params: {
           'input_secret': inputSecret,
           'device_id_param': deviceId,
+          'biometric_hash': biometricHash,
         },
       );
 

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -164,6 +165,7 @@ class BiometricBloc extends Bloc<BiometricEvent, BiometricState> {
 
     final biometricHash = data!['hash'];
     await secureStorage.write(key: Env.biometricHashKey, value: biometricHash);
+    await secureStorage.write(key: Env.derivedKey, value: base64Encode(derivedKey));
 
     emit(
       EnrolledSuccessfulState(

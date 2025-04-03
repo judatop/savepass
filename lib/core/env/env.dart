@@ -31,4 +31,7 @@ final class Env {
 
   @EnviedField(varName: 'BIOMETRIC_HASH_KEY', obfuscate: true)
   static final String biometricHashKey = _Env.biometricHashKey;
+
+  @EnviedField(varName: 'DERIVED_KEY', obfuscate: true)
+  static final String derivedKey = _Env.derivedKey;
 }

@@ -2,11 +2,9 @@ import 'dart:io';
 
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_bloc.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_event.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_state.dart';
@@ -60,69 +58,12 @@ void _listener(context, state) {
 class _Body extends StatelessWidget {
   const _Body();
 
-  void _openBiometrics(BuildContext context) async {
-    try {
-      final intl = AppLocalizations.of(context)!;
-
-      final LocalAuthentication auth = LocalAuthentication();
-
-      final bool isDeviceSupported = await auth.isDeviceSupported();
-
-      bool isAuthenticated = false;
-
-      if (isDeviceSupported) {
-        final bool canAuthenticateWithBiometrics =
-            await auth.canCheckBiometrics;
-        final bool canAuthenticate =
-            canAuthenticateWithBiometrics || await auth.isDeviceSupported();
-        if (canAuthenticate) {
-          isAuthenticated = await auth.authenticate(
-            localizedReason: intl.authBiometricMsg,
-            options: const AuthenticationOptions(
-              biometricOnly: true,
-              useErrorDialogs: false,
-            ),
-          );
-        } else {
-          isAuthenticated = await auth.authenticate(
-            localizedReason: intl.authBiometricMsg,
-          );
-        }
-      } else {
-        if (context.mounted) {
-          _showNoBiometricDialog(context);
-        }
-      }
-
-      if (isAuthenticated) {
-        Modular.to.navigate(Routes.dashboardRoute);
-      }
-    } catch (error) {
-      if (error is PlatformException) {
-        if (error.code == 'NotEnrolled') {
-          if (context.mounted) {
-            _showNoBiometricDialog(context);
-          }
-        }
-      }
-    }
-  }
-
-  void _showNoBiometricDialog(BuildContext context) async {
-    await showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return const _BiometricNotEnrolled();
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final deviceHeight = MediaQuery.of(context).size.height;
     final textTheme = Theme.of(context).textTheme;
     final intl = AppLocalizations.of(context)!;
+    final bloc = Modular.get<AuthInitBloc>();
 
     return AdsScreenTemplate(
       wrapScroll: false,
@@ -202,7 +143,8 @@ class _Body extends StatelessWidget {
                   SizedBox(height: deviceHeight * 0.01),
                   if (canAuthenticateWithBiometrics && hasBiometricsSaved)
                     AdsOutlinedIconButton(
-                      onPressedCallback: () => _openBiometrics(context),
+                      onPressedCallback: () =>
+                          bloc.add(const SubmitWithBiometricsEvent()),
                       text: intl.useBiometrics,
                       icon: Platform.isIOS ? Icons.face : Icons.fingerprint,
                     ),
@@ -211,37 +153,6 @@ class _Body extends StatelessWidget {
             );
           },
         ),
-      ),
-    );
-  }
-}
-
-class _BiometricNotEnrolled extends StatelessWidget {
-  const _BiometricNotEnrolled();
-
-  @override
-  Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      child: AlertDialog(
-        title: const Text('Atenttion'),
-        content: const SingleChildScrollView(
-          child: ListBody(
-            children: <Widget>[
-              Text(
-                'Your Biometrics are not enrolled, in order to proceed you need to configure your biometrics in your settings',
-              ),
-            ],
-          ),
-        ),
-        actions: <Widget>[
-          AdsFilledButton(
-            onPressedCallback: () {
-              Modular.to.pop();
-            },
-            text: 'Entendido',
-          ),
-        ],
       ),
     );
   }

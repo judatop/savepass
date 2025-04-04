@@ -70,6 +70,7 @@ import 'package:savepass/core/api/supabase_middleware.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/global/presentation/screens/photo_permission_screen.dart';
 import 'package:savepass/core/utils/biometric_utils.dart';
+import 'package:savepass/core/utils/device_info.dart';
 import 'package:savepass/core/utils/security_utils.dart';
 
 class AppModule extends Module {
@@ -82,6 +83,7 @@ class AppModule extends Module {
     i.addSingleton(SecurityUtils.new);
     i.addSingleton(BiometricUtils.new);
     i.addSingleton(LocalAuthentication.new);
+    i.addSingleton(DeviceInfo.new);
     i.addSingleton<ProfileRepository>(ProfileRepositoryImpl.new);
     i.addSingleton<ProfileDatasource>(SupabaseProfileDatasource.new);
     i.addSingleton<PreferencesRepository>(PreferencesIRepository.new);

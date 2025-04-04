@@ -84,3 +84,19 @@ class GetCardValueEvent extends DashboardEvent {
 class CheckBiometricsEvent extends DashboardEvent {
   const CheckBiometricsEvent() : super();
 }
+
+class GetProfileEvent extends DashboardEvent{
+  const GetProfileEvent() : super();
+}
+
+class GetCardsEvent extends DashboardEvent{
+  const GetCardsEvent() : super();
+}
+
+class GetPasswordsEvent extends DashboardEvent{
+  const GetPasswordsEvent() : super();
+}
+
+class CheckSupabaseBiometricsEvent extends DashboardEvent{
+  const CheckSupabaseBiometricsEvent() : super();
+}

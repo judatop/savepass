@@ -48,6 +48,8 @@ class AuthInitStateModel extends Equatable {
   final PasswordForm password;
   final bool alreadySubmitted;
   final bool showPassword;
+  final FormzSubmissionStatus statusProfile;
+  final FormzSubmissionStatus statusBiometrics;
   final FormzSubmissionStatus status;
   final ProfileEntity? profile;
   final bool hasBiometricsSaved;
@@ -57,6 +59,8 @@ class AuthInitStateModel extends Equatable {
     this.password = const PasswordForm.pure(),
     this.alreadySubmitted = false,
     this.showPassword = false,
+    this.statusProfile = FormzSubmissionStatus.initial,
+    this.statusBiometrics = FormzSubmissionStatus.initial,
     this.status = FormzSubmissionStatus.initial,
     this.profile,
     this.hasBiometricsSaved = false,
@@ -68,6 +72,8 @@ class AuthInitStateModel extends Equatable {
     PasswordForm? password,
     bool? alreadySubmitted,
     bool? showPassword,
+    FormzSubmissionStatus? statusProfile,
+    FormzSubmissionStatus? statusBiometrics,
     FormzSubmissionStatus? status,
     bool? hasBiometricsSaved,
     bool? canAuthenticateWithBiometrics,
@@ -76,11 +82,13 @@ class AuthInitStateModel extends Equatable {
       password: password ?? this.password,
       alreadySubmitted: alreadySubmitted ?? this.alreadySubmitted,
       showPassword: showPassword ?? this.showPassword,
-      status: status ?? this.status,
+      statusProfile: statusProfile ?? this.statusProfile,
+      statusBiometrics: statusBiometrics ?? this.statusBiometrics,
       profile: profile ?? this.profile,
       hasBiometricsSaved: hasBiometricsSaved ?? this.hasBiometricsSaved,
       canAuthenticateWithBiometrics:
           canAuthenticateWithBiometrics ?? this.canAuthenticateWithBiometrics,
+      status: status ?? this.status,
     );
   }
 
@@ -89,6 +97,8 @@ class AuthInitStateModel extends Equatable {
         password,
         alreadySubmitted,
         showPassword,
+        statusProfile,
+        statusBiometrics,
         status,
         profile,
         hasBiometricsSaved,

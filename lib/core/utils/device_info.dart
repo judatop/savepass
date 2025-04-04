@@ -5,10 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 
 class DeviceInfo {
-  static const MethodChannel _channel =
-      MethodChannel('com.juda.savepass/device_info');
+   final MethodChannel _channel =
+      const MethodChannel('com.juda.savepass/device_info');
 
-  static Future<String?> getAndroidId() async {
+   Future<String?> _getAndroidId() async {
     try {
       final String? androidId = await _channel.invokeMethod('getAndroidId');
       return androidId;
@@ -18,7 +18,7 @@ class DeviceInfo {
     }
   }
 
-  static Future<String?> getIosId() async {
+   Future<String?> _getIosId() async {
     try {
       final String? identifier =
           await _channel.invokeMethod('getIosIdentifierForVendor');
@@ -29,15 +29,15 @@ class DeviceInfo {
     }
   }
 
-  static Future<String?> getDeviceId() async {
+   Future<String?> getDeviceId() async {
     if (Platform.isAndroid) {
-      return await getAndroidId();
+      return await _getAndroidId();
     } else {
-      return await getIosId();
+      return await _getIosId();
     }
   }
 
-  static Future<String> getDeviceName() async {
+   Future<String> getDeviceName() async {
     final deviceInfo = DeviceInfoPlugin();
     if (Platform.isAndroid) {
       return (await deviceInfo.androidInfo).model;
@@ -46,7 +46,7 @@ class DeviceInfo {
     }
   }
 
-  static String getDeviceType() {
+   String getDeviceType() {
     return Platform.isAndroid ? 'Android' : 'iOS';
   }
 }

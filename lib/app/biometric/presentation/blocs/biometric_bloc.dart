@@ -20,12 +20,14 @@ class BiometricBloc extends Bloc<BiometricEvent, BiometricState> {
   final BiometricRepository biometricRepository;
   final FlutterSecureStorage secureStorage;
   final BiometricUtils biometricUtils;
+  final DeviceInfo deviceInfo;
 
   BiometricBloc({
     required this.authInitRepository,
     required this.biometricRepository,
     required this.secureStorage,
     required this.biometricUtils,
+    required this.deviceInfo,
   }) : super(const BiometricInitialState()) {
     on<BiometricInitialEvent>(_onBiometricInitialEvent);
     on<SubmitBiometricEvent>(_onSubmitBiometricEvent);
@@ -97,9 +99,9 @@ class BiometricBloc extends Bloc<BiometricEvent, BiometricState> {
 
     final clearMasterPassword = state.model.masterPassword.value;
     final derivedKey =
-        SecurityUtils.deriveMasterKey(clearMasterPassword, salt!, 32);
+        await SecurityUtils.deriveMasterKey(clearMasterPassword, salt!, 32);
     final hashedPassword = SecurityUtils.hashMasterKey(derivedKey);
-    final deviceId = await DeviceInfo.getDeviceId();
+    final deviceId = await deviceInfo.getDeviceId();
 
     if (deviceId == null) {
       emit(

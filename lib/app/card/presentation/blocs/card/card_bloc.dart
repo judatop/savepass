@@ -245,7 +245,7 @@ class CardBloc extends Bloc<CardEvent, CardState> {
       }
 
       final decryptedCard =
-          SecurityUtils.decryptPassword(card!.card, derivedKey);
+          await SecurityUtils.decryptPassword(card!.card, derivedKey);
       final values = decryptedCard.split('|');
       final cardNumber = values[0];
       final cardHoldername = values[1];

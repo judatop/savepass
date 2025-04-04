@@ -17,9 +17,11 @@ import 'package:uuid/uuid.dart';
 
 class SyncBloc extends Bloc<SyncEvent, SyncState> {
   final ProfileRepository profileRepository;
+  final DeviceInfo deviceInfo;
 
   SyncBloc({
     required this.profileRepository,
+    required this.deviceInfo,
   }) : super(const SyncInitialState()) {
     on<SyncInitialEvent>(_onSyncInitial);
     on<SyncPasswordChangedEvent>(_onSyncPasswordChanged);
@@ -75,11 +77,11 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     final name = '${const Uuid().v4()}-${SecretUtils.masterPasswordKey}';
     final salt = SecurityUtils.generateSalt(16);
     final derivedKey =
-        SecurityUtils.deriveMasterKey(clearMasterPassword, salt, 32);
+        await SecurityUtils.deriveMasterKey(clearMasterPassword, salt, 32);
     final hashedPassword = SecurityUtils.hashMasterKey(derivedKey);
-    final deviceId = await DeviceInfo.getDeviceId();
-    final deviceName = await DeviceInfo.getDeviceName();
-    final deviceType = DeviceInfo.getDeviceType();
+    final deviceId = await deviceInfo.getDeviceId();
+    final deviceName = await deviceInfo.getDeviceName();
+    final deviceType = deviceInfo.getDeviceType();
 
     if (deviceId == null) {
       emit(

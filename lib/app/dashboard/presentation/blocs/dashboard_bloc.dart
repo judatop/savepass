@@ -9,6 +9,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:savepass/app/auth_init/domain/repositories/auth_init_repository.dart';
 import 'package:savepass/app/card/domain/repositories/card_repository.dart';
 import 'package:savepass/app/card/infrastructure/models/card_model.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
@@ -18,9 +19,11 @@ import 'package:savepass/app/password/infrastructure/models/password_model.dart'
 import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
+import 'package:savepass/core/api/savepass_response_model.dart';
 import 'package:savepass/core/form/text_form.dart';
 import 'package:savepass/core/utils/biometric_utils.dart';
-import 'package:savepass/core/utils/security_utils.dart';
+import 'package:savepass/core/utils/device_info.dart';
+import 'package:savepass/core/utils/password_utils.dart';
 import 'package:savepass/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -32,6 +35,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final CardRepository cardRepository;
   final BiometricUtils biometricUtils;
   final FlutterSecureStorage secureStorage;
+  final DeviceInfo deviceInfo;
+  final AuthInitRepository authInitRepository;
 
   DashboardBloc({
     required this.log,
@@ -41,6 +46,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     required this.cardRepository,
     required this.biometricUtils,
     required this.secureStorage,
+    required this.deviceInfo,
+    required this.authInitRepository,
   }) : super(const DashboardInitialState()) {
     on<DashboardInitialEvent>(_onDashboardInitialEvent);
     on<ChangeIndexEvent>(_onChangeIndexEvent);
@@ -58,144 +65,17 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<OnClickNewCard>(_onOnClickNewCard);
     on<OpenSearchEvent>(_onOpenSearchEvent);
     on<CheckBiometricsEvent>(_onCheckBiometricsEvent);
+    on<GetProfileEvent>(_onGetProfileEvent);
+    on<GetCardsEvent>(_onGetCardsEvent);
+    on<GetPasswordsEvent>(_onGetPasswordsEvent);
+    on<CheckSupabaseBiometricsEvent>(_onCheckSupabaseBiometricsEvent);
   }
 
   FutureOr<void> _onDashboardInitialEvent(
     DashboardInitialEvent event,
     Emitter<DashboardState> emit,
-  ) async {
+  ) {
     emit(const DashboardInitialState());
-    final res = await profileRepository.getProfile();
-    res.fold(
-      (l) {},
-      (r) {
-        emit(
-          ChangeDashboardState(
-            state.model.copyWith(
-              profile: r,
-              displayName: TextForm.dirty(r.displayName ?? ''),
-            ),
-          ),
-        );
-      },
-    );
-
-    emit(
-      ChangeDashboardState(
-        state.model.copyWith(passwordStatus: FormzSubmissionStatus.inProgress),
-      ),
-    );
-
-    final profileBloc = Modular.get<ProfileBloc>();
-    final derivedKey = profileBloc.state.model.derivedKey;
-
-    if (derivedKey == null) {
-      emit(
-        GeneralErrorState(
-          state.model.copyWith(passwordStatus: FormzSubmissionStatus.failure),
-        ),
-      );
-      return;
-    }
-
-    final passwordsResponse = await passwordRepository.getPasswords();
-
-    passwordsResponse.fold(
-      (l) {
-        emit(
-          ChangeDashboardState(
-            state.model.copyWith(passwordStatus: FormzSubmissionStatus.failure),
-          ),
-        );
-      },
-      (r) {
-        List<PasswordModel> passwords = [];
-
-        if (r.data != null && r.data!['list'] != null) {
-          final passwordsList = r.data!['list'] as List;
-          passwords.addAll(
-            passwordsList.map(
-              (e) {
-                final model = PasswordModel.fromJson(e);
-                model.copyWith(
-                  password:
-                      SecurityUtils.decryptPassword(model.password, derivedKey),
-                );
-
-                return PasswordModel.fromJson(e);
-              },
-            ),
-          );
-        }
-
-        emit(
-          ChangeDashboardState(
-            state.model.copyWith(
-              passwordStatus: FormzSubmissionStatus.success,
-              passwords: passwords,
-            ),
-          ),
-        );
-      },
-    );
-
-    emit(
-      ChangeDashboardState(
-        state.model.copyWith(cardStatus: FormzSubmissionStatus.inProgress),
-      ),
-    );
-
-    final cardsRes = await cardRepository.getCards();
-
-    cardsRes.fold(
-      (l) {
-        emit(
-          ChangeDashboardState(
-            state.model.copyWith(cardStatus: FormzSubmissionStatus.failure),
-          ),
-        );
-      },
-      (r) {
-        List<CardModel> cards = [];
-
-        if (r.data != null && r.data!['list'] != null) {
-          final cardsList = r.data!['list'] as List;
-          cards.addAll(
-            cardsList.map(
-              (e) {
-                CardModel model = CardModel.fromJson(e);
-                model = model.copyWith(
-                  card: SecurityUtils.decryptPassword(model.card, derivedKey),
-                );
-                return model;
-              },
-            ),
-          );
-        }
-
-        emit(
-          ChangeDashboardState(
-            state.model.copyWith(
-              cardStatus: FormzSubmissionStatus.success,
-              cards: cards,
-            ),
-          ),
-        );
-      },
-    );
-
-    final hasBiometrics = await biometricUtils.hasBiometricsSaved();
-    final canAuthenticate =
-        await biometricUtils.canAuthenticateWithBiometrics();
-
-    emit(
-      ChangeDashboardState(
-        state.model.copyWith(
-          hasBiometrics: hasBiometrics,
-          canAuthenticate: canAuthenticate,
-        ),
-      ),
-    );
   }
 
   FutureOr<void> _onChangeIndexEvent(
@@ -685,6 +565,223 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         state.model.copyWith(
           hasBiometrics: hasBiometrics,
           canAuthenticate: canAuthenticate,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onGetProfileEvent(
+    GetProfileEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(
+          status: FormzSubmissionStatus.inProgress,
+        ),
+      ),
+    );
+
+    final res = await profileRepository.getProfile();
+    res.fold(
+      (l) {
+        GeneralErrorState(
+          state.model.copyWith(
+            status: FormzSubmissionStatus.failure,
+          ),
+        );
+      },
+      (r) {
+        emit(
+          ChangeDashboardState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.success,
+              profile: r,
+              displayName: TextForm.dirty(r.displayName ?? ''),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  FutureOr<void> _onGetCardsEvent(
+    GetCardsEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(cardStatus: FormzSubmissionStatus.inProgress),
+      ),
+    );
+
+    final profileBloc = Modular.get<ProfileBloc>();
+    final derivedKey = profileBloc.state.model.derivedKey;
+
+    if (derivedKey == null) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(passwordStatus: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
+    final cardsRes = await cardRepository.getCards();
+    late final SavePassResponseModel? modelResponse;
+    cardsRes.fold(
+      (l) {
+        modelResponse = null;
+      },
+      (r) {
+        modelResponse = r;
+      },
+    );
+
+    if (modelResponse == null) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(cardStatus: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
+    List<CardModel> cards = [];
+
+    final cardsData = modelResponse?.data;
+
+    if (cardsData != null && cardsData['list'] != null) {
+      final cardsList = cardsData['list'] as List;
+
+      final decryptedCards =
+          await PasswordUtils.getCards(cardsList, derivedKey);
+
+      cards.addAll(decryptedCards);
+    }
+
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(
+          cardStatus: FormzSubmissionStatus.success,
+          cards: cards,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onGetPasswordsEvent(
+    GetPasswordsEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(passwordStatus: FormzSubmissionStatus.inProgress),
+      ),
+    );
+
+    final profileBloc = Modular.get<ProfileBloc>();
+    final derivedKey = profileBloc.state.model.derivedKey;
+
+    if (derivedKey == null) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(passwordStatus: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
+    final passwordsResponse = await passwordRepository.getPasswords();
+    late final SavePassResponseModel? savePassResponse;
+    passwordsResponse.fold(
+      (l) {
+        savePassResponse = null;
+      },
+      (r) {
+        savePassResponse = r;
+      },
+    );
+
+    if (savePassResponse == null) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
+    List<PasswordModel> passwords = [];
+
+    final passwordsData = savePassResponse?.data;
+
+    if (passwordsData != null && passwordsData['list'] != null) {
+      final passwordsList = passwordsData['list'] as List;
+
+      final decryptedPasswords =
+          await PasswordUtils.getPasswords(passwordsList, derivedKey);
+
+      passwords.addAll(decryptedPasswords);
+    }
+
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(
+          passwordStatus: FormzSubmissionStatus.success,
+          passwords: passwords,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onCheckSupabaseBiometricsEvent(
+    CheckSupabaseBiometricsEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(
+          statusBiometrics: FormzSubmissionStatus.inProgress,
+        ),
+      ),
+    );
+
+    final deviceId = await deviceInfo.getDeviceId();
+
+    if (deviceId == null) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(
+            statusBiometrics: FormzSubmissionStatus.failure,
+          ),
+        ),
+      );
+      return;
+    }
+
+    final hasBiometricsSupabaseResponse =
+        await authInitRepository.hasBiometrics(deviceId: deviceId);
+    late final bool hasSupabaseBiometricsSaved;
+    hasBiometricsSupabaseResponse.fold(
+      (l) {
+        hasSupabaseBiometricsSaved = false;
+      },
+      (r) {
+        hasSupabaseBiometricsSaved = r.data?['hasBiometrics'];
+      },
+    );
+
+    final hasLocalBiometricsSaved = await biometricUtils.hasBiometricsSaved();
+    final canAuthenticate =
+        await biometricUtils.canAuthenticateWithBiometrics();
+
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(
+          hasBiometrics: hasSupabaseBiometricsSaved && hasLocalBiometricsSaved,
+          canAuthenticate: canAuthenticate,
+          statusBiometrics: FormzSubmissionStatus.success,
         ),
       ),
     );

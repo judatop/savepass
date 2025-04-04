@@ -15,6 +15,7 @@ class SupabaseMiddleware {
     DbUtils.getUserSaltFunction,
     DbUtils.isEmailExistsFunction,
     DbUtils.insertMasterPassword,
+    DbUtils.hasBiometricsFunction,
   ];
 
   SupabaseMiddleware({required this.log});

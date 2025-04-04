@@ -14,7 +14,7 @@ abstract class PreferencesState extends Equatable {
 }
 
 class ThemeInitialState extends PreferencesState {
-  ThemeInitialState() : super(PreferencesUtils.defaultAccountPreferencesModel);
+  const ThemeInitialState() : super(PreferencesUtils.defaultAccountPreferencesModel);
 }
 
 class ChangePreferencesState extends PreferencesState {

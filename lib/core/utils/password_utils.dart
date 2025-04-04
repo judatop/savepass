@@ -1,4 +1,10 @@
+import 'dart:isolate';
 import 'dart:math';
+import 'dart:typed_data';
+
+import 'package:savepass/app/card/infrastructure/models/card_model.dart';
+import 'package:savepass/app/password/infrastructure/models/password_model.dart';
+import 'package:savepass/core/utils/security_utils.dart';
 
 class PasswordUtils {
   static bool atLeast8Characters(String password) {
@@ -88,5 +94,58 @@ class PasswordUtils {
       return card;
     }
     return '${card.substring(0, 4)} XXXX XXXX ${card.substring(12, 16)}';
+  }
+
+  static Future<List<CardModel>> getCards(
+    List<dynamic> cardsList,
+    Uint8List derivedKey,
+  ) async {
+    final List<CardModel> cards = await Isolate.run<List<CardModel>>(
+      () async {
+        final cards = await Future.wait(
+          cardsList.map(
+            (e) async {
+              CardModel model = CardModel.fromJson(e);
+              model = model.copyWith(
+                card: SecurityUtils.decryptPassword(model.card, derivedKey),
+              );
+              return model;
+            },
+          ),
+        );
+        return cards;
+      },
+    );
+
+    return cards;
+  }
+
+  static Future<List<PasswordModel>> getPasswords(
+    List<dynamic> passwordsList,
+    Uint8List derivedKey,
+  ) async {
+    final List<PasswordModel> passwords =
+        await Isolate.run<List<PasswordModel>>(
+      () async {
+        final passwords = await Future.wait(
+          passwordsList.map(
+            (e) async {
+              final model = PasswordModel.fromJson(e);
+              model.copyWith(
+                password: SecurityUtils.decryptPassword(
+                  model.password,
+                  derivedKey,
+                ),
+              );
+
+              return PasswordModel.fromJson(e);
+            },
+          ),
+        );
+        return passwords;
+      },
+    );
+
+    return passwords;
   }
 }

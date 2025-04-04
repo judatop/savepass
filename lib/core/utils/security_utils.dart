@@ -55,23 +55,17 @@ class SecurityUtils {
     return passwordEncrypted;
   }
 
-  static Future<String> decryptPassword(
+  static String decryptPassword(
     String encryptedData,
     Uint8List derivedKey,
-  ) async {
-    final String passwordDecrypted = await Isolate.run<String>(
-      () {
-        final key = Key(derivedKey.sublist(0, 32));
+  ) {
+    final key = Key(derivedKey.sublist(0, 32));
 
-        final parts = encryptedData.split(':');
-        final iv = IV.fromBase64(parts[0]);
-        final encryptedText = Encrypted.fromBase64(parts[1]);
+    final parts = encryptedData.split(':');
+    final iv = IV.fromBase64(parts[0]);
+    final encryptedText = Encrypted.fromBase64(parts[1]);
 
-        final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
-        return encrypter.decrypt(encryptedText, iv: iv);
-      },
-    );
-
-    return passwordDecrypted;
+    final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
+    return encrypter.decrypt(encryptedText, iv: iv);
   }
 }

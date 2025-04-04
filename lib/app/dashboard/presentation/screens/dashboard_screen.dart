@@ -22,7 +22,12 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = Modular.get<DashboardBloc>();
     return BlocProvider.value(
-      value: bloc..add(const DashboardInitialEvent()),
+      value: bloc
+        ..add(const DashboardInitialEvent())
+        ..add(const GetProfileEvent())
+        ..add(const GetCardsEvent())
+        ..add(const GetPasswordsEvent())
+        ..add(const CheckSupabaseBiometricsEvent()),
       child: const BlocListener<DashboardBloc, DashboardState>(
         listener: _listener,
         child: _Body(),

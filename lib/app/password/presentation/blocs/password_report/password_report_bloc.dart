@@ -11,6 +11,7 @@ import 'package:savepass/app/password/presentation/blocs/password_report/passwor
 import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
 import 'package:savepass/core/api/savepass_response_model.dart';
 import 'package:savepass/core/form/text_form.dart';
+import 'package:savepass/core/utils/password_utils.dart';
 import 'package:savepass/core/utils/security_utils.dart';
 
 class PassReportBloc extends Bloc<PassReportEvent, PassReportState> {
@@ -182,23 +183,10 @@ class PassReportBloc extends Bloc<PassReportEvent, PassReportState> {
     if (data != null && data['list'] != null) {
       final passwordsList = data['list'] as List;
 
-      passwords.addAll(
-        await Future.wait(
-          passwordsList.map(
-            (e) async {
-              final model = PasswordModel.fromJson(e);
-              model.copyWith(
-                password: await SecurityUtils.decryptPassword(
-                  model.password,
-                  derivedKey,
-                ),
-              );
+      final decryptedPasswords =
+          await PasswordUtils.getPasswords(passwordsList, derivedKey);
 
-              return PasswordModel.fromJson(e);
-            },
-          ),
-        ),
-      );
+      passwords.addAll(decryptedPasswords);
     }
 
     emit(

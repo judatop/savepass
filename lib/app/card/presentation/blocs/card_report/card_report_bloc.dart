@@ -11,6 +11,7 @@ import 'package:savepass/app/card/presentation/blocs/card_report/card_report_sta
 import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
 import 'package:savepass/core/api/savepass_response_model.dart';
 import 'package:savepass/core/form/text_form.dart';
+import 'package:savepass/core/utils/password_utils.dart';
 import 'package:savepass/core/utils/security_utils.dart';
 
 class CardReportBloc extends Bloc<CardReportEvent, CardReportState> {
@@ -76,20 +77,10 @@ class CardReportBloc extends Bloc<CardReportEvent, CardReportState> {
     if (data != null && data['list'] != null) {
       final cardsList = data['list'] as List;
 
-      cards.addAll(
-        await Future.wait(
-          cardsList.map(
-            (e) async {
-              CardModel model = CardModel.fromJson(e);
-              model = model.copyWith(
-                card:
-                    await SecurityUtils.decryptPassword(model.card, derivedKey),
-              );
-              return model;
-            },
-          ),
-        ),
-      );
+      final decryptedCards =
+          await PasswordUtils.getCards(cardsList, derivedKey);
+
+      cards.addAll(decryptedCards);
     }
 
     emit(

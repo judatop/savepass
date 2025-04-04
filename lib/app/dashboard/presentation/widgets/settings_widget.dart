@@ -12,6 +12,7 @@ import 'package:savepass/app/dashboard/presentation/widgets/settings/policy_sett
 import 'package:savepass/app/dashboard/presentation/widgets/settings/terms_settings_widget.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/settings/theme_settings_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/app/dashboard/presentation/widgets/settings/update_master_password_widget.dart';
 
 class SettingsWidget extends StatelessWidget {
   const SettingsWidget({super.key});
@@ -55,6 +56,8 @@ class SettingsWidget extends StatelessWidget {
             const TermsSettingsWidget(),
             SizedBox(height: deviceHeight * 0.02),
             const AboutAppSettingsWidget(),
+            SizedBox(height: deviceHeight * 0.02),
+            const UpdateMasterPasswordWidget(),
             SizedBox(height: deviceHeight * 0.02),
             const DeleteAccountSettingsWidget(),
             SizedBox(height: deviceHeight * 0.02),

@@ -293,5 +293,17 @@
     "biometricsTip": "Inicia con biométricos para una rápida experiencia",
     "@biometricsTip": {},
     "biometricsEnrolled": "Biométricos registrados",
-    "@biometricsEnrolled": {}
+    "@biometricsEnrolled": {},
+    "updateMasterPasswordTitle": "Actualizar contraseña maestra",
+    "@updateMasterPasswordTitle": {},
+    "updateMasterPasswordText": "Recomendamos actualizar tu contraseña maestra cada cierto tiempo, esto ayuda a mantener la seguridad de tu cuenta",
+    "@updateMasterPasswordText": {},
+    "updateText": "Actualizar",
+    "@updateText": {},
+    "enterOldMasterPassword": "Contraseña maestra actual",
+    "@enterOldMasterPassword": {},
+    "enterNewMasterPassword": "Nueva contraseña maestra",
+    "@enterNewMasterPassword": {},
+    "repeatMasterPassword": "Repite nueva contraseña maestra",
+    "@repeatMasterPassword": {}
 }

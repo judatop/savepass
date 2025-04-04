@@ -22,4 +22,5 @@ class Routes {
   static const String cardReport = '/cardReport';
   static const String enrollRoute = '/enroll';
   static const String biometricRoute = '/biometric';
+  static const String masterPasswordRoute = '/masterPasswordz';
 }

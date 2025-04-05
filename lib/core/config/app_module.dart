@@ -39,6 +39,10 @@ import 'package:savepass/app/enroll/presentation/screens/enroll_screen.dart';
 import 'package:savepass/app/get_started/presentation/blocs/get_started_bloc.dart';
 import 'package:savepass/app/get_started/presentation/screens/get_started_screen.dart';
 import 'package:savepass/app/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:savepass/app/master_password/domain/datasources/master_password_datasource.dart';
+import 'package:savepass/app/master_password/domain/repositories/master_password_repository.dart';
+import 'package:savepass/app/master_password/infrastructure/datasources/supabase_master_password_datasource.dart';
+import 'package:savepass/app/master_password/infrastructure/repositories_impl/master_password_repository_impl.dart';
 import 'package:savepass/app/master_password/presentation/blocs/master_password_bloc.dart';
 import 'package:savepass/app/master_password/presentation/screens/master_password_screen.dart';
 import 'package:savepass/app/password/domain/datasources/password_datasource.dart';
@@ -103,6 +107,10 @@ class AppModule extends Module {
     i.addSingleton<EnrollRepository>(EnrollRepositoryImpl.new);
     i.addSingleton<BiometricDatasource>(SupabaseBiometricDatasource.new);
     i.addSingleton<BiometricRepository>(BiometricRepositoryImpl.new);
+    i.addSingleton<MasterPasswordDatasource>(
+      SupabaseMasterPasswordDatasource.new,
+    );
+    i.addSingleton<MasterPasswordRepository>(MasterPasswordRepositoryImpl.new);
     i.addSingleton(GetStartedBloc.new);
     i.addSingleton(AuthInitBloc.new);
     i.addSingleton(SyncBloc.new);

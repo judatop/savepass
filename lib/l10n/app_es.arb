@@ -305,5 +305,11 @@
     "enterNewMasterPassword": "Nueva contraseña maestra",
     "@enterNewMasterPassword": {},
     "repeatMasterPassword": "Repite nueva contraseña maestra",
-    "@repeatMasterPassword": {}
+    "@repeatMasterPassword": {},
+    "passwordMissmatch": "Las contraseñas no coinciden",
+    "@passwordMissmatch": {},
+    "masterPasswordUpdated": "Contraseña maestra actualizada",
+    "@masterPasswordUpdated": {},
+    "newPasswordBeDiferent": "Nueva contraseña debe ser diferente",
+    "@newPasswordBeDiferent": {}
 }

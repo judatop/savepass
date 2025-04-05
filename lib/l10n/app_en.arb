@@ -305,5 +305,11 @@
     "enterNewMasterPassword": "New master password",
     "@enterNewMasterPassword": {},
     "repeatMasterPassword": "Repeat new master password",
-    "@repeatMasterPassword": {}
+    "@repeatMasterPassword": {},
+    "passwordMissmatch": "The passwords do not match",
+    "@passwordMissmatch": {},
+    "masterPasswordUpdated": "Master password updated successfully",
+    "@masterPasswordUpdated": {},
+    "newPasswordBeDiferent": "New password needs to be different",
+    "@newPasswordBeDiferent": {}
 }

@@ -32,6 +32,14 @@ class InvalidMasterPasswordState extends MasterPasswordState {
   const InvalidMasterPasswordState(super.model);
 }
 
+class SamePasswordsMasterPasswordState extends MasterPasswordState {
+  const SamePasswordsMasterPasswordState(super.model);
+}
+
+class PasswordsMismatchState extends MasterPasswordState{
+  const PasswordsMismatchState(super.model);
+}
+
 class MasterPasswordStateModel extends Equatable {
   final PasswordForm oldPassword;
   final MasterPasswordForm newPassword;

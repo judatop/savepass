@@ -14,6 +14,7 @@ import 'package:savepass/app/master_password/presentation/widget/new_password_wi
 import 'package:savepass/app/master_password/presentation/widget/old_password_widget.dart';
 import 'package:savepass/app/master_password/presentation/widget/repeat_password_widget.dart';
 import 'package:savepass/app/master_password/presentation/widget/submit_update_master_password_widget.dart';
+import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class MasterPasswordScreen extends StatelessWidget {
@@ -32,7 +33,30 @@ class MasterPasswordScreen extends StatelessWidget {
   }
 }
 
-void _listener(context, state) {}
+void _listener(context, state) {
+  final intl = AppLocalizations.of(context)!;
+
+  if (state is PasswordsMismatchState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.passwordMissmatch);
+  }
+
+  if (state is GeneralErrorState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.genericError);
+  }
+
+  if (state is InvalidMasterPasswordState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.invalidCredentials);
+  }
+
+  if (state is MasterPasswordUpdatedState) {
+    SnackBarUtils.showSuccessSnackBar(context, intl.masterPasswordUpdated);
+    Modular.to.pop();
+  }
+
+  if (state is SamePasswordsMasterPasswordState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.newPasswordBeDiferent);
+  }
+}
 
 class _Body extends StatelessWidget {
   const _Body();

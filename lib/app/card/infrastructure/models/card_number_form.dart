@@ -1,9 +1,11 @@
 import 'package:formz/formz.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/core/utils/form_utils.dart';
 
 enum CardNumberFormValidationError {
   empty,
   minLength,
+  maxLength
 }
 
 class CardNumberForm extends FormzInput<String, CardNumberFormValidationError> {
@@ -21,6 +23,10 @@ class CardNumberForm extends FormzInput<String, CardNumberFormValidationError> {
       return CardNumberFormValidationError.minLength;
     }
 
+    if (value.length > FormUtils.maxLength) {
+      return CardNumberFormValidationError.maxLength;
+    }
+
     return null;
   }
 
@@ -30,6 +36,8 @@ class CardNumberForm extends FormzInput<String, CardNumberFormValidationError> {
         return intl10.mandatoryField;
       case CardNumberFormValidationError.minLength:
         return intl10.cardMinLength;
+       case CardNumberFormValidationError.maxLength:
+        return intl10.maxLengthField;
       default:
         return null;
     }

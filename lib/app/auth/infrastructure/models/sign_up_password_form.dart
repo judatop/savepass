@@ -1,10 +1,12 @@
 import 'package:formz/formz.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/core/utils/form_utils.dart';
 import 'package:savepass/core/utils/password_utils.dart';
 
 enum SignUpPasswordFormValidationError {
   empty,
   atLeast8Characters,
+  maxLength,
 }
 
 class SignUpPasswordForm
@@ -23,6 +25,10 @@ class SignUpPasswordForm
       return SignUpPasswordFormValidationError.atLeast8Characters;
     }
 
+    if (value.length > FormUtils.maxLength) {
+      return SignUpPasswordFormValidationError.maxLength;
+    }
+
     return null;
   }
 
@@ -35,6 +41,8 @@ class SignUpPasswordForm
         return intl.mandatoryField;
       case SignUpPasswordFormValidationError.atLeast8Characters:
         return intl.atLeast8Characters;
+      case SignUpPasswordFormValidationError.maxLength:
+        return intl.maxLengthField;
       default:
         return null;
     }

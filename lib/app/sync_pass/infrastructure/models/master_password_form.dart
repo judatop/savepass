@@ -1,5 +1,6 @@
 import 'package:formz/formz.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/core/utils/form_utils.dart';
 import 'package:savepass/core/utils/password_utils.dart';
 
 enum MasterPasswordFormValidationError {
@@ -10,7 +11,8 @@ enum MasterPasswordFormValidationError {
   containsNumber,
   containsSpecialCharacter,
   notContains3RepeatedCharacters,
-  notContains3ConsecutiveCharacters
+  notContains3ConsecutiveCharacters,
+  maxLength
 }
 
 class MasterPasswordForm
@@ -54,6 +56,10 @@ class MasterPasswordForm
           .notContains3ConsecutiveCharacters;
     }
 
+    if (value.length > FormUtils.maxLength) {
+      return MasterPasswordFormValidationError.maxLength;
+    }
+
     return null;
   }
 
@@ -78,6 +84,8 @@ class MasterPasswordForm
         return intl.notContains3RepeatedCharacters;
       case MasterPasswordFormValidationError.notContains3ConsecutiveCharacters:
         return intl.notContains3ConsecutiveCharacters;
+      case MasterPasswordFormValidationError.maxLength:
+        return intl.maxLengthField;
       default:
         return null;
     }

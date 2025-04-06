@@ -311,5 +311,7 @@
     "masterPasswordUpdated": "Master password updated successfully",
     "@masterPasswordUpdated": {},
     "newPasswordBeDiferent": "New password needs to be different",
-    "@newPasswordBeDiferent": {}
+    "@newPasswordBeDiferent": {},
+    "maxLengthField": "Field value too large",
+    "@maxLengthField": {}
 }

@@ -311,5 +311,7 @@
     "masterPasswordUpdated": "Contraseña maestra actualizada",
     "@masterPasswordUpdated": {},
     "newPasswordBeDiferent": "Nueva contraseña debe ser diferente",
-    "@newPasswordBeDiferent": {}
+    "@newPasswordBeDiferent": {},
+    "maxLengthField": "Valor del campo muy largo",
+    "@maxLengthField": {}
 }

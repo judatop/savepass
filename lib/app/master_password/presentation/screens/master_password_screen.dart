@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/master_password/presentation/blocs/master_password_bloc.dart';
 import 'package:savepass/app/master_password/presentation/blocs/master_password_event.dart';
 import 'package:savepass/app/master_password/presentation/blocs/master_password_state.dart';
@@ -50,12 +52,16 @@ void _listener(context, state) {
 
   if (state is MasterPasswordUpdatedState) {
     SnackBarUtils.showSuccessSnackBar(context, intl.masterPasswordUpdated);
+    final dashboardBloc = Modular.get<DashboardBloc>();
+    dashboardBloc.add(const GetPasswordsEvent());
+    dashboardBloc.add(const GetCardsEvent());
     Modular.to.pop();
   }
 
   if (state is SamePasswordsMasterPasswordState) {
     SnackBarUtils.showErrroSnackBar(context, intl.newPasswordBeDiferent);
   }
+  
 }
 
 class _Body extends StatelessWidget {

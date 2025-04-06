@@ -43,6 +43,7 @@ class CardScreen extends StatelessWidget {
 
 void _listener(context, state) {
   final intl = AppLocalizations.of(context)!;
+  final bloc = Modular.get<DashboardBloc>();
 
   if (state is MinLengthErrorCardState) {
     SnackBarUtils.showErrroSnackBar(
@@ -52,15 +53,13 @@ void _listener(context, state) {
   }
 
   if (state is CardCreatedState) {
-    final bloc = Modular.get<DashboardBloc>();
-    bloc.add(const DashboardInitialEvent());
+    bloc.add(const GetCardsEvent());
     SnackBarUtils.showSuccessSnackBar(context, intl.cardCreated);
     Modular.to.pop();
   }
 
   if (state is CardEditedState) {
-    final bloc = Modular.get<DashboardBloc>();
-    bloc.add(const DashboardInitialEvent());
+    bloc.add(const GetCardsEvent());
     SnackBarUtils.showSuccessSnackBar(context, intl.cardEdited);
     Modular.to.pop();
   }
@@ -71,8 +70,7 @@ void _listener(context, state) {
   }
 
   if (state is CardDeletedState) {
-    final bloc = Modular.get<DashboardBloc>();
-    bloc.add(const DashboardInitialEvent());
+    bloc.add(const GetCardsEvent());
     SnackBarUtils.showSuccessSnackBar(context, intl.cardDeleted);
     Modular.to.pop();
   }

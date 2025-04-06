@@ -45,7 +45,7 @@ void _listener(context, state) {
 
   if (state is PasswordCreatedState) {
     final bloc = Modular.get<DashboardBloc>();
-    bloc.add(const DashboardInitialEvent());
+    bloc.add(const GetPasswordsEvent());
     SnackBarUtils.showSuccessSnackBar(context, intl.passwordCreated);
     Modular.to.pop();
   }
@@ -69,7 +69,7 @@ void _listener(context, state) {
 
   if (state is PasswordDeletedState) {
     final bloc = Modular.get<DashboardBloc>();
-    bloc.add(const DashboardInitialEvent());
+    bloc.add(const GetPasswordsEvent());
     SnackBarUtils.showSuccessSnackBar(context, intl.passwordDeleted);
     Modular.to.pop();
   }

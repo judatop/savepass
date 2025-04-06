@@ -13,6 +13,7 @@ class DbUtils {
   static const getUserSaltFunction = 'get_user_salt';
   static const isEmailExistsFunction = 'is_email_exist';
   static const insertMasterPassword = 'insert_master_password';
+  static const updateMasterPassword = 'update_master_password';
   static const deleteAccountFunction = 'delete_account';
   static const enrollBiometricFunction = 'enroll_biometric';
   static const hasBiometricsFunction = 'has_biometrics';

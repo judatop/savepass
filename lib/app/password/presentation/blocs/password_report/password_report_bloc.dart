@@ -82,7 +82,7 @@ class PassReportBloc extends Bloc<PassReportEvent, PassReportState> {
             (e) async {
               final model = PasswordModel.fromJson(e);
               model.copyWith(
-                password: await SecurityUtils.decryptPassword(
+                password: SecurityUtils.decryptPassword(
                   model.password,
                   derivedKey,
                 ),

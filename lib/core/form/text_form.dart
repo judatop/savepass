@@ -1,9 +1,8 @@
 import 'package:formz/formz.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/core/utils/form_utils.dart';
 
-enum TextFormValidationError {
-  empty,
-}
+enum TextFormValidationError { empty, maxLength }
 
 class TextForm extends FormzInput<String, TextFormValidationError> {
   const TextForm.pure() : super.pure('');
@@ -16,6 +15,10 @@ class TextForm extends FormzInput<String, TextFormValidationError> {
       return TextFormValidationError.empty;
     }
 
+    if (value.length > FormUtils.maxLength) {
+      return TextFormValidationError.maxLength;
+    }
+
     return null;
   }
 
@@ -23,6 +26,8 @@ class TextForm extends FormzInput<String, TextFormValidationError> {
     switch (error) {
       case TextFormValidationError.empty:
         return intl10.mandatoryField;
+      case TextFormValidationError.maxLength:
+        return intl10.maxLengthField;
       default:
         return null;
     }

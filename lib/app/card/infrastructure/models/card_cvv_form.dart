@@ -1,9 +1,11 @@
 import 'package:formz/formz.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/core/utils/form_utils.dart';
 
 enum CardCvvFormValidationError {
   empty,
   minLength,
+  maxLength,
 }
 
 class CardCvvForm extends FormzInput<String, CardCvvFormValidationError> {
@@ -21,6 +23,10 @@ class CardCvvForm extends FormzInput<String, CardCvvFormValidationError> {
       return CardCvvFormValidationError.minLength;
     }
 
+    if (value.length > FormUtils.maxLength) {
+      return CardCvvFormValidationError.maxLength;
+    }
+
     return null;
   }
 
@@ -30,6 +36,8 @@ class CardCvvForm extends FormzInput<String, CardCvvFormValidationError> {
         return intl10.mandatoryField;
       case CardCvvFormValidationError.minLength:
         return intl10.cvvMinLength;
+      case CardCvvFormValidationError.maxLength:
+        return intl10.maxLengthField;
       default:
         return null;
     }

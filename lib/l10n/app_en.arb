@@ -313,5 +313,7 @@
     "newPasswordBeDiferent": "New password needs to be different",
     "@newPasswordBeDiferent": {},
     "maxLengthField": "Field value too large",
-    "@maxLengthField": {}
+    "@maxLengthField": {},
+    "repeatPassword": "Repeat password",
+    "@repeatPassword": {}
 }

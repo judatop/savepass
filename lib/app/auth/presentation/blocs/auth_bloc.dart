@@ -42,7 +42,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<ProcessSignedInEvent>(_onProcessSignedInEvent);
     on<EmailChangedEvent>(_onEmailChangedEvent);
     on<PasswordChangedEvent>(_onPasswordChangedEvent);
+    on<RepeatPasswordChangedEvent>(_onRepeatPasswordChangedEvent);
     on<ToggleMasterPasswordEvent>(_onToggleMasterPasswordEvent);
+    on<ToggleRepeatPasswordEvent>(_onToggleRepeatPasswordEvent);
   }
 
   FutureOr<void> _onAuthInitialEvent(
@@ -158,6 +160,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (!Formz.validate([
         state.model.email,
         state.model.signUpPassword,
+        state.model.repeatSignUpPassword,
       ])) {
         emit(
           ChangeAuthState(
@@ -178,6 +181,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         );
         return;
       }
+    }
+
+    if (state.model.signUpPassword.value !=
+        state.model.repeatSignUpPassword.value) {
+      emit(
+        PasswordsMismatch(
+          state.model.copyWith(status: FormzSubmissionStatus.initial),
+        ),
+      );
+      return;
     }
 
     final email = state.model.email.value.toLowerCase();
@@ -430,6 +443,32 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       ChangeAuthState(
         state.model.copyWith(
           showPassword: !state.model.showPassword,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onRepeatPasswordChangedEvent(
+    RepeatPasswordChangedEvent event,
+    Emitter<AuthState> emit,
+  ) {
+    emit(
+      ChangeAuthState(
+        state.model.copyWith(
+          repeatSignUpPassword: SignUpPasswordForm.dirty(event.password),
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onToggleRepeatPasswordEvent(
+    ToggleRepeatPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) {
+    emit(
+      ChangeAuthState(
+        state.model.copyWith(
+          repeatShowPassword: !state.model.repeatShowPassword,
         ),
       ),
     );

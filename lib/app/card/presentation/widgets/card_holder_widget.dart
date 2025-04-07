@@ -124,6 +124,7 @@ class _CardHolder extends StatelessWidget {
                 RegexUtils.lettersWithSpace,
               ),
             ],
+            textCapitalization: TextCapitalization.characters,
           ),
         );
       },

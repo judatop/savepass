@@ -29,10 +29,6 @@ class BiometricSettingsWidget extends StatelessWidget {
           return Container();
         }
 
-        debugPrint(
-          'hasBiometrics: $hasBiometrics, canAuthenticate: $canAuthenticate',
-        );
-
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

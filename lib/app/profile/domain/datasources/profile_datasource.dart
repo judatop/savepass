@@ -24,4 +24,6 @@ abstract class ProfileDatasource {
   });
 
   Future<Either<Fail, SavePassResponseModel>> deleteAccount();
+
+  Future<Either<Fail, Unit>> deleteAvatar();
 }

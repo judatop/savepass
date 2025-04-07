@@ -397,6 +397,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     }
 
     await secureStorage.deleteAll();
+    await profileRepository.deleteAvatar();
     supabase.auth.signOut();
     emit(
       LogOutState(

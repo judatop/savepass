@@ -55,6 +55,7 @@ class SupabaseProfileDatasource implements ProfileDatasource {
       }
 
       if (avatarUuid != null) {
+        await deleteAvatar();
         userMetaData?['custom_avatar'] = avatarUuid;
       }
 
@@ -163,6 +164,29 @@ class SupabaseProfileDatasource implements ProfileDatasource {
       return Right(response);
     } catch (e) {
       log.e('deleteAccount: $e');
+      return Left(Fail(SnackBarErrors.generalErrorCode));
+    }
+  }
+
+  @override
+  Future<Either<Fail, Unit>> deleteAvatar() async {
+    try {
+      final user = supabase.auth.currentUser;
+
+      if (user == null || user.userMetadata == null) {
+        return Left(
+          Fail('Profile not found'),
+        );
+      }
+
+      final profile = ProfileModel.fromJson(user.userMetadata!);
+      await supabase.storage.from(Env.supabaseBucket).remove(
+        ['${Env.supabaseBucketAvatarsFolder}/${profile.avatar}'],
+      );
+
+      return const Right(unit);
+    } catch (e) {
+      log.e('deleteAvatar: $e');
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }

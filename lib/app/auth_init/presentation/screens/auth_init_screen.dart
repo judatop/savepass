@@ -16,14 +16,19 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class AuthInitScreen extends StatelessWidget {
-  const AuthInitScreen({super.key});
+  final bool refreshAuth;
+
+  const AuthInitScreen({
+    super.key,
+    required this.refreshAuth,
+  });
 
   @override
   Widget build(BuildContext context) {
     final bloc = Modular.get<AuthInitBloc>();
     return BlocProvider.value(
       value: bloc
-        ..add(const AuthInitInitialEvent())
+        ..add(AuthInitInitialEvent(refreshAuth: refreshAuth))
         ..add(const GetProfileEvent())
         ..add(const CheckSupabaseBiometricsEvent()),
       child: const BlocListener<AuthInitBloc, AuthInitState>(
@@ -36,6 +41,10 @@ class AuthInitScreen extends StatelessWidget {
 
 void _listener(context, state) {
   final intl = AppLocalizations.of(context)!;
+
+  if (state is RefreshSuccessState) {
+    Modular.to.pop();
+  }
 
   if (state is OpenHomeState) {
     Modular.to.pushNamedAndRemoveUntil(Routes.dashboardRoute, (_) => false);

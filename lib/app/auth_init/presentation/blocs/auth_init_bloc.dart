@@ -49,6 +49,13 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
     Emitter<AuthInitState> emit,
   ) {
     emit(const AuthInitInitialState());
+    emit(
+      ChangeAuthInitState(
+        state.model.copyWith(
+          refreshAuth: event.refreshAuth,
+        ),
+      ),
+    );
   }
 
   FutureOr<void> _onPasswordChanged(
@@ -298,6 +305,15 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
           emit(
             DeviceAlreadyEnrolledState(
               state.model.copyWith(status: FormzSubmissionStatus.failure),
+            ),
+          );
+          return;
+        }
+
+        if (state.model.refreshAuth) {
+          emit(
+            RefreshSuccessState(
+              state.model.copyWith(status: FormzSubmissionStatus.success),
             ),
           );
           return;

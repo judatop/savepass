@@ -148,7 +148,9 @@ class AppModule extends Module {
     );
     r.child(
       Routes.authInitRoute,
-      child: (context) => const AuthInitScreen(),
+      child: (context) => AuthInitScreen(
+        refreshAuth: r.args.data,
+      ),
     );
     r.child(
       Routes.photoPermissionRoute,

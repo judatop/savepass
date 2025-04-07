@@ -34,7 +34,11 @@ void _listener(context, state) {
   }
 
   if (state is OpenAuthInitState) {
-    Modular.to.pushNamedAndRemoveUntil(Routes.authInitRoute, (_) => false);
+    Modular.to.pushNamedAndRemoveUntil(
+      Routes.authInitRoute,
+      (_) => false,
+      arguments: false,
+    );
   }
 
   if (state is OpenSyncMasterPasswordState) {

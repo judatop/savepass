@@ -232,7 +232,7 @@ class MasterPasswordBloc
     final name = '${const Uuid().v4()}-${SecretUtils.masterPasswordKey}';
     final newPasswordSalt = SecurityUtils.generateSalt(16);
     final newDerivedKey = await SecurityUtils.deriveMasterKey(
-      clearOldPassword,
+      clearNewPassword,
       newPasswordSalt,
       32,
     );
@@ -282,6 +282,7 @@ class MasterPasswordBloc
             p.password,
             newDerivedKey,
           ),
+          vaultId: p.vaultId!,
         ),
       );
     }
@@ -330,6 +331,7 @@ class MasterPasswordBloc
             c.card,
             newDerivedKey,
           ),
+          vaultId: c.vaultId!,
         ),
       );
     }

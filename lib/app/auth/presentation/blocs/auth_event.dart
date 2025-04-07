@@ -42,8 +42,18 @@ class PasswordChangedEvent extends AuthEvent {
   const PasswordChangedEvent({required this.password}) : super();
 }
 
+class RepeatPasswordChangedEvent extends AuthEvent {
+  final String password;
+
+  const RepeatPasswordChangedEvent({required this.password}) : super();
+}
+
 class ToggleMasterPasswordEvent extends AuthEvent {
   const ToggleMasterPasswordEvent() : super();
+}
+
+class ToggleRepeatPasswordEvent extends AuthEvent {
+  const ToggleRepeatPasswordEvent() : super();
 }
 
 class AuthWithEmailEvent extends AuthEvent {

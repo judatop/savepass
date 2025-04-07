@@ -384,8 +384,6 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
       ),
     );
 
-    await Future.delayed(const Duration(seconds: 5));
-
     final res = await profileRepository.getProfile();
     res.fold(
       (l) {

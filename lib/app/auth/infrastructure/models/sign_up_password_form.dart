@@ -6,6 +6,9 @@ import 'package:savepass/core/utils/password_utils.dart';
 enum SignUpPasswordFormValidationError {
   empty,
   atLeast8Characters,
+  containsLowerCase,
+  containsUpperCase,
+  containsNumber,
   maxLength,
 }
 
@@ -23,6 +26,18 @@ class SignUpPasswordForm
 
     if (!PasswordUtils.atLeast8Characters(value)) {
       return SignUpPasswordFormValidationError.atLeast8Characters;
+    }
+
+    if (!PasswordUtils.containsLowerCase(value)) {
+      return SignUpPasswordFormValidationError.containsLowerCase;
+    }
+
+    if (!PasswordUtils.containsUpperCase(value)) {
+      return SignUpPasswordFormValidationError.containsUpperCase;
+    }
+
+    if (!PasswordUtils.containsNumber(value)) {
+      return SignUpPasswordFormValidationError.containsNumber;
     }
 
     if (value.length > FormUtils.maxLength) {
@@ -43,6 +58,12 @@ class SignUpPasswordForm
         return intl.atLeast8Characters;
       case SignUpPasswordFormValidationError.maxLength:
         return intl.maxLengthField;
+      case SignUpPasswordFormValidationError.containsLowerCase:
+        return intl.containsLowerCase;
+      case SignUpPasswordFormValidationError.containsUpperCase:
+        return intl.containsUpperCase;
+      case SignUpPasswordFormValidationError.containsNumber:
+        return intl.containsNumber;
       default:
         return null;
     }

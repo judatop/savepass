@@ -12,6 +12,7 @@ import 'package:savepass/app/auth/presentation/widgets/auth_header_widget.dart';
 import 'package:savepass/app/auth/presentation/widgets/auth_sign_in_password.dart';
 import 'package:savepass/app/auth/presentation/widgets/auth_sign_up_password.dart';
 import 'package:savepass/app/auth/presentation/widgets/auth_submit.dart';
+import 'package:savepass/app/auth/presentation/widgets/repeat_auth_sign_up_password.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -54,6 +55,13 @@ void _listener(context, state) {
     Modular.to
         .pushNamedAndRemoveUntil(Routes.syncMasterPasswordRoute, (_) => false);
   }
+
+  if (state is PasswordsMismatch) {
+    SnackBarUtils.showErrroSnackBar(
+      context,
+      intl.passwordMissmatch,
+    );
+  }
 }
 
 class _Body extends StatelessWidget {
@@ -61,35 +69,62 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
 
     return AdsScreenTemplate(
-      goBack: false,
-      wrapScroll: true,
-      child: BlocBuilder<AuthBloc, AuthState>(
-        buildWhen: (previous, current) =>
-            (previous.model.status != current.model.status),
-        builder: (context, state) {
-          final authType = state.model.authType;
+      safeAreaBottom: false,
+      safeAreaTop: true,
+      wrapScroll: false,
+      padding: EdgeInsets.zero,
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: deviceWidth * ADSFoundationSizes.defaultHorizontalPadding,
+          right: deviceWidth * ADSFoundationSizes.defaultHorizontalPadding,
+          bottom: deviceHeight * ADSFoundationSizes.defaultVerticalPadding,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const AuthHeaderWidget(),
+              BlocBuilder<AuthBloc, AuthState>(
+                buildWhen: (previous, current) =>
+                    (previous.model.status != current.model.status),
+                builder: (context, state) {
+                  final authType = state.model.authType;
 
-          return Skeletonizer(
-            enabled: state.model.status.isInProgress,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const AuthHeaderWidget(),
-                SizedBox(height: deviceHeight * 0.06),
-                const AuthEmail(),
-                SizedBox(height: deviceHeight * 0.02),
-                if (authType == AuthType.signUp) const AuthSignUpPassword(),
-                if (authType == AuthType.signIn) const AuthSignInPassword(),
-                SizedBox(height: deviceHeight * 0.05),
-                const AuthSubmit(),
-              ],
-            ),
-          );
-        },
+                  return Skeletonizer(
+                    enabled: state.model.status.isInProgress,
+                    child: Column(
+                      children: [
+                        SizedBox(height: deviceHeight * 0.06),
+                        const AuthEmail(),
+                        SizedBox(height: deviceHeight * 0.02),
+                        if (authType == AuthType.signUp)
+                          Column(
+                            children: [
+                              const AuthSignUpPassword(),
+                              SizedBox(height: deviceHeight * 0.02),
+                              const RepeatAuthSignUpPassword(),
+                            ],
+                          ),
+                        if (authType == AuthType.signIn)
+                          const AuthSignInPassword(),
+                        SizedBox(height: deviceHeight * 0.05),
+                        const Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            AuthSubmit(),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

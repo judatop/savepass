@@ -19,6 +19,7 @@ import 'package:savepass/app/password/infrastructure/models/password_model.dart'
 import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
+import 'package:savepass/core/api/api_codes.dart';
 import 'package:savepass/core/api/savepass_response_model.dart';
 import 'package:savepass/core/form/text_form.dart';
 import 'package:savepass/core/utils/biometric_utils.dart';
@@ -372,29 +373,37 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       ),
     );
 
-    await secureStorage.deleteAll();
     final response = await profileRepository.deleteAccount();
 
+    late SavePassResponseModel? responseModel;
     response.fold(
       (l) {
-        emit(
-          GeneralErrorState(
-            state.model.copyWith(
-              deleteStatus: FormzSubmissionStatus.failure,
-            ),
-          ),
-        );
+        responseModel = null;
       },
-      (r) async {
-        supabase.auth.signOut();
-        emit(
-          LogOutState(
-            state.model.copyWith(
-              deleteStatus: FormzSubmissionStatus.success,
-            ),
-          ),
-        );
+      (r) {
+        responseModel = r;
       },
+    );
+
+    if (responseModel == null || responseModel?.code != ApiCodes.success) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(
+            deleteStatus: FormzSubmissionStatus.failure,
+          ),
+        ),
+      );
+      return;
+    }
+
+    await secureStorage.deleteAll();
+    supabase.auth.signOut();
+    emit(
+      LogOutState(
+        state.model.copyWith(
+          deleteStatus: FormzSubmissionStatus.success,
+        ),
+      ),
     );
   }
 
@@ -703,7 +712,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       },
     );
 
-    if (savePassResponse == null) {
+    if (savePassResponse == null ||
+        savePassResponse?.code != ApiCodes.success) {
       emit(
         GeneralErrorState(
           state.model.copyWith(status: FormzSubmissionStatus.failure),

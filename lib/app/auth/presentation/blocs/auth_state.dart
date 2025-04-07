@@ -67,14 +67,20 @@ class UserAlreadyExistsState extends AuthState {
   const UserAlreadyExistsState(super.model);
 }
 
+class PasswordsMismatch extends AuthState {
+  const PasswordsMismatch(super.model);
+}
+
 class AuthStateModel extends Equatable {
   final AuthType authType;
   final TextForm name;
   final EmailForm email;
   final bool alreadySubmitted;
   final SignUpPasswordForm signUpPassword;
+  final SignUpPasswordForm repeatSignUpPassword;
   final PasswordForm signInPassword;
   final bool showPassword;
+  final bool repeatShowPassword;
   final FormzSubmissionStatus status;
 
   const AuthStateModel({
@@ -83,8 +89,10 @@ class AuthStateModel extends Equatable {
     this.email = const EmailForm.pure(),
     this.alreadySubmitted = false,
     this.signUpPassword = const SignUpPasswordForm.pure(),
+    this.repeatSignUpPassword = const SignUpPasswordForm.pure(),
     this.signInPassword = const PasswordForm.pure(),
     this.showPassword = false,
+    this.repeatShowPassword = false,
     this.status = FormzSubmissionStatus.initial,
   });
 
@@ -94,8 +102,10 @@ class AuthStateModel extends Equatable {
     EmailForm? email,
     bool? alreadySubmitted,
     SignUpPasswordForm? signUpPassword,
+    SignUpPasswordForm? repeatSignUpPassword,
     PasswordForm? signInPassword,
     bool? showPassword,
+    bool? repeatShowPassword,
     FormzSubmissionStatus? status,
   }) {
     return AuthStateModel(
@@ -104,8 +114,10 @@ class AuthStateModel extends Equatable {
       email: email ?? this.email,
       alreadySubmitted: alreadySubmitted ?? this.alreadySubmitted,
       signUpPassword: signUpPassword ?? this.signUpPassword,
+      repeatSignUpPassword: repeatSignUpPassword ?? this.repeatSignUpPassword,
       signInPassword: signInPassword ?? this.signInPassword,
       showPassword: showPassword ?? this.showPassword,
+      repeatShowPassword: repeatShowPassword ?? this.repeatShowPassword,
       status: status ?? this.status,
     );
   }
@@ -117,8 +129,10 @@ class AuthStateModel extends Equatable {
         email,
         alreadySubmitted,
         signUpPassword,
+        repeatSignUpPassword,
         signInPassword,
         showPassword,
+        repeatShowPassword,
         status,
       ];
 }

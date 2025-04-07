@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
 import 'package:savepass/app/enroll/domain/repositories/enroll_repository.dart';
 import 'package:savepass/app/enroll/infrastructure/models/enroll_new_device_model.dart';
 import 'package:savepass/app/enroll/presentation/blocs/enroll_event.dart';
 import 'package:savepass/app/enroll/presentation/blocs/enroll_state.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile_event.dart';
 import 'package:savepass/core/utils/device_info.dart';
 
 class EnrollBloc extends Bloc<EnrollEvent, EnrollState> {
@@ -97,6 +100,18 @@ class EnrollBloc extends Bloc<EnrollEvent, EnrollState> {
         );
       },
       (r) {
+        if (r.data == null) {
+          emit(
+            GeneralErrorState(
+              state.model.copyWith(status: FormzSubmissionStatus.failure),
+            ),
+          );
+          return;
+        }
+
+        final profileBloc = Modular.get<ProfileBloc>();
+        profileBloc.add(SaveJwtEvent(jwt: r.data!['jwt']));
+
         emit(
           SuccessEnrolledState(
             state.model.copyWith(

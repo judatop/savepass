@@ -51,11 +51,16 @@ void _listener(context, state) {
   }
 
   if (state is OpenAuthScreenState) {
-    Modular.to.pushNamedAndRemoveUntil(Routes.authInitRoute, (_) => false);
+    Modular.to.pushNamedAndRemoveUntil(
+      Routes.authInitRoute,
+      (_) => false,
+      arguments: false,
+    );
   }
 
   if (state is OpenSyncPassState) {
-    Modular.to.pushNamedAndRemoveUntil(Routes.syncMasterPasswordRoute, (_) => false);
+    Modular.to
+        .pushNamedAndRemoveUntil(Routes.syncMasterPasswordRoute, (_) => false);
   }
 
   if (state is InvalidCredentialsState) {

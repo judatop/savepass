@@ -28,6 +28,10 @@ class OpenHomeState extends AuthInitState {
   const OpenHomeState(super.model);
 }
 
+class RefreshSuccessState extends AuthInitState {
+  const RefreshSuccessState(super.model);
+}
+
 class InvalidMasterPasswordState extends AuthInitState {
   const InvalidMasterPasswordState(super.model);
 }
@@ -54,6 +58,7 @@ class AuthInitStateModel extends Equatable {
   final ProfileEntity? profile;
   final bool hasBiometricsSaved;
   final bool canAuthenticateWithBiometrics;
+  final bool refreshAuth;
 
   const AuthInitStateModel({
     this.password = const PasswordForm.pure(),
@@ -65,6 +70,7 @@ class AuthInitStateModel extends Equatable {
     this.profile,
     this.hasBiometricsSaved = false,
     this.canAuthenticateWithBiometrics = false,
+    this.refreshAuth = false,
   });
 
   AuthInitStateModel copyWith({
@@ -77,6 +83,7 @@ class AuthInitStateModel extends Equatable {
     FormzSubmissionStatus? status,
     bool? hasBiometricsSaved,
     bool? canAuthenticateWithBiometrics,
+    bool? refreshAuth,
   }) {
     return AuthInitStateModel(
       password: password ?? this.password,
@@ -89,6 +96,7 @@ class AuthInitStateModel extends Equatable {
       canAuthenticateWithBiometrics:
           canAuthenticateWithBiometrics ?? this.canAuthenticateWithBiometrics,
       status: status ?? this.status,
+      refreshAuth: refreshAuth ?? this.refreshAuth,
     );
   }
 
@@ -103,5 +111,6 @@ class AuthInitStateModel extends Equatable {
         profile,
         hasBiometricsSaved,
         canAuthenticateWithBiometrics,
+        refreshAuth,
       ];
 }

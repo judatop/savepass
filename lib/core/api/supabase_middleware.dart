@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:logger/web.dart';
 import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
 import 'package:savepass/core/api/savepass_response_model.dart';
+import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/utils/db_utils.dart';
 import 'package:savepass/main.dart';
 
@@ -27,10 +29,21 @@ class SupabaseMiddleware {
     try {
       if (!omitRpcs.contains(rpc)) {
         final bloc = Modular.get<ProfileBloc>();
-        final jwt = bloc.state.model.jwt;
+        String? jwt = bloc.state.model.jwt;
 
         if (jwt == null) {
           log.w('JWT is null');
+        }
+
+        DateTime fechaExpiracion = JwtDecoder.getExpirationDate(jwt!);
+
+        if (fechaExpiracion.isBefore(DateTime.now())) {
+          await Modular.to.pushNamed(
+            Routes.authInitRoute,
+            arguments: true,
+          );
+
+          jwt = bloc.state.model.jwt;
         }
 
         if (params == null) {

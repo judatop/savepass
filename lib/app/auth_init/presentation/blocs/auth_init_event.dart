@@ -8,7 +8,9 @@ abstract class AuthInitEvent extends Equatable {
 }
 
 class AuthInitInitialEvent extends AuthInitEvent {
-  const AuthInitInitialEvent() : super();
+  final bool refreshAuth;
+
+  const AuthInitInitialEvent({required this.refreshAuth}) : super();
 }
 
 class CheckSupabaseBiometricsEvent extends AuthInitEvent{

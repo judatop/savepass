@@ -73,6 +73,10 @@ void _listener(context, state) {
     SnackBarUtils.showSuccessSnackBar(context, intl.passwordDeleted);
     Modular.to.pop();
   }
+
+  if (state is ReachedPasswordsState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.reachedPasswordsLimit);
+  }
 }
 
 class _Body extends StatelessWidget {

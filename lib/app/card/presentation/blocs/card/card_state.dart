@@ -65,6 +65,10 @@ class CardHoldernameCopiedState extends CardState{
   const CardHoldernameCopiedState(super.model);
 }
 
+class ReachedCardsLimitState extends CardState{
+  const ReachedCardsLimitState(super.model);
+}
+
 class CardStateModel extends Equatable {
   final CardNumberForm cardNumber;
   final TextForm cardHolderName;

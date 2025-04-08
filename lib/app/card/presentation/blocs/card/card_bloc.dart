@@ -16,6 +16,7 @@ import 'package:savepass/app/card/presentation/blocs/card/card_state.dart';
 import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
 import 'package:savepass/app/preferences/infrastructure/models/card_image_model.dart';
 import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
+import 'package:savepass/core/api/api_codes.dart';
 import 'package:savepass/core/form/text_form.dart';
 import 'package:savepass/core/utils/security_utils.dart';
 
@@ -431,6 +432,28 @@ class CardBloc extends Bloc<CardEvent, CardState> {
         );
       },
       (r) {
+        if (r.code == ApiCodes.reachedCardsLimit) {
+          emit(
+            ReachedCardsLimitState(
+              state.model.copyWith(
+                status: FormzSubmissionStatus.failure,
+              ),
+            ),
+          );
+          return;
+        }
+
+        if (r.code != ApiCodes.success) {
+          emit(
+            GeneralErrorState(
+              state.model.copyWith(
+                status: FormzSubmissionStatus.failure,
+              ),
+            ),
+          );
+          return;
+        }
+
         emit(
           CardCreatedState(
             state.model.copyWith(

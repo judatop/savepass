@@ -54,6 +54,10 @@ class PasswordDeletedState extends PasswordState {
   const PasswordDeletedState(super.model);
 }
 
+class ReachedPasswordsState extends PasswordState{
+  const ReachedPasswordsState(super.model);
+}
+
 class PasswordStateModel extends Equatable {
   final TextForm name;
   final TextForm email;

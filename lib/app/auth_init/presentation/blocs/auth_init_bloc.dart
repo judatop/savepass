@@ -171,6 +171,15 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
             return;
           }
 
+          if (r.code == ApiCodes.userBlocked) {
+            emit(
+              UserBlockedState(
+                state.model.copyWith(status: FormzSubmissionStatus.failure),
+              ),
+            );
+            return;
+          }
+
           if (r.code == ApiCodes.alreadyHasDeviceEnrolled ||
               r.code == ApiCodes.success) {
             profileBloc.add(SaveDerivedKeyEvent(derivedKey: derivedKey));
@@ -281,6 +290,15 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
       if (data == null) {
         emit(
           GeneralErrorState(
+            state.model.copyWith(status: FormzSubmissionStatus.failure),
+          ),
+        );
+        return;
+      }
+
+      if (code == ApiCodes.userBlocked) {
+        emit(
+          UserBlockedState(
             state.model.copyWith(status: FormzSubmissionStatus.failure),
           ),
         );

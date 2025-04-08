@@ -65,6 +65,10 @@ void _listener(context, state) {
   if (state is DeviceNotEnrolledState) {
     Modular.to.pushNamed(Routes.enrollRoute);
   }
+
+  if(state is UserBlockedState){
+    SnackBarUtils.showErrroSnackBar(context, intl.userBlocked);
+  }
 }
 
 class _Body extends StatelessWidget {

@@ -319,5 +319,7 @@
     "reachedPasswordsLimit": "Reached passwords limit number",
     "@reachedPasswordsLimit": {},
     "reachedCardsLimit": "Reached cards limit number",
-    "@reachedCardsLimit": {}
+    "@reachedCardsLimit": {},
+    "userBlocked": "User blocked",
+    "@userBlocked": {}
 }

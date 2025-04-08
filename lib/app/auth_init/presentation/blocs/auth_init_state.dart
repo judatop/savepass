@@ -48,6 +48,10 @@ class DeviceNotEnrolledState extends AuthInitState {
   const DeviceNotEnrolledState(super.model);
 }
 
+class UserBlockedState extends AuthInitState{
+  const UserBlockedState(super.model);
+}
+
 class AuthInitStateModel extends Equatable {
   final PasswordForm password;
   final bool alreadySubmitted;

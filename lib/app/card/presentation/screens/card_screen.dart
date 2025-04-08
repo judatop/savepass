@@ -85,6 +85,10 @@ void _listener(context, state) {
       intl.cardholderNameCopiedClipboard,
     );
   }
+
+  if (state is ReachedCardsLimitState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.reachedCardsLimit);
+  }
 }
 
 class _Body extends StatelessWidget {

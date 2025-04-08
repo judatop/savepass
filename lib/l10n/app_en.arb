@@ -315,5 +315,9 @@
     "maxLengthField": "Field value too large",
     "@maxLengthField": {},
     "repeatPassword": "Repeat password",
-    "@repeatPassword": {}
+    "@repeatPassword": {},
+    "reachedPasswordsLimit": "Reached passwords limit number",
+    "@reachedPasswordsLimit": {},
+    "reachedCardsLimit": "Reached cards limit number",
+    "@reachedCardsLimit": {}
 }

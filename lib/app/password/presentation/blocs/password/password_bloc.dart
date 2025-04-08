@@ -114,7 +114,7 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
             name: TextForm.dirty(passModel!.name ?? ''),
             email: TextForm.dirty(passModel!.username),
             password: PasswordForm.dirty(
-               SecurityUtils.decryptPassword(
+              SecurityUtils.decryptPassword(
                 passModel!.password,
                 derivedKey,
               ),
@@ -376,6 +376,17 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
         );
       },
       (r) {
+        if (r.code == ApiCodes.reachedPasswordsLimit) {
+          emit(
+            ReachedPasswordsState(
+              state.model.copyWith(
+                status: FormzSubmissionStatus.failure,
+              ),
+            ),
+          );
+          return;
+        }
+
         if (r.code != ApiCodes.success) {
           emit(
             GeneralErrorState(

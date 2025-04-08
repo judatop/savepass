@@ -315,5 +315,9 @@
     "maxLengthField": "Valor del campo muy largo",
     "@maxLengthField": {},
     "repeatPassword": "Repetir contraseña",
-    "@repeatPassword": {}
+    "@repeatPassword": {},
+    "reachedPasswordsLimit": "Límite de contraseñas alcanzado",
+    "@reachedPasswordsLimit": {},
+    "reachedCardsLimit": "Límite de tarjetas alcanzado",
+    "@reachedCardsLimit": {}
 }

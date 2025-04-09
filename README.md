@@ -22,6 +22,8 @@ We are using Supabase as our database, API, storage and authentication manager. 
 
 Supabase Storage is used to store files/images related with the app. You'll need to set up your storage and create a new bucket and folder, copy the values: **SUPABASE_BUCKET** and **SUPABASE_BUCKET_AVATARS_FOLDER**.
 
+Also, you need to add another key for a public parameters bucket called **SUPABASE_PARAMETERS_BUCKET**.
+
 ### Supabase Auth with Google
 
 One of the authentication methods we are using is Google. You'll need to create a new project on Google Cloud Platform and create a new OAuth client ID for web, Android and iOS. Then, copy the values: **GOOGLE_WEB_CLIENT_ID** and **GOOGLE_IOS_CLIENT_ID**. After that, you'll need to enable the Google Auth method on Supabase and fill the respective values.
@@ -32,7 +34,14 @@ Other authentication method we are using is Github. You'll need to create a new 
 
 ### Supabase Database
 
-The database set up is up to you and your needs. You can create the tables and columns manually or use the Supabase SQL editor. The logic or the design for the database on this project is confidential for mantain the security of the app.
+The database set up is up to you and your needs. You can create the tables and columns manually or use the Supabase SQL editor. The logic or the design for the database/api on this project is confidential for mantain the security of the app.
+
+## Flutter Secure Storage
+
+Flutter Secure Storage is used to store data in secure storage, Keychain for iOS and EncryptedSharedPreferences for Android, in order to use this plugin you need to define some keys with a random value:
+- **BIOMETRIC_HASH_KEY**
+- **DERIVED_KEY**
+
 
 ### Git
 

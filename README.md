@@ -1,6 +1,8 @@
 # SavePass
 
-![](https://github.com/user-attachments/assets/a80ab2d1-74df-48db-8f2b-0ae0f225eba4)
+![](https://github-production-user-asset-6210df.s3.amazonaws.com/46090290/432073195-40939aa2-7034-4f9d-b4ec-1ec156104670.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250410%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250410T001833Z&X-Amz-Expires=300&X-Amz-Signature=6d3bf6a2beacd1d1d22cd23c3d45d741346bacc266a2fba91a9f7bf02d14fa03&X-Amz-SignedHeaders=host)
+
+![](https://github-production-user-asset-6210df.s3.amazonaws.com/46090290/432073213-f6bbeaeb-0e93-430d-803b-588bf298c822.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250410%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250410T001818Z&X-Amz-Expires=300&X-Amz-Signature=28946c00492b698a60260766a8ef45cb04169fe016009c848ef212f17cb00cc9&X-Amz-SignedHeaders=host)
 
 ## Introduction
 
@@ -22,6 +24,8 @@ We are using Supabase as our database, API, storage and authentication manager. 
 
 Supabase Storage is used to store files/images related with the app. You'll need to set up your storage and create a new bucket and folder, copy the values: **SUPABASE_BUCKET** and **SUPABASE_BUCKET_AVATARS_FOLDER**.
 
+Also, you need to add another key for a public parameters bucket called **SUPABASE_PARAMETERS_BUCKET**.
+
 ### Supabase Auth with Google
 
 One of the authentication methods we are using is Google. You'll need to create a new project on Google Cloud Platform and create a new OAuth client ID for web, Android and iOS. Then, copy the values: **GOOGLE_WEB_CLIENT_ID** and **GOOGLE_IOS_CLIENT_ID**. After that, you'll need to enable the Google Auth method on Supabase and fill the respective values.
@@ -32,7 +36,14 @@ Other authentication method we are using is Github. You'll need to create a new 
 
 ### Supabase Database
 
-The database set up is up to you and your needs. You can create the tables and columns manually or use the Supabase SQL editor. The logic or the design for the database on this project is confidential for mantain the security of the app.
+The database set up is up to you and your needs. You can create the tables and columns manually or use the Supabase SQL editor. The logic or the design for the database/api on this project is confidential for mantain the security of the app.
+
+## Flutter Secure Storage
+
+Flutter Secure Storage is used to store data in secure storage, Keychain for iOS and EncryptedSharedPreferences for Android, in order to use this plugin you need to define some keys with a random value:
+
+- **BIOMETRIC_HASH_KEY**
+- **DERIVED_KEY**
 
 ### Git
 

@@ -52,9 +52,9 @@ class AboutAppSettingsWidget extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.feedback_outlined),
+                        const Icon(Icons.report),
                         const SizedBox(width: 10),
-                        Text(intl.feedback),
+                        Text(intl.support),
                       ],
                     ),
                     const Icon(Icons.arrow_right),

@@ -321,5 +321,7 @@
     "reachedCardsLimit": "Reached cards limit number",
     "@reachedCardsLimit": {},
     "userBlocked": "User blocked",
-    "@userBlocked": {}
+    "@userBlocked": {},
+    "support": "Support",
+    "@support": {}
 }

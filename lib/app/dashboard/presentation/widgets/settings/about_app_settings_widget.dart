@@ -4,9 +4,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:savepass/app/preferences/presentation/blocs/preferences_bloc.dart';
 import 'package:savepass/app/preferences/presentation/blocs/preferences_state.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AboutAppSettingsWidget extends StatelessWidget {
   const AboutAppSettingsWidget({super.key});
+
+  Future<void> _launchEmail() async {
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: 'app.savepass@gmail.com',
+      queryParameters: {
+        'subject': 'Support',
+      },
+    );
+
+    if (await canLaunchUrl(emailLaunchUri)) {
+      await launchUrl(emailLaunchUri);
+    } else {
+      throw Exception('Error launching mail URL');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +61,7 @@ class AboutAppSettingsWidget extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             InkWell(
-              onTap: () {},
+              onTap: _launchEmail,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Row(

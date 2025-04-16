@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:logger/logger.dart';
+import 'package:logging/logging.dart';
 import 'package:savepass/app/card/domain/datasources/card_datasource.dart';
 import 'package:savepass/app/card/infrastructure/models/card_model.dart';
 import 'package:savepass/core/api/savepass_response_model.dart';
@@ -31,8 +31,8 @@ class SupabaseCardDatasource implements CardDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('deleteCard: $e');
+    } catch (e, stackTrace) {
+      log.severe('deleteCard: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -48,8 +48,8 @@ class SupabaseCardDatasource implements CardDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('editCard: $e');
+    } catch (e, stackTrace) {
+      log.severe('editCard: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -62,8 +62,8 @@ class SupabaseCardDatasource implements CardDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('getCards: $e');
+    } catch (e, stackTrace) {
+      log.severe('getCards: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -79,8 +79,8 @@ class SupabaseCardDatasource implements CardDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('insertCard: $e');
+    } catch (e, stackTrace) {
+      log.severe('insertCard: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -98,8 +98,8 @@ class SupabaseCardDatasource implements CardDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('searchCards: $e');
+    } catch (e, stackTrace) {
+      log.severe('searchCards: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -117,8 +117,8 @@ class SupabaseCardDatasource implements CardDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('getCardById: $e');
+    } catch (e, stackTrace) {
+      log.severe('getCardById: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }

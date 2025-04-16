@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:logger/logger.dart';
+import 'package:logging/logging.dart';
 import 'package:savepass/app/auth/domain/repositories/auth_repository.dart';
 import 'package:savepass/app/auth/infrastructure/models/auth_type.dart';
 import 'package:savepass/app/auth/infrastructure/models/sign_up_password_form.dart';
@@ -120,8 +120,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         );
         return;
       }
-    } catch (error) {
-      log.e('onAuthWithGoogleEvent error: $error');
+    } catch (e, stacktTrace) {
+      log.severe('onAuthWithGoogleEvent error: $e', e, stacktTrace);
       emit(
         GeneralErrorState(
           state.model.copyWith(status: FormzSubmissionStatus.failure),

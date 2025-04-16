@@ -7,7 +7,7 @@ import 'package:formz/formz.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
+import 'package:logging/logging.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:savepass/app/auth_init/domain/repositories/auth_init_repository.dart';
 import 'package:savepass/app/card/domain/repositories/card_repository.dart';
@@ -26,6 +26,7 @@ import 'package:savepass/core/utils/biometric_utils.dart';
 import 'package:savepass/core/utils/device_info.dart';
 import 'package:savepass/core/utils/password_utils.dart';
 import 'package:savepass/main.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
@@ -76,6 +77,18 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     DashboardInitialEvent event,
     Emitter<DashboardState> emit,
   ) {
+    final user = supabase.auth.currentUser;
+    if (user != null) {
+      Sentry.configureScope((scope) {
+        scope.setUser(
+          SentryUser(
+            id: user.id,
+            username: user.email,
+          ),
+        );
+      });
+    }
+
     emit(const DashboardInitialState());
   }
 
@@ -269,8 +282,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       }
 
       return null;
-    } catch (error) {
-      log.e(error);
+    } catch (e, stackTrace) {
+      log.severe('uploadPhoto :$e', e, stackTrace);
       return false;
     }
   }

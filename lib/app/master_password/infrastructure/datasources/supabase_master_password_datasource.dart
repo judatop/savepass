@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:logger/logger.dart';
+import 'package:logging/logging.dart';
 import 'package:savepass/app/master_password/domain/datasources/master_password_datasource.dart';
 import 'package:savepass/app/master_password/infrastructure/models/update_master_password_model.dart';
 import 'package:savepass/core/api/savepass_response_model.dart';
@@ -27,8 +27,8 @@ class SupabaseMasterPasswordDatasource implements MasterPasswordDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('insertMasterPassword: $e');
+    } catch (e, stackTrace) {
+      log.severe('insertMasterPassword: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }

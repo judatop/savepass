@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:logger/logger.dart';
+import 'package:logging/logging.dart';
 import 'package:savepass/app/password/domain/datasources/password_datasource.dart';
 import 'package:savepass/app/password/infrastructure/models/password_model.dart';
 import 'package:savepass/core/api/savepass_response_model.dart';
@@ -27,8 +27,8 @@ class SupabasePasswordDatasource implements PasswordDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('insertPassword: $e');
+    } catch (e, stackTrace) {
+      log.severe('insertPassword: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -44,8 +44,8 @@ class SupabasePasswordDatasource implements PasswordDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('editPassword: $e');
+    } catch (e, stackTrace) {
+      log.severe('editPassword: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -65,8 +65,8 @@ class SupabasePasswordDatasource implements PasswordDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('deletePassword: $e');
+    } catch (e, stackTrace) {
+      log.severe('deletePassword: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -79,8 +79,8 @@ class SupabasePasswordDatasource implements PasswordDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('getPasswords: $e');
+    } catch (e, stackTrace) {
+      log.severe('getPasswords: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -98,8 +98,8 @@ class SupabasePasswordDatasource implements PasswordDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('getPasswordById: $e');
+    } catch (e, stackTrace) {
+      log.severe('getPasswordById: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -117,8 +117,8 @@ class SupabasePasswordDatasource implements PasswordDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('searchPasswords: $e');
+    } catch (e, stackTrace) {
+      log.severe('searchPasswords: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }

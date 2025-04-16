@@ -34,4 +34,7 @@ final class Env {
 
   @EnviedField(varName: 'DERIVED_KEY', obfuscate: true)
   static final String derivedKey = _Env.derivedKey;
+
+  @EnviedField(varName: 'SENTRY_DSN', obfuscate: true)
+  static final String sentryDsn = _Env.sentryDsn;
 }

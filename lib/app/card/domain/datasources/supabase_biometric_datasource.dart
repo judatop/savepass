@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:logger/logger.dart';
+import 'package:logging/logging.dart';
 import 'package:savepass/app/biometric/domain/datasources/biometric_datasource.dart';
 import 'package:savepass/core/api/savepass_response_model.dart';
 import 'package:savepass/core/api/supabase_middleware.dart';
@@ -30,8 +30,8 @@ class SupabaseBiometricDatasource implements BiometricDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('enrollBiometric: $e');
+    } catch (e, stackTrace) {
+      log.severe('enrollBiometric: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }

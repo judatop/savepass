@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:logger/web.dart';
+import 'package:logging/logging.dart';
 import 'package:savepass/app/auth_init/domain/datasources/auth_init_datasource.dart';
 import 'package:savepass/core/api/savepass_response_model.dart';
 import 'package:savepass/core/api/supabase_middleware.dart';
@@ -32,8 +32,8 @@ class SupabaseAuthInitDatasource implements AuthInitDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('checkMasterPassword: $e');
+    } catch (e, stackTrace) {
+      log.severe('checkMasterPassword: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -46,8 +46,8 @@ class SupabaseAuthInitDatasource implements AuthInitDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('getUserSalt: $e');
+    } catch (e, stackTrace) {
+      log.severe('getUserSalt: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -65,8 +65,8 @@ class SupabaseAuthInitDatasource implements AuthInitDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('hasBiometrics: $e');
+    } catch (e, stackTrace) {
+      log.severe('hasBiometrics: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }

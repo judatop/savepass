@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:logger/logger.dart';
+import 'package:logging/logging.dart';
 import 'package:savepass/app/preferences/domain/datasources/parameters_datasource.dart';
 import 'package:savepass/app/preferences/infrastructure/models/card_image_model.dart';
 import 'package:savepass/app/preferences/infrastructure/models/pass_image_model.dart';
@@ -19,8 +19,8 @@ class SupabaseParametersDatasource implements ParametersDatasource {
           .select()
           .eq('key', 'policy');
       return Right(response[0]['value'] as String);
-    } catch (e) {
-      log.e('getPrivacyUrl: $e');
+    } catch (e, stackTrace) {
+      log.severe('getPrivacyUrl: $e', e, stackTrace);
       return Left(
         Fail('Error occurred while getting privacy url'),
       );
@@ -36,8 +36,8 @@ class SupabaseParametersDatasource implements ParametersDatasource {
           .eq('key', 'terms');
 
       return Right(response[0]['value'] as String);
-    } catch (e) {
-      log.e('getTermsUrl: $e');
+    } catch (e, stackTrace) {
+      log.severe('getTermsUrl: $e', e, stackTrace);
       return Left(
         Fail('Error occurred while getting terms url'),
       );
@@ -65,8 +65,8 @@ class SupabaseParametersDatasource implements ParametersDatasource {
       }
 
       return Right(passImages);
-    } catch (e) {
-      log.e('getPassImages: $e');
+    } catch (e, stackTrace) {
+      log.severe('getPassImages: $e', e, stackTrace);
       return Left(
         Fail('Error occurred while getting pass images'),
       );
@@ -85,8 +85,8 @@ class SupabaseParametersDatasource implements ParametersDatasource {
       }).toList();
 
       return Right(cardImgs);
-    } catch (e) {
-      log.e('getCardImages: $e');
+    } catch (e, stackTrace) {
+      log.severe('getCardImages: $e', e, stackTrace);
       return Left(
         Fail('Error occurred while getting card images'),
       );

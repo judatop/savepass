@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:logger/web.dart';
+import 'package:logging/logging.dart';
 import 'package:savepass/app/profile/domain/datasources/profile_datasource.dart';
 import 'package:savepass/app/profile/domain/entities/profile_entity.dart';
 import 'package:savepass/app/profile/infraestructure/models/insert_master_password_model.dart';
@@ -36,8 +36,8 @@ class SupabaseProfileDatasource implements ProfileDatasource {
           );
 
       return Right(avatarUuid);
-    } catch (e) {
-      log.e('uploadAvatar: $e');
+    } catch (e, stackTrace) {
+      log.severe('uploadAvatar: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -66,8 +66,8 @@ class SupabaseProfileDatasource implements ProfileDatasource {
       );
 
       return const Right(unit);
-    } catch (e) {
-      log.e('createProfile: $e');
+    } catch (e, stackTrace) {
+      log.severe('createProfile: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -83,8 +83,8 @@ class SupabaseProfileDatasource implements ProfileDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('insertMasterPassword: $e');
+    } catch (e, stackTrace) {
+      log.severe('insertMasterPassword: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -97,8 +97,8 @@ class SupabaseProfileDatasource implements ProfileDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('checkIfHasMasterPassword: $e');
+    } catch (e, stackTrace) {
+      log.severe('checkIfHasMasterPassword: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -129,8 +129,8 @@ class SupabaseProfileDatasource implements ProfileDatasource {
       final finalProfile = profile.copyWith(avatar: url);
 
       return Right(finalProfile);
-    } catch (e) {
-      log.e('getProfile: $e');
+    } catch (e, stackTrace) {
+      log.severe('getProfile: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -148,8 +148,8 @@ class SupabaseProfileDatasource implements ProfileDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('isEmailExists: $e');
+    } catch (e, stackTrace) {
+      log.severe('isEmailExists: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -162,8 +162,8 @@ class SupabaseProfileDatasource implements ProfileDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('deleteAccount: $e');
+    } catch (e, stackTrace) {
+      log.severe('deleteAccount: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -185,8 +185,8 @@ class SupabaseProfileDatasource implements ProfileDatasource {
       );
 
       return const Right(unit);
-    } catch (e) {
-      log.e('deleteAvatar: $e');
+    } catch (e, stackTrace) {
+      log.severe('deleteAvatar: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }

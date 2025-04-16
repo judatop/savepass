@@ -6,6 +6,8 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:savepass/app/app_widget.dart';
 import 'package:savepass/core/config/app_module.dart';
 import 'package:savepass/core/env/env.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:sentry_logging/sentry_logging.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final webClientId = Env.googleWebClientId;
@@ -34,10 +36,17 @@ void main() async {
     anonKey: Env.supabaseAnonKey,
   );
 
-  return runApp(
-    ModularApp(
-      module: AppModule(),
-      child: const AppWidget(),
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = Env.sentryDsn;
+      options.sendDefaultPii = true;
+      options.addIntegration(LoggingIntegration());
+    },
+    appRunner: () => runApp(
+      ModularApp(
+        module: AppModule(),
+        child: const AppWidget(),
+      ),
     ),
   );
 }

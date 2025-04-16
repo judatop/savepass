@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:logger/logger.dart';
+import 'package:logging/logging.dart';
 import 'package:savepass/app/auth/domain/datasources/auth_datasource.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:savepass/main.dart';
@@ -26,8 +26,8 @@ class SupabaseAuthDatasource implements AuthDatasource {
       }
 
       return Right(response);
-    } catch (e) {
-      log.e('signUpWithEmailAndPassword: $e');
+    } catch (e, stackTrace) {
+      log.severe('signUpWithEmailAndPassword: $e', e, stackTrace);
 
       if (e is AuthApiException) {
         return Left(Fail(e.code ?? SnackBarErrors.generalErrorCode));
@@ -55,8 +55,8 @@ class SupabaseAuthDatasource implements AuthDatasource {
       }
 
       return Right(response);
-    } catch (e) {
-      log.e('signInWithEmailAndPassword: $e');
+    } catch (e, stackTrace) {
+      log.severe('signInWithEmailAndPassword: $e', e, stackTrace);
 
       if (e is AuthApiException) {
         return Left(Fail(e.code ?? SnackBarErrors.generalErrorCode));

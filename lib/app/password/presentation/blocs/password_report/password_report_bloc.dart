@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
-import 'package:logger/logger.dart';
+import 'package:logging/logging.dart';
 import 'package:savepass/app/password/domain/repositories/password_repository.dart';
 import 'package:savepass/app/password/infrastructure/models/password_model.dart';
 import 'package:savepass/app/password/presentation/blocs/password_report/password_report_event.dart';

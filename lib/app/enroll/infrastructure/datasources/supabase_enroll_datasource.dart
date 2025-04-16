@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:logger/logger.dart';
+import 'package:logging/logging.dart';
 import 'package:savepass/app/enroll/domain/datasources/enroll_datasource.dart';
 import 'package:savepass/app/enroll/infrastructure/models/enroll_new_device_model.dart';
 import 'package:savepass/core/api/savepass_response_model.dart';
@@ -24,8 +24,8 @@ class SupabaseEnrollDatasource implements EnrollDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('getDeviceName: $e');
+    } catch (e, stackTrace) {
+      log.severe('getDeviceName: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }
@@ -41,8 +41,8 @@ class SupabaseEnrollDatasource implements EnrollDatasource {
       );
 
       return Right(response);
-    } catch (e) {
-      log.e('enrollNewDevice: $e');
+    } catch (e, stackTrace) {
+      log.severe('enrollNewDevice: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }

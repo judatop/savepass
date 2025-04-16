@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
-import 'package:logger/logger.dart';
+import 'package:logging/logging.dart';
 import 'package:savepass/app/card/domain/repositories/card_repository.dart';
 import 'package:savepass/app/card/infrastructure/models/card_model.dart';
 import 'package:savepass/app/password/domain/repositories/password_repository.dart';
@@ -126,7 +126,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
             (e) async {
               PasswordModel model = PasswordModel.fromJson(e);
               model = model.copyWith(
-                password: await SecurityUtils.decryptPassword(
+                password:  SecurityUtils.decryptPassword(
                   model.password,
                   derivedKey,
                 ),
@@ -199,7 +199,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
               CardModel model = CardModel.fromJson(e);
               model = model.copyWith(
                 card:
-                    await SecurityUtils.decryptPassword(model.card, derivedKey),
+                     SecurityUtils.decryptPassword(model.card, derivedKey),
               );
 
               if (model.id != null &&

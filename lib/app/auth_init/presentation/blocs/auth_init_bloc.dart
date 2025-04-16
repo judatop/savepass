@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:formz/formz.dart';
-import 'package:logger/logger.dart';
+import 'package:logging/logging.dart';
 import 'package:savepass/app/auth_init/domain/repositories/auth_init_repository.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_event.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_state.dart';
@@ -202,8 +202,8 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
           }
         },
       );
-    } catch (e) {
-      log.e('Exception _onSubmitEvent: $e');
+    } catch (e, stackTrace) {
+      log.severe('Exception _onSubmitEvent: $e', e, stackTrace);
       emit(
         GeneralErrorState(
           state.model.copyWith(status: FormzSubmissionStatus.failure),
@@ -343,8 +343,8 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
           ),
         );
       }
-    } catch (e) {
-      log.e('Exception _onSubmitEvent: $e');
+    } catch (e, stackTrace) {
+      log.severe('Exception _onSubmitEvent: $e', e, stackTrace);
       emit(
         GeneralErrorState(
           state.model.copyWith(status: FormzSubmissionStatus.failure),

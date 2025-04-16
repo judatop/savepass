@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
-import 'package:logger/logger.dart';
+import 'package:logging/logging.dart';
 import 'package:savepass/app/card/domain/repositories/card_repository.dart';
 import 'package:savepass/app/card/infrastructure/models/card_model.dart';
 import 'package:savepass/app/card/presentation/blocs/card_report/card_report_event.dart';
@@ -180,7 +180,7 @@ class CardReportBloc extends Bloc<CardReportEvent, CardReportState> {
               CardModel model = CardModel.fromJson(e);
               model = model.copyWith(
                 card:
-                    await SecurityUtils.decryptPassword(model.card, derivedKey),
+                     SecurityUtils.decryptPassword(model.card, derivedKey),
               );
               return model;
             },

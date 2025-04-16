@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
-import 'package:logger/logger.dart';
+import 'package:logging/logging.dart';
 import 'package:savepass/app/card/domain/repositories/card_repository.dart';
 import 'package:savepass/app/card/infrastructure/models/card_cvv_form.dart';
 import 'package:savepass/app/card/infrastructure/models/card_exp_form.dart';
@@ -246,7 +246,7 @@ class CardBloc extends Bloc<CardEvent, CardState> {
       }
 
       final decryptedCard =
-          await SecurityUtils.decryptPassword(card!.card, derivedKey);
+          SecurityUtils.decryptPassword(card!.card, derivedKey);
       final values = decryptedCard.split('|');
       final cardNumber = values[0];
       final cardHoldername = values[1];

@@ -1,6 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:logger/logger.dart';
+import 'package:logging/logging.dart';
 import 'package:savepass/core/env/env.dart';
 
 class BiometricUtils {
@@ -44,8 +44,8 @@ class BiometricUtils {
         localizedReason: 'Please authenticate to show account balance',
         options: const AuthenticationOptions(biometricOnly: true),
       );
-    } catch (e) {
-      log.e('Biometric utils authenticate error: $e');
+    } catch (e, stackTrace) {
+      log.severe('Biometric utils authenticate error: $e', e, stackTrace);
     }
 
     return isAuthenticated;

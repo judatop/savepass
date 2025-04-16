@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
+import 'package:logging/logging.dart';
 import 'package:savepass/app/profile/presentation/blocs/profile_event.dart';
 import 'package:savepass/app/profile/presentation/blocs/profile_state.dart';
 

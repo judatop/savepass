@@ -1,7 +1,7 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:logger/logger.dart';
+import 'package:logging/logging.dart';
 import 'package:savepass/app/auth/domain/datasources/auth_datasource.dart';
 import 'package:savepass/app/auth/domain/repositories/auth_repository.dart';
 import 'package:savepass/app/auth/infrastructure/datasources/supabase_auth_datasource.dart';
@@ -84,7 +84,7 @@ class AppModule extends Module {
   void binds(i) {
     i.addSingleton(FlutterSecureStorage.new);
     i.addSingleton(PreferencesBloc.new);
-    i.addSingleton(Logger.new);
+    i.addSingleton<Logger>(() => Logger('SavePassLogger'));
     i.addSingleton(SupabaseMiddleware.new);
     i.addSingleton(SecurityUtils.new);
     i.addSingleton(BiometricUtils.new);

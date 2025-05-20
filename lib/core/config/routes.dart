@@ -11,7 +11,6 @@ class Routes {
   static const String notificationRoute = '/notification';
   static const String termsRoute = '/terms';
   static const String permissionRoute = '/permission';
-  static const String privacyPolicyRoute = '/privacyPolicy';
   static const String authInitRoute = '/authInit';
   static const String photoPermissionRoute = '/photoPermission';
   static const String syncMasterPasswordRoute = '/syncMasterPassword';

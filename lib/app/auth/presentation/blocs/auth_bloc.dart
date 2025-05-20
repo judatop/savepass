@@ -260,38 +260,47 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     final response = await preferencesRepository.getPrivacyUrl();
 
+    late String? policyUrl;
+
     response.fold(
       (l) {
-        emit(
-          GeneralErrorState(
-            state.model.copyWith(
-              status: FormzSubmissionStatus.failure,
-            ),
-          ),
-        );
+        policyUrl = null;
       },
-      (r) async {
-        emit(
-          ChangeAuthState(
-            state.model.copyWith(
-              status: FormzSubmissionStatus.success,
-            ),
-          ),
-        );
-
-        final Uri url = Uri.parse(r);
-
-        if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-          emit(
-            GeneralErrorState(
-              state.model.copyWith(
-                status: FormzSubmissionStatus.failure,
-              ),
-            ),
-          );
-        }
+      (r) {
+        policyUrl = r;
       },
     );
+
+    if (policyUrl == null) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(
+            status: FormzSubmissionStatus.failure,
+          ),
+        ),
+      );
+      return;
+    }
+
+    emit(
+      ChangeAuthState(
+        state.model.copyWith(
+          status: FormzSubmissionStatus.success,
+        ),
+      ),
+    );
+
+    final Uri url = Uri.parse(policyUrl!);
+
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(
+            status: FormzSubmissionStatus.failure,
+          ),
+        ),
+      );
+    }
   }
 
   FutureOr<void> _onOpenTermsEvent(
@@ -308,45 +317,54 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     final response = await preferencesRepository.getTermsUrl();
 
+    late String? termsUrl;
+
     response.fold(
       (l) {
-        emit(
-          GeneralErrorState(
-            state.model.copyWith(
-              status: FormzSubmissionStatus.failure,
-            ),
-          ),
-        );
+        termsUrl = null;
       },
-      (r) async {
-        emit(
-          ChangeAuthState(
-            state.model.copyWith(
-              status: FormzSubmissionStatus.success,
-            ),
-          ),
-        );
-
-        final Uri url = Uri.parse(r);
-
-        if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-          emit(
-            GeneralErrorState(
-              state.model.copyWith(
-                status: FormzSubmissionStatus.failure,
-              ),
-            ),
-          );
-        }
-
-        emit(
-          ChangeAuthState(
-            state.model.copyWith(
-              status: FormzSubmissionStatus.success,
-            ),
-          ),
-        );
+      (r) {
+        termsUrl = r;
       },
+    );
+
+    if (termsUrl == null) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(
+            status: FormzSubmissionStatus.failure,
+          ),
+        ),
+      );
+      return;
+    }
+
+    emit(
+      ChangeAuthState(
+        state.model.copyWith(
+          status: FormzSubmissionStatus.success,
+        ),
+      ),
+    );
+
+    final Uri url = Uri.parse(termsUrl!);
+
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(
+            status: FormzSubmissionStatus.failure,
+          ),
+        ),
+      );
+    }
+
+    emit(
+      ChangeAuthState(
+        state.model.copyWith(
+          status: FormzSubmissionStatus.success,
+        ),
+      ),
     );
   }
 

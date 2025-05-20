@@ -57,7 +57,6 @@ import 'package:savepass/app/preferences/domain/datasources/parameters_datasourc
 import 'package:savepass/app/preferences/domain/datasources/preferences_datasource.dart';
 import 'package:savepass/app/preferences/infrastructure/datasources/local_parameters_datasource.dart';
 import 'package:savepass/app/preferences/infrastructure/datasources/supabase_parameters_datasource.dart';
-import 'package:savepass/app/privacy_policy/presentation/screens/privacy_policy_screen.dart';
 import 'package:savepass/app/profile/domain/datasources/profile_datasource.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/app/profile/infraestructure/datasources/supabase_profile_datasource.dart';
@@ -137,10 +136,6 @@ class AppModule extends Module {
     r.child(
       Routes.getStartedRoute,
       child: (context) => const GetStartedScreen(),
-    );
-    r.child(
-      Routes.privacyPolicyRoute,
-      child: (context) => const PrivacyPolicyScreen(),
     );
     r.child(
       Routes.dashboardRoute,

@@ -9,14 +9,14 @@ import 'package:savepass/app/auth/presentation/blocs/auth_state.dart';
 import 'package:savepass/core/utils/regex_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class AuthSignInPassword extends StatefulWidget {
-  const AuthSignInPassword({super.key});
+class AuthSignUpPassword extends StatefulWidget {
+  const AuthSignUpPassword({super.key});
 
   @override
-  State<AuthSignInPassword> createState() => _AuthSignInPasswordState();
+  State<AuthSignUpPassword> createState() => _AuthSignUpPasswordState();
 }
 
-class _AuthSignInPasswordState extends State<AuthSignInPassword> {
+class _AuthSignUpPasswordState extends State<AuthSignUpPassword> {
   late final TextEditingController _controller;
 
   @override
@@ -33,19 +33,19 @@ class _AuthSignInPasswordState extends State<AuthSignInPassword> {
 
     return BlocBuilder<AuthBloc, AuthState>(
       buildWhen: (previous, current) =>
-          (previous.model.signInPassword != current.model.signInPassword) ||
+          (previous.model.signUpPassword != current.model.signUpPassword) ||
           (previous.model.alreadySubmitted != current.model.alreadySubmitted) ||
           (previous.model.showPassword != current.model.showPassword),
       builder: (context, state) {
         final model = state.model;
-        final password = model.signInPassword.value;
-        _controller.text = password;
+        final masterPassword = model.signUpPassword.value;
+        _controller.text = masterPassword;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${intl.passwordTitle}:',
+              '${intl.password}:',
               style:
                   textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
             ),
@@ -56,8 +56,8 @@ class _AuthSignInPasswordState extends State<AuthSignInPassword> {
               controller: _controller,
               key: const Key('signUp_masterPassword_textField'),
               errorText: model.alreadySubmitted
-                  ? model.signInPassword
-                      .getError(intl, model.signInPassword.error)
+                  ? model.signUpPassword
+                      .getError(intl, model.signUpPassword.error)
                   : null,
               onChanged: (value) {
                 final bloc = Modular.get<AuthBloc>();

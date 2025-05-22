@@ -32,6 +32,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.log,
   }) : super(const AuthInitialState()) {
     on<AuthInitialEvent>(_onAuthInitialEvent);
+    on<AuthEmailInitialEvent>(_onAuthEmailInitialBloc);
     on<OpenSignInEvent>(_onOpenSignInEvent);
     on<OpenSignUpEvent>(_onOpenSignUpEvent);
     on<AuthWithGoogleEvent>(_onAuthWithGoogleEvent);
@@ -45,6 +46,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<RepeatPasswordChangedEvent>(_onRepeatPasswordChangedEvent);
     on<ToggleMasterPasswordEvent>(_onToggleMasterPasswordEvent);
     on<ToggleRepeatPasswordEvent>(_onToggleRepeatPasswordEvent);
+    on<InitForgotPasswordEvent>(_onInitForgotPasswordEvent);
+    on<RecoveryEmailChangeEvent>(_onRecoveryEmailChangeEvent);
+    on<ForgotPasswordSubmitEvent>(_onForgotPasswordSubmitEvent);
+    on<InitRecoveryPasswordEvent>(_onInitRecoveryPasswordEvent);
+    on<RecoveryPasswordSubmitEvent>(_onRecoveryPasswordSubmitEvent);
+    on<ChangeRecoveryPasswordEvent>(_onChangeRecoveryPasswordEvent);
+    on<ChangeRepeatRecoveryPasswordEvent>(_onChangeRepeatRecoveryPasswordEvent);
+    on<ToggleShowRecoveryPasswordEvent>(_onToggleShowRecoveryPasswordEvent);
+    on<ToggleShowRepeatRecoveryPasswordEvent>(
+      _onToggleShowRepeatRecoveryPasswordEvent,
+    );
+    on<LinkInvalidExpiredEvent>(_onLinkInvalidExpiredEvent);
   }
 
   FutureOr<void> _onAuthInitialEvent(
@@ -233,6 +246,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             return;
           }
 
+          if (code == SnackBarErrors.emailNotConfirmed) {
+            emit(
+              EmailNotConfirmedState(
+                state.model.copyWith(
+                  status: FormzSubmissionStatus.failure,
+                ),
+              ),
+            );
+            return;
+          }
+
           emit(
             GeneralErrorState(
               state.model.copyWith(
@@ -242,7 +266,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           );
         }
       },
-      (r) {},
+      (r) {
+        emit(
+          UserNeedsConfirmationState(
+            state.model.copyWith(
+              status: FormzSubmissionStatus.success,
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -489,6 +521,253 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           repeatShowPassword: !state.model.repeatShowPassword,
         ),
       ),
+    );
+  }
+
+  FutureOr<void> _onAuthEmailInitialBloc(
+    AuthEmailInitialEvent event,
+    Emitter<AuthState> emit,
+  ) {
+    emit(
+      ChangeAuthState(
+        state.model.copyWith(
+          email: const EmailForm.pure(),
+          alreadySubmitted: false,
+          signUpPassword: const SignUpPasswordForm.pure(),
+          repeatSignUpPassword: const SignUpPasswordForm.pure(),
+          signInPassword: const PasswordForm.pure(),
+          showPassword: false,
+          repeatShowPassword: false,
+          status: FormzSubmissionStatus.initial,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onInitForgotPasswordEvent(
+    InitForgotPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) {
+    emit(
+      ChangeAuthState(
+        state.model.copyWith(
+          forgotPasswordAlreadySubmitted: false,
+          recoveryEmail: const EmailForm.pure(),
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onRecoveryEmailChangeEvent(
+    RecoveryEmailChangeEvent event,
+    Emitter<AuthState> emit,
+  ) {
+    emit(
+      ChangeAuthState(
+        state.model.copyWith(
+          recoveryEmail: EmailForm.dirty(event.email),
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onForgotPasswordSubmitEvent(
+    ForgotPasswordSubmitEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(
+      ChangeAuthState(
+        state.model.copyWith(
+          forgotPasswordStatus: FormzSubmissionStatus.inProgress,
+          forgotPasswordAlreadySubmitted: true,
+        ),
+      ),
+    );
+
+    if (!Formz.validate([
+      state.model.recoveryEmail,
+    ])) {
+      emit(
+        ChangeAuthState(
+          state.model
+              .copyWith(forgotPasswordStatus: FormzSubmissionStatus.initial),
+        ),
+      );
+      return;
+    }
+
+    final response = await authRepository.recoveryPassword(
+      email: state.model.recoveryEmail.value,
+    );
+
+    response.fold(
+      (l) {
+        emit(
+          GeneralErrorState(
+            state.model
+                .copyWith(forgotPasswordStatus: FormzSubmissionStatus.failure),
+          ),
+        );
+        return;
+      },
+      (r) {
+        emit(
+          RecoveryEmailSent(
+            state.model
+                .copyWith(forgotPasswordStatus: FormzSubmissionStatus.success),
+          ),
+        );
+      },
+    );
+  }
+
+  FutureOr<void> _onInitRecoveryPasswordEvent(
+    InitRecoveryPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) {
+    emit(
+      ChangeAuthState(
+        state.model.copyWith(
+          recoveryPassword: const SignUpPasswordForm.pure(),
+          repeatRecoveryPassword: const SignUpPasswordForm.pure(),
+          showRecoveryPassword: false,
+          showRepeatRecoveryPassword: false,
+          recoveryPasswordAlreadySubmitted: false,
+          recoveryStatus: FormzSubmissionStatus.initial,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onRecoveryPasswordSubmitEvent(
+    RecoveryPasswordSubmitEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(
+      ChangeAuthState(
+        state.model.copyWith(
+          recoveryStatus: FormzSubmissionStatus.inProgress,
+          recoveryPasswordAlreadySubmitted: true,
+        ),
+      ),
+    );
+
+    if (!Formz.validate([
+      state.model.recoveryPassword,
+      state.model.repeatRecoveryPassword,
+    ])) {
+      emit(
+        ChangeAuthState(
+          state.model.copyWith(recoveryStatus: FormzSubmissionStatus.initial),
+        ),
+      );
+      return;
+    }
+
+    if (state.model.recoveryPassword.value !=
+        state.model.repeatRecoveryPassword.value) {
+      emit(
+        PasswordsMismatch(
+          state.model.copyWith(recoveryStatus: FormzSubmissionStatus.initial),
+        ),
+      );
+      return;
+    }
+
+    final response = await authRepository.updateNewPassword(
+      password: state.model.recoveryPassword.value,
+    );
+
+    response.fold(
+      (l) {
+        if (l.failure is String) {
+          final code = l.failure as String;
+
+          if (code == SnackBarErrors.sameNewPassword) {
+            emit(
+              NewPasswordMustBeDiferentState(
+                state.model
+                    .copyWith(recoveryStatus: FormzSubmissionStatus.failure),
+              ),
+            );
+            return;
+          }
+        }
+
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(recoveryStatus: FormzSubmissionStatus.failure),
+          ),
+        );
+      },
+      (r) {
+        emit(
+          NewPasswordSuccessState(
+            state.model.copyWith(recoveryStatus: FormzSubmissionStatus.success),
+          ),
+        );
+      },
+    );
+  }
+
+  FutureOr<void> _onChangeRecoveryPasswordEvent(
+    ChangeRecoveryPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) {
+    emit(
+      ChangeAuthState(
+        state.model.copyWith(
+          recoveryPassword: SignUpPasswordForm.dirty(event.password),
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onChangeRepeatRecoveryPasswordEvent(
+    ChangeRepeatRecoveryPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) {
+    emit(
+      ChangeAuthState(
+        state.model.copyWith(
+          repeatRecoveryPassword: SignUpPasswordForm.dirty(event.password),
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onToggleShowRecoveryPasswordEvent(
+    ToggleShowRecoveryPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) {
+    emit(
+      ChangeAuthState(
+        state.model.copyWith(
+          showRecoveryPassword: !state.model.showRecoveryPassword,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onToggleShowRepeatRecoveryPasswordEvent(
+    ToggleShowRepeatRecoveryPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) {
+    emit(
+      ChangeAuthState(
+        state.model.copyWith(
+          showRepeatRecoveryPassword: !state.model.showRepeatRecoveryPassword,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onLinkInvalidExpiredEvent(
+    LinkInvalidExpiredEvent event,
+    Emitter<AuthState> emit,
+  ) {
+    emit(
+      EmailLinkInvalidExpiredState(state.model),
     );
   }
 }

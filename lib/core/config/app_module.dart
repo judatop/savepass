@@ -9,6 +9,10 @@ import 'package:savepass/app/auth/infrastructure/repositories/auth_repository_im
 import 'package:savepass/app/auth/presentation/blocs/auth_bloc.dart';
 import 'package:savepass/app/auth/presentation/screens/auth_email_screen.dart';
 import 'package:savepass/app/auth/presentation/screens/auth_screen.dart';
+import 'package:savepass/app/auth/presentation/screens/confirm_mail_sign_up_screen.dart';
+import 'package:savepass/app/auth/presentation/screens/forgot_password_mail_screen.dart';
+import 'package:savepass/app/auth/presentation/screens/password_recovery_screen.dart';
+import 'package:savepass/app/auth/presentation/screens/recovery_email_sent_screen.dart';
 import 'package:savepass/app/auth_init/domain/datasources/auth_init_datasource.dart';
 import 'package:savepass/app/auth_init/domain/repositories/auth_init_repository.dart';
 import 'package:savepass/app/auth_init/infrastructure/datasources/supabase_auth_init_datasource.dart';
@@ -164,6 +168,10 @@ class AppModule extends Module {
       child: (context) => const AuthEmailScreen(),
     );
     r.child(
+      Routes.forgotPasswordRoute,
+      child: (context) => const ForgotPasswordMailScreen(),
+    );
+    r.child(
       Routes.passwordRoute,
       child: (context) => PasswordScreen(selectedPassId: r.args.data),
     );
@@ -194,6 +202,18 @@ class AppModule extends Module {
     r.child(
       Routes.masterPasswordRoute,
       child: (context) => const MasterPasswordScreen(),
+    );
+    r.child(
+      Routes.emailSentRoute,
+      child: (context) => const RecoveryEmailSentScreen(),
+    );
+    r.child(
+      Routes.recoveryPasswordRoute,
+      child: (context) => const PasswordRecoveryScreen(),
+    );
+    r.child(
+      Routes.signUpConfirmMail,
+      child: (context) => const ConfirmMailSignUpScreen(),
     );
   }
 }

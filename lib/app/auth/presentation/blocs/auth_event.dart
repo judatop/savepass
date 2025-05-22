@@ -14,6 +14,10 @@ class AuthInitialEvent extends AuthEvent {
   const AuthInitialEvent({required this.authType}) : super();
 }
 
+class AuthEmailInitialEvent extends AuthEvent {
+  const AuthEmailInitialEvent() : super();
+}
+
 class OpenSignInEvent extends AuthEvent {
   const OpenSignInEvent() : super();
 }
@@ -70,4 +74,50 @@ class AuthWithGithubEvent extends AuthEvent {
 
 class ProcessSignedInEvent extends AuthEvent {
   const ProcessSignedInEvent() : super();
+}
+
+class InitForgotPasswordEvent extends AuthEvent {
+  const InitForgotPasswordEvent() : super();
+}
+
+class RecoveryEmailChangeEvent extends AuthEvent {
+  final String email;
+
+  const RecoveryEmailChangeEvent({required this.email}) : super();
+}
+
+class ForgotPasswordSubmitEvent extends AuthEvent {
+  const ForgotPasswordSubmitEvent() : super();
+}
+
+class InitRecoveryPasswordEvent extends AuthEvent {
+  const InitRecoveryPasswordEvent() : super();
+}
+
+class RecoveryPasswordSubmitEvent extends AuthEvent {
+  const RecoveryPasswordSubmitEvent() : super();
+}
+
+class ChangeRecoveryPasswordEvent extends AuthEvent {
+  final String password;
+
+  const ChangeRecoveryPasswordEvent({required this.password}) : super();
+}
+
+class ChangeRepeatRecoveryPasswordEvent extends AuthEvent {
+  final String password;
+
+  const ChangeRepeatRecoveryPasswordEvent({required this.password}) : super();
+}
+
+class ToggleShowRecoveryPasswordEvent extends AuthEvent{
+  const ToggleShowRecoveryPasswordEvent() : super();
+}
+
+class ToggleShowRepeatRecoveryPasswordEvent extends AuthEvent{
+  const ToggleShowRepeatRecoveryPasswordEvent() : super();
+}
+
+class LinkInvalidExpiredEvent extends AuthEvent{
+  const LinkInvalidExpiredEvent() : super();
 }

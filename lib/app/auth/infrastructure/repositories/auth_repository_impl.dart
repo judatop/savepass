@@ -29,4 +29,20 @@ class AuthRepositoryImpl implements AuthRepository {
       password: password,
     );
   }
+
+  @override
+  Future<Either<Fail, Unit>> recoveryPassword({required String email}) async {
+    return await datasource.recoveryPassword(
+      email: email,
+    );
+  }
+
+  @override
+  Future<Either<Fail, UserResponse>> updateNewPassword({
+    required String password,
+  }) async {
+    return await datasource.updateNewPassword(
+      password: password,
+    );
+  }
 }

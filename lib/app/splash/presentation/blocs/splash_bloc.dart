@@ -27,8 +27,12 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     Emitter<SplashState> emit,
   ) async {
     final user = supabase.auth.currentUser;
+    final session = supabase.auth.currentSession;
 
-    if (user == null) {
+    if (user == null ||
+        session == null ||
+        user.aud != 'authenticated' ||
+        session.isExpired) {
       emit(OpenGetStartedState(state.model));
       return;
     }

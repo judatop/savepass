@@ -24,9 +24,14 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def flutterCompileSdkVersion = localProperties.getProperty('flutter.compileSdkVersion')
+if (flutterCompileSdkVersion == null) {
+    flutterCompileSdkVersion = 34
+}
+
 android {
     namespace "com.juda.savepass"
-    compileSdk flutter.compileSdkVersion
+    compileSdk flutterCompileSdkVersion.toInteger()
     ndkVersion flutter.ndkVersion
 
     compileOptions {

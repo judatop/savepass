@@ -5,6 +5,7 @@ class Routes {
   static const String dashboardRoute = '/dashboard';
   static const String authRoute = '/auth';
   static const String authEmailRoute = '/authEmail';
+  static const String forgotPasswordRoute = '/forgotPassword';
   static const String accountRoute = '/account';
   static const String settingsRoute = '/settings';
   static const String themeRoute = '/theme';
@@ -21,5 +22,8 @@ class Routes {
   static const String cardReport = '/cardReport';
   static const String enrollRoute = '/enroll';
   static const String biometricRoute = '/biometric';
-  static const String masterPasswordRoute = '/masterPasswordz';
+  static const String masterPasswordRoute = '/masterPassword';
+  static const String emailSentRoute = '/emailSent';
+  static const String recoveryPasswordRoute = '/recoveryPassword';
+  static const String signUpConfirmMail = '/signUpConfirmMail';
 }

@@ -11,4 +11,12 @@ abstract class AuthRepository {
     required String email,
     required String password,
   });
+
+  Future<Either<Fail, Unit>> recoveryPassword({
+    required String email,
+  });
+
+  Future<Either<Fail, UserResponse>> updateNewPassword({
+    required String password,
+  });
 }

@@ -25,6 +25,10 @@ class SupabaseAuthDatasource implements AuthDatasource {
         throw Exception('User id is null');
       }
 
+      if (response.user?.userMetadata?.isEmpty ?? false) {
+        return Left(Fail(SnackBarErrors.userAlreadyExists));
+      }
+
       return Right(response);
     } catch (e, stackTrace) {
       log.severe('signUpWithEmailAndPassword: $e', e, stackTrace);
@@ -59,6 +63,59 @@ class SupabaseAuthDatasource implements AuthDatasource {
       log.severe('signInWithEmailAndPassword: $e', e, stackTrace);
 
       if (e is AuthApiException) {
+        return Left(Fail(e.code ?? SnackBarErrors.generalErrorCode));
+      }
+
+      return Left(
+        Fail(SnackBarErrors.generalErrorCode),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Fail, Unit>> recoveryPassword({
+    required String email,
+  }) async {
+    try {
+      await supabase.auth.resetPasswordForEmail(
+        email,
+      );
+
+      return const Right(unit);
+    } catch (e, stackTrace) {
+      log.severe('recoveryPassword: $e', e, stackTrace);
+
+      if (e is AuthApiException) {
+        return Left(Fail(e.code ?? SnackBarErrors.generalErrorCode));
+      }
+
+      return Left(
+        Fail(SnackBarErrors.generalErrorCode),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Fail, UserResponse>> updateNewPassword({
+    required String password,
+  }) async {
+    try {
+      final response =
+          await supabase.auth.updateUser(UserAttributes(password: password));
+
+      if (response.user?.id == null) {
+        throw Exception('User id is null');
+      }
+
+      return Right(response);
+    } catch (e, stackTrace) {
+      log.severe('updateNewPassword: $e', e, stackTrace);
+
+      if (e is AuthApiException) {
+        return Left(Fail(e.code ?? SnackBarErrors.generalErrorCode));
+      }
+
+      if (e is AuthException) {
         return Left(Fail(e.code ?? SnackBarErrors.generalErrorCode));
       }
 

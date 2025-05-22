@@ -71,6 +71,10 @@ class _Body extends StatelessWidget {
                     textAlign: TextAlign.start,
                   ),
                   SizedBox(height: deviceHeight * 0.025),
+                  AdsSubtitle(
+                    text: intl.masterPasswordNotRecovered,
+                  ),
+                  SizedBox(height: deviceHeight * 0.025),
                   const MasterPasswordWidget(),
                   SizedBox(height: deviceHeight * 0.025),
                   const SubmitSyncPassWidget(),

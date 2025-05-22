@@ -5,14 +5,16 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
 import 'package:savepass/app/auth/infrastructure/models/auth_type.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_bloc.dart';
+import 'package:savepass/app/auth/presentation/blocs/auth_event.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:savepass/app/auth/presentation/widgets/auth_email.dart';
-import 'package:savepass/app/auth/presentation/widgets/auth_header_widget.dart';
-import 'package:savepass/app/auth/presentation/widgets/auth_sign_in_password.dart';
-import 'package:savepass/app/auth/presentation/widgets/auth_sign_up_password.dart';
-import 'package:savepass/app/auth/presentation/widgets/auth_submit.dart';
-import 'package:savepass/app/auth/presentation/widgets/repeat_auth_sign_up_password.dart';
+import 'package:savepass/app/auth/presentation/widgets/auth_email/auth_email.dart';
+import 'package:savepass/app/auth/presentation/widgets/auth_email/auth_header_widget.dart';
+import 'package:savepass/app/auth/presentation/widgets/auth_email/auth_sign_in_password.dart';
+import 'package:savepass/app/auth/presentation/widgets/auth_email/auth_sign_up_password.dart';
+import 'package:savepass/app/auth/presentation/widgets/auth_email/auth_submit.dart';
+import 'package:savepass/app/auth/presentation/widgets/auth_email/forgot_password.dart';
+import 'package:savepass/app/auth/presentation/widgets/auth_email/repeat_auth_sign_up_password.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -25,7 +27,7 @@ class AuthEmailScreen extends StatelessWidget {
     final bloc = Modular.get<AuthBloc>();
 
     return BlocProvider.value(
-      value: bloc,
+      value: bloc..add(const AuthEmailInitialEvent()),
       child: const BlocListener<AuthBloc, AuthState>(
         listener: _listener,
         child: _Body(),
@@ -109,7 +111,14 @@ class _Body extends StatelessWidget {
                             ],
                           ),
                         if (authType == AuthType.signIn)
-                          const AuthSignInPassword(),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const AuthSignInPassword(),
+                              SizedBox(height: deviceHeight * 0.01),
+                              const ForgotPassword(),
+                            ],
+                          ),
                         SizedBox(height: deviceHeight * 0.05),
                         const Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,

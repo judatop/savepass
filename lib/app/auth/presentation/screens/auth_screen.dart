@@ -7,10 +7,10 @@ import 'package:savepass/app/auth/infrastructure/models/auth_type.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_bloc.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_event.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_state.dart';
-import 'package:savepass/app/auth/presentation/widgets/already_have_account.dart';
-import 'package:savepass/app/auth/presentation/widgets/auth_options.dart';
-import 'package:savepass/app/auth/presentation/widgets/auth_terms.dart';
-import 'package:savepass/app/auth/presentation/widgets/no_account.dart';
+import 'package:savepass/app/auth/presentation/widgets/auth/already_have_account.dart';
+import 'package:savepass/app/auth/presentation/widgets/auth/auth_options.dart';
+import 'package:savepass/app/auth/presentation/widgets/auth/auth_terms.dart';
+import 'package:savepass/app/auth/presentation/widgets/auth/no_account.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:savepass/main.dart';
@@ -70,6 +70,18 @@ void _listener(context, state) {
   if (state is UserAlreadyExistsState) {
     SnackBarUtils.showErrroSnackBar(context, intl.emailAlreadyInUse);
   }
+
+  if (state is EmailLinkInvalidExpiredState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.emailInvalidExpired);
+  }
+
+  if (state is EmailNotConfirmedState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.emailNotConfirmed);
+  }
+
+  if (state is UserNeedsConfirmationState) {
+    Modular.to.pushNamed(Routes.signUpConfirmMail);
+  }
 }
 
 class _Body extends StatefulWidget {
@@ -88,6 +100,7 @@ class _BodyState extends State<_Body> {
 
   void _onAuthStateChange() async {
     final bloc = Modular.get<AuthBloc>();
+
     supabase.auth.onAuthStateChange.listen(
       (data) {
         final supabaseauth.AuthChangeEvent event = data.event;
@@ -107,6 +120,7 @@ class _BodyState extends State<_Body> {
             break;
 
           case supabaseauth.AuthChangeEvent.passwordRecovery:
+            Modular.to.pushNamed(Routes.recoveryPasswordRoute);
             break;
 
           case supabaseauth.AuthChangeEvent.tokenRefreshed:
@@ -123,7 +137,13 @@ class _BodyState extends State<_Body> {
             break;
         }
       },
-    );
+    ).onError((error) {
+      if (error is supabaseauth.AuthException) {
+        if (error.statusCode == 'otp_expired') {
+          bloc.add(const LinkInvalidExpiredEvent());
+        }
+      }
+    });
   }
 
   @override

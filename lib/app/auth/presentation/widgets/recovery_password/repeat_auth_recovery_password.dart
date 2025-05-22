@@ -9,14 +9,16 @@ import 'package:savepass/app/auth/presentation/blocs/auth_state.dart';
 import 'package:savepass/core/utils/regex_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class AuthSignUpPassword extends StatefulWidget {
-  const AuthSignUpPassword({super.key});
+class RepeatAuthRecoveryPassword extends StatefulWidget {
+  const RepeatAuthRecoveryPassword({super.key});
 
   @override
-  State<AuthSignUpPassword> createState() => _AuthSignUpPasswordState();
+  State<RepeatAuthRecoveryPassword> createState() =>
+      _RepeatAuthRecoveryPasswordState();
 }
 
-class _AuthSignUpPasswordState extends State<AuthSignUpPassword> {
+class _RepeatAuthRecoveryPasswordState
+    extends State<RepeatAuthRecoveryPassword> {
   late final TextEditingController _controller;
 
   @override
@@ -33,19 +35,22 @@ class _AuthSignUpPasswordState extends State<AuthSignUpPassword> {
 
     return BlocBuilder<AuthBloc, AuthState>(
       buildWhen: (previous, current) =>
-          (previous.model.signUpPassword != current.model.signUpPassword) ||
-          (previous.model.alreadySubmitted != current.model.alreadySubmitted) ||
-          (previous.model.showPassword != current.model.showPassword),
+          (previous.model.repeatRecoveryPassword.value !=
+              current.model.repeatRecoveryPassword.value) ||
+          (previous.model.recoveryPasswordAlreadySubmitted !=
+              current.model.recoveryPasswordAlreadySubmitted) ||
+          (previous.model.showRepeatRecoveryPassword !=
+              current.model.showRepeatRecoveryPassword),
       builder: (context, state) {
         final model = state.model;
-        final masterPassword = model.signUpPassword.value;
-        _controller.text = masterPassword;
+        final password = model.repeatRecoveryPassword.value;
+        _controller.text = password;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${intl.passwordTitle}:',
+              '${intl.repeatPassword}:',
               style:
                   textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
             ),
@@ -54,26 +59,26 @@ class _AuthSignUpPasswordState extends State<AuthSignUpPassword> {
             ),
             AdsTextField(
               controller: _controller,
-              key: const Key('signUp_masterPassword_textField'),
-              errorText: model.alreadySubmitted
-                  ? model.signUpPassword
-                      .getError(intl, model.signUpPassword.error)
+              key: const Key('auth_repeatRecoveryPassword_textField'),
+              errorText: model.recoveryPasswordAlreadySubmitted
+                  ? model.repeatRecoveryPassword
+                      .getError(intl, model.repeatRecoveryPassword.error)
                   : null,
               onChanged: (value) {
-                final bloc = Modular.get<AuthBloc>();
-                bloc.add(PasswordChangedEvent(password: value));
+                bloc.add(ChangeRepeatRecoveryPasswordEvent(password: value));
               },
-              obscureText: !model.showPassword,
+              obscureText: !model.showRepeatRecoveryPassword,
               inputFormatters: [
                 FilteringTextInputFormatter.allow(
                   RegexUtils.password,
                 ),
               ],
               textInputAction: TextInputAction.done,
-              suffixIcon:
-                  model.showPassword ? Icons.visibility_off : Icons.visibility,
+              suffixIcon: model.showRepeatRecoveryPassword
+                  ? Icons.visibility_off
+                  : Icons.visibility,
               onTapSuffixIcon: () =>
-                  bloc.add(const ToggleMasterPasswordEvent()),
+                  bloc.add(const ToggleShowRepeatRecoveryPasswordEvent()),
             ),
           ],
         );

@@ -97,9 +97,11 @@ packages:
   atomic_design_system:
     dependency: "direct main"
     description:
-      path: "../atomic_design_system"
-      relative: true
-    source: path
+      path: "."
+      ref: master
+      resolved-ref: ffc139c31e26d6e6450a72a5597fd29795da06f4
+      url: "https://github.com/judatop/atomic_design_system"
+    source: git
     version: "0.0.1"
   auto_injector:
     dependency: transitive

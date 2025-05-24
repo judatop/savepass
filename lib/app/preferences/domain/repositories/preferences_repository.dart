@@ -11,8 +11,12 @@ abstract class PreferencesRepository {
   Future<Either<Fail, String>> setLanguage(String language);
   Future<Either<Fail, String>> getPrivacyUrl();
   Future<Either<Fail, String>> getTermsUrl();
+  Future<Either<Fail, String>> getFeatureFlag();
+  Future<Either<Fail, String>> getAppVersion();
+  Future<Either<Fail, String>> getAppStoreURL();
+  Future<Either<Fail, String>> getPlayStoreURL();
+  Future<Either<Fail, String>> getSavePassDocsURL();
+  Future<Either<Fail, String>> getSupportMail();
   Future<Either<Fail, List<PassImageModel>>> getPassImages();
   Future<Either<Fail, List<CardImageModel>>> getCardImages();
-
-
 }

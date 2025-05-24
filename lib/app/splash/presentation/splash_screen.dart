@@ -29,8 +29,11 @@ class SplashScreen extends StatelessWidget {
 }
 
 void _listener(context, state) {
+  final bloc = Modular.get<SplashBloc>();
+
   if (state is OpenGetStartedState) {
     Modular.to.pushNamedAndRemoveUntil(Routes.getStartedRoute, (_) => false);
+    bloc.add(const CheckAppVersionAndFeatureFlagEvent());
   }
 
   if (state is OpenAuthInitState) {
@@ -39,11 +42,13 @@ void _listener(context, state) {
       (_) => false,
       arguments: false,
     );
+    bloc.add(const CheckAppVersionAndFeatureFlagEvent());
   }
 
   if (state is OpenSyncMasterPasswordState) {
     Modular.to
         .pushNamedAndRemoveUntil(Routes.syncMasterPasswordRoute, (_) => false);
+    bloc.add(const CheckAppVersionAndFeatureFlagEvent());
   }
 }
 

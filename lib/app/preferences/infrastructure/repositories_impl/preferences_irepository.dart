@@ -57,4 +57,34 @@ class PreferencesIRepository implements PreferencesRepository {
   Future<Either<Fail, List<CardImageModel>>> getCardImages() async {
     return await supabaseDatasource.getCardImages();
   }
+
+  @override
+  Future<Either<Fail, String>> getAppVersion() async {
+    return await supabaseDatasource.getAppVersion();
+  }
+
+  @override
+  Future<Either<Fail, String>> getFeatureFlag() async {
+    return await supabaseDatasource.getFeatureFlag();
+  }
+
+  @override
+  Future<Either<Fail, String>> getAppStoreURL() async {
+    return await supabaseDatasource.getAppStoreURL();
+  }
+
+  @override
+  Future<Either<Fail, String>> getPlayStoreURL() async {
+    return await supabaseDatasource.getPlayStoreURL();
+  }
+
+  @override
+  Future<Either<Fail, String>> getSavePassDocsURL() async {
+    return await supabaseDatasource.getSavePassDocsURL();
+  }
+
+  @override
+  Future<Either<Fail, String>> getSupportMail() async {
+    return await supabaseDatasource.getSupportMail();
+  }
 }

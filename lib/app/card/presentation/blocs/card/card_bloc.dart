@@ -15,7 +15,7 @@ import 'package:savepass/app/card/presentation/blocs/card/card_event.dart';
 import 'package:savepass/app/card/presentation/blocs/card/card_state.dart';
 import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
 import 'package:savepass/app/preferences/infrastructure/models/card_image_model.dart';
-import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile/profile_bloc.dart';
 import 'package:savepass/core/api/api_codes.dart';
 import 'package:savepass/core/form/text_form.dart';
 import 'package:savepass/core/utils/security_utils.dart';

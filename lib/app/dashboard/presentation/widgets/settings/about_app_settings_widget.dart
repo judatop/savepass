@@ -2,31 +2,18 @@ import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
+import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/preferences/presentation/blocs/preferences_bloc.dart';
 import 'package:savepass/app/preferences/presentation/blocs/preferences_state.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class AboutAppSettingsWidget extends StatelessWidget {
   const AboutAppSettingsWidget({super.key});
 
-  Future<void> _launchEmail() async {
-    final Uri emailLaunchUri = Uri(
-      scheme: 'mailto',
-      path: 'app.savepass@gmail.com',
-      queryParameters: {
-        'subject': 'Support',
-      },
-    );
-
-    if (await canLaunchUrl(emailLaunchUri)) {
-      await launchUrl(emailLaunchUri);
-    } else {
-      throw Exception('Error launching mail URL');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final bloc = Modular.get<DashboardBloc>();
     final intl = AppLocalizations.of(context)!;
 
     return AdsCard(
@@ -41,7 +28,7 @@ class AboutAppSettingsWidget extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             InkWell(
-              onTap: () {},
+              onTap: () => bloc.add(const RateItDashboardEvent()),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Row(
@@ -61,7 +48,7 @@ class AboutAppSettingsWidget extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             InkWell(
-              onTap: _launchEmail,
+              onTap: () => bloc.add(const SupportDashboardEvent()),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Row(
@@ -72,6 +59,26 @@ class AboutAppSettingsWidget extends StatelessWidget {
                         const Icon(Icons.report),
                         const SizedBox(width: 10),
                         Text(intl.support),
+                      ],
+                    ),
+                    const Icon(Icons.arrow_right),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            InkWell(
+              onTap: () => bloc.add(const DocsDashboardEvent()),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.description),
+                        const SizedBox(width: 10),
+                        Text(intl.savepassDocs),
                       ],
                     ),
                     const Icon(Icons.arrow_right),

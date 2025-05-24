@@ -16,8 +16,8 @@ import 'package:savepass/app/master_password/presentation/blocs/master_password_
 import 'package:savepass/app/master_password/presentation/blocs/master_password_state.dart';
 import 'package:savepass/app/password/domain/repositories/password_repository.dart';
 import 'package:savepass/app/password/infrastructure/models/password_model.dart';
-import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
-import 'package:savepass/app/profile/presentation/blocs/profile_event.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile/profile_bloc.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile/profile_event.dart';
 import 'package:savepass/app/sync_pass/infrastructure/models/master_password_form.dart';
 import 'package:savepass/core/api/api_codes.dart';
 import 'package:savepass/core/api/savepass_response_model.dart';

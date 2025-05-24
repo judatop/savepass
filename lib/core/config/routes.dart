@@ -26,4 +26,6 @@ class Routes {
   static const String emailSentRoute = '/emailSent';
   static const String recoveryPasswordRoute = '/recoveryPassword';
   static const String signUpConfirmMail = '/signUpConfirmMail';
+  static const String weAreExperiencingIssuesRoute = '/weAreExperiencingIssues';
+  static const String newAppVersionRoute = '/newAppVersion';
 }

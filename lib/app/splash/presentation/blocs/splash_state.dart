@@ -29,6 +29,10 @@ class OpenSyncMasterPasswordState extends SplashState {
   const OpenSyncMasterPasswordState(super.model);
 }
 
+class FeatureFlagState extends SplashState {
+  const FeatureFlagState(super.model);
+}
+
 class SplashStateModel extends Equatable {
   const SplashStateModel();
 

@@ -347,5 +347,17 @@
     "emailNotConfirmed": "Your email is not confirmed",
     "@emailNotConfirmed": {},
     "masterPasswordNotRecovered": "If you lose your master password, you will lose access to your data. You can not recover it.",
-    "@masterPasswordNotRecovered": {}
+    "@masterPasswordNotRecovered": {},
+     "weAreExpectingSomeIssues": "We are experiencing some issues with the app. Please be patient while we work on it.",
+    "@weAreExpectingSomeIssues": {},
+    "weApologize": "Our apologies",
+    "@weApologize": {},
+    "newVersionAvailableTitle": "New version available",
+    "@newVersionAvailableTitle": {},
+    "newVersionAvailableText": "A new version of the app is available. Please update to the latest version for the best experience.",
+    "@newVersionAvailableText": {},
+    "newVersionAvailableDownload": "Download",
+    "@newVersionAvailableDownload": {},
+    "savepassDocs": "Docs",
+    "@savepassDocs": {}
 }

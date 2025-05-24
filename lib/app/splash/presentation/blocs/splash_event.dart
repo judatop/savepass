@@ -14,3 +14,7 @@ class SplashInitialEvent extends SplashEvent {
 class ManageRouteChangeEvent extends SplashEvent {
   const ManageRouteChangeEvent() : super();
 }
+
+class CheckAppVersionAndFeatureFlagEvent extends SplashEvent {
+  const CheckAppVersionAndFeatureFlagEvent() : super();
+}

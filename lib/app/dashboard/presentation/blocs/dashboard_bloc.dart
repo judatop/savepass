@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -18,7 +19,7 @@ import 'package:savepass/app/password/domain/repositories/password_repository.da
 import 'package:savepass/app/password/infrastructure/models/password_model.dart';
 import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
-import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile/profile_bloc.dart';
 import 'package:savepass/core/api/api_codes.dart';
 import 'package:savepass/core/api/savepass_response_model.dart';
 import 'package:savepass/core/form/text_form.dart';
@@ -71,6 +72,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<GetCardsEvent>(_onGetCardsEvent);
     on<GetPasswordsEvent>(_onGetPasswordsEvent);
     on<CheckSupabaseBiometricsEvent>(_onCheckSupabaseBiometricsEvent);
+    on<RateItDashboardEvent>(_onRateItDashboardEvent);
+    on<SupportDashboardEvent>(_onSupportDashboardEvent);
+    on<DocsDashboardEvent>(_onDocsDashboardEvent);
   }
 
   FutureOr<void> _onDashboardInitialEvent(
@@ -809,5 +813,106 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         ),
       ),
     );
+  }
+
+  FutureOr<void> _onRateItDashboardEvent(
+    RateItDashboardEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    late Either<Fail<dynamic>, String> response;
+
+    if (Platform.isAndroid) {
+      response = await preferencesRepository.getPlayStoreURL();
+    } else {
+      response = await preferencesRepository.getAppStoreURL();
+    }
+
+    late String? url;
+
+    response.fold(
+      (l) {
+        url = null;
+      },
+      (r) {
+        url = r;
+      },
+    );
+
+    if (url == null) {
+      emit(GeneralErrorState(state.model));
+      return;
+    }
+
+    final Uri uri = Uri.parse(url!);
+
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      emit(GeneralErrorState(state.model));
+    }
+  }
+
+  FutureOr<void> _onSupportDashboardEvent(
+    SupportDashboardEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    final response = await preferencesRepository.getSupportMail();
+
+    String? supportMail;
+
+    response.fold(
+      (l) {
+        supportMail = null;
+      },
+      (r) {
+        supportMail = r;
+      },
+    );
+
+    if (supportMail == null) {
+      emit(GeneralErrorState(state.model));
+      return;
+    }
+
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: supportMail,
+      queryParameters: {
+        'subject': 'Support',
+      },
+    );
+
+    if (await canLaunchUrl(emailLaunchUri)) {
+      await launchUrl(emailLaunchUri);
+    } else {
+      throw Exception('Error launching mail URL');
+    }
+  }
+
+  FutureOr<void> _onDocsDashboardEvent(
+    DocsDashboardEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    final response = await preferencesRepository.getSavePassDocsURL();
+
+    String? savepassDocsURL;
+
+    response.fold(
+      (l) {
+        savepassDocsURL = null;
+      },
+      (r) {
+        savepassDocsURL = r;
+      },
+    );
+
+    if (savepassDocsURL == null) {
+      emit(GeneralErrorState(state.model));
+      return;
+    }
+
+    final Uri uri = Uri.parse(savepassDocsURL!);
+
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      emit(GeneralErrorState(state.model));
+    }
   }
 }

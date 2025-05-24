@@ -92,4 +92,106 @@ class SupabaseParametersDatasource implements ParametersDatasource {
       );
     }
   }
+
+  @override
+  Future<Either<Fail, String>> getAppVersion() async {
+    try {
+      final response = await supabase
+          .from(DbUtils.publicParametersTable)
+          .select()
+          .eq('key', 'appVersion');
+
+      return Right(response[0]['value'] as String);
+    } catch (e, stackTrace) {
+      log.severe('getAppVersion: $e', e, stackTrace);
+      return Left(
+        Fail('Error occurred while getting app version'),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Fail, String>> getFeatureFlag() async {
+    try {
+      final response = await supabase
+          .from(DbUtils.publicParametersTable)
+          .select()
+          .eq('key', 'featureFlag');
+
+      return Right(response[0]['value'] as String);
+    } catch (e, stackTrace) {
+      log.severe('getFeatureFlag: $e', e, stackTrace);
+      return Left(
+        Fail('Error occurred while getting feature flag'),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Fail, String>> getAppStoreURL() async {
+    try {
+      final response = await supabase
+          .from(DbUtils.publicParametersTable)
+          .select()
+          .eq('key', 'appStoreURL');
+
+      return Right(response[0]['value'] as String);
+    } catch (e, stackTrace) {
+      log.severe('getAppStoreURL: $e', e, stackTrace);
+      return Left(
+        Fail('Error occurred while getting app store URL'),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Fail, String>> getPlayStoreURL() async {
+    try {
+      final response = await supabase
+          .from(DbUtils.publicParametersTable)
+          .select()
+          .eq('key', 'playStoreURL');
+
+      return Right(response[0]['value'] as String);
+    } catch (e, stackTrace) {
+      log.severe('getPlayStoreURL: $e', e, stackTrace);
+      return Left(
+        Fail('Error occurred while getting play store URL'),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Fail, String>> getSavePassDocsURL() async {
+    try {
+      final response = await supabase
+          .from(DbUtils.publicParametersTable)
+          .select()
+          .eq('key', 'savepassDocs');
+
+      return Right(response[0]['value'] as String);
+    } catch (e, stackTrace) {
+      log.severe('getSavePassDocsURL: $e', e, stackTrace);
+      return Left(
+        Fail('Error occurred while getting savepass docs URL'),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Fail, String>> getSupportMail() async {
+    try {
+      final response = await supabase
+          .from(DbUtils.publicParametersTable)
+          .select()
+          .eq('key', 'supportMail');
+
+      return Right(response[0]['value'] as String);
+    } catch (e, stackTrace) {
+      log.severe('getSupportMail: $e', e, stackTrace);
+      return Left(
+        Fail('Error occurred while getting support mail URL'),
+      );
+    }
+  }
 }

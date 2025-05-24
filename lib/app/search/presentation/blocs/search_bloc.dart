@@ -8,7 +8,7 @@ import 'package:savepass/app/card/domain/repositories/card_repository.dart';
 import 'package:savepass/app/card/infrastructure/models/card_model.dart';
 import 'package:savepass/app/password/domain/repositories/password_repository.dart';
 import 'package:savepass/app/password/infrastructure/models/password_model.dart';
-import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile/profile_bloc.dart';
 import 'package:savepass/app/search/infrastructure/models/search_model.dart';
 import 'package:savepass/app/search/infrastructure/models/search_type_enum.dart';
 import 'package:savepass/app/search/presentation/blocs/search_event.dart';

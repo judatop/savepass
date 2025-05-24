@@ -347,5 +347,17 @@
     "emailNotConfirmed": "Su correo electrónico no ha sido confirmado",
     "@emailNotConfirmed": {},
     "masterPasswordNotRecovered": "Si pierdes tu contraseña maestra, perderás el acceso a tus datos. No podrás recuperarlos.",
-    "@masterPasswordNotRecovered": {}
+    "@masterPasswordNotRecovered": {},
+    "weAreExpectingSomeIssues": "Estamos experimentando algunos problemas técnico, por favor se paciente mientras trabajamos para solucionarlos.",
+    "@weAreExpectingSomeIssues": {},
+    "weApologize": "Lo sentimos",
+    "@weApologize": {},
+    "newVersionAvailableTitle": "Nueva versión disponible",
+    "@newVersionAvailableTitle": {},
+    "newVersionAvailableText": "Ya está disponible una nueva versión de la aplicación. Actualiza a la última versión para disfrutar de la mejor experiencia.",
+    "@newVersionAvailableText": {},
+    "newVersionAvailableDownload": "Descargar",
+    "@newVersionAvailableDownload": {},
+    "savepassDocs": "Documentación",
+    "@savepassDocs": {}
 }

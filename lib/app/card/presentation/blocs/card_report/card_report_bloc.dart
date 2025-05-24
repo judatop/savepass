@@ -8,7 +8,7 @@ import 'package:savepass/app/card/domain/repositories/card_repository.dart';
 import 'package:savepass/app/card/infrastructure/models/card_model.dart';
 import 'package:savepass/app/card/presentation/blocs/card_report/card_report_event.dart';
 import 'package:savepass/app/card/presentation/blocs/card_report/card_report_state.dart';
-import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile/profile_bloc.dart';
 import 'package:savepass/core/api/savepass_response_model.dart';
 import 'package:savepass/core/form/text_form.dart';
 import 'package:savepass/core/utils/password_utils.dart';

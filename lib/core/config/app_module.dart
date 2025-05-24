@@ -65,7 +65,11 @@ import 'package:savepass/app/profile/domain/datasources/profile_datasource.dart'
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/app/profile/infraestructure/datasources/supabase_profile_datasource.dart';
 import 'package:savepass/app/profile/infraestructure/repositories_impl/profile_repository_impl.dart';
-import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
+import 'package:savepass/app/profile/presentation/blocs/experiencing_issues/experiencing_issues_bloc.dart';
+import 'package:savepass/app/profile/presentation/blocs/new_app_version/new_app_version_bloc.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile/profile_bloc.dart';
+import 'package:savepass/app/profile/presentation/screens/new_app_version_screen.dart';
+import 'package:savepass/app/profile/presentation/screens/we_are_experiencing_issues_screen.dart';
 import 'package:savepass/app/search/presentation/blocs/search_bloc.dart';
 import 'package:savepass/app/search/presentation/screens/search_screen.dart';
 import 'package:savepass/app/splash/presentation/blocs/splash_bloc.dart';
@@ -129,6 +133,8 @@ class AppModule extends Module {
     i.addSingleton(ProfileBloc.new);
     i.addSingleton(BiometricBloc.new);
     i.addSingleton(MasterPasswordBloc.new);
+    i.addSingleton(ExperiencingIssuesBloc.new);
+    i.addSingleton(NewAppVersionBloc.new);
   }
 
   @override
@@ -214,6 +220,14 @@ class AppModule extends Module {
     r.child(
       Routes.signUpConfirmMail,
       child: (context) => const ConfirmMailSignUpScreen(),
+    );
+    r.child(
+      Routes.weAreExperiencingIssuesRoute,
+      child: (context) => const WeAreExperiencingIssuesScreen(),
+    );
+    r.child(
+      Routes.newAppVersionRoute,
+      child: (context) => const NewAppVersionScreen(),
     );
   }
 }

@@ -4,4 +4,6 @@ class LottiePaths {
   static const String device = 'assets/lotties/device.json';
   static const String biometrics = 'assets/lotties/biometrics.json';
   static const String mail = 'assets/lotties/mail.json';
+  static const String update = 'assets/lotties/update.json';
+  static const String error = 'assets/lotties/error.json';
 }

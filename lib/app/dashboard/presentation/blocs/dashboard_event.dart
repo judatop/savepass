@@ -100,3 +100,15 @@ class GetPasswordsEvent extends DashboardEvent{
 class CheckSupabaseBiometricsEvent extends DashboardEvent{
   const CheckSupabaseBiometricsEvent() : super();
 }
+
+class RateItDashboardEvent extends DashboardEvent {
+  const RateItDashboardEvent() : super();
+}
+
+class SupportDashboardEvent extends DashboardEvent {
+  const SupportDashboardEvent() : super();
+}
+
+class DocsDashboardEvent extends DashboardEvent {
+  const DocsDashboardEvent() : super();
+}

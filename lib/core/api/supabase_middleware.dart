@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:logging/logging.dart';
-import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile/profile_bloc.dart';
 import 'package:savepass/core/api/savepass_response_model.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/utils/db_utils.dart';

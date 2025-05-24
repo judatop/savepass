@@ -18,7 +18,7 @@ class AddPasswordWidget extends StatelessWidget {
 
     return AdsCard(
       elevation: 1,
-      onTap: () {
+      onTap: () async {
         final bloc = Modular.get<DashboardBloc>();
         bloc.add(const OnClickNewPassword());
       },

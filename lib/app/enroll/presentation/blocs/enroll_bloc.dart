@@ -7,8 +7,8 @@ import 'package:savepass/app/enroll/domain/repositories/enroll_repository.dart';
 import 'package:savepass/app/enroll/infrastructure/models/enroll_new_device_model.dart';
 import 'package:savepass/app/enroll/presentation/blocs/enroll_event.dart';
 import 'package:savepass/app/enroll/presentation/blocs/enroll_state.dart';
-import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
-import 'package:savepass/app/profile/presentation/blocs/profile_event.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile/profile_bloc.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile/profile_event.dart';
 import 'package:savepass/core/utils/device_info.dart';
 
 class EnrollBloc extends Bloc<EnrollEvent, EnrollState> {

@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
-import 'package:savepass/app/profile/presentation/blocs/profile_event.dart';
-import 'package:savepass/app/profile/presentation/blocs/profile_state.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile/profile_event.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile/profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final Logger log;

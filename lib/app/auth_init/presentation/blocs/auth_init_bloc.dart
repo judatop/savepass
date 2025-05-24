@@ -10,8 +10,8 @@ import 'package:savepass/app/auth_init/domain/repositories/auth_init_repository.
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_event.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_state.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
-import 'package:savepass/app/profile/presentation/blocs/profile_bloc.dart';
-import 'package:savepass/app/profile/presentation/blocs/profile_event.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile/profile_bloc.dart';
+import 'package:savepass/app/profile/presentation/blocs/profile/profile_event.dart';
 import 'package:savepass/core/api/api_codes.dart';
 import 'package:savepass/core/env/env.dart';
 import 'package:savepass/core/form/password_form.dart';

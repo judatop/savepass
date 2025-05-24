@@ -24,8 +24,6 @@ We are using Supabase as our database, API, storage and authentication manager. 
 
 Supabase Storage is used to store files/images related with the app. You'll need to set up your storage and create a new bucket and folder, copy the values: **SUPABASE_BUCKET** and **SUPABASE_BUCKET_AVATARS_FOLDER**.
 
-Also, you need to add another key for a public parameters bucket called **SUPABASE_PARAMETERS_BUCKET**.
-
 ### Supabase Auth with Google
 
 One of the authentication methods we are using is Google. You'll need to create a new project on Google Cloud Platform and create a new OAuth client ID for web, Android and iOS. Then, copy the values: **GOOGLE_WEB_CLIENT_ID** and **GOOGLE_IOS_CLIENT_ID**. After that, you'll need to enable the Google Auth method on Supabase and fill the respective values.

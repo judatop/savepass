@@ -48,3 +48,5 @@ firebase_options.dart
 env.g.dart
 db
 GoogleService-Info.plist
+
+.kotlin

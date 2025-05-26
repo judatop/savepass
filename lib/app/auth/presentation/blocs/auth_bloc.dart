@@ -94,53 +94,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthWithGoogleEvent event,
     Emitter<AuthState> emit,
   ) async {
-    emit(
-      ChangeAuthState(
-        state.model.copyWith(
-          status: FormzSubmissionStatus.inProgress,
-        ),
-      ),
+    supabase.auth.signInWithOAuth(
+      supabaseauth.OAuthProvider.google,
+      redirectTo: Env.supabaseRedirectUrl,
+      authScreenLaunchMode: supabaseauth.LaunchMode.externalApplication,
     );
-
-    try {
-      final googleUser = await googleSignIn.signIn();
-      final googleAuth = await googleUser!.authentication;
-      final accessToken = googleAuth.accessToken;
-      final idToken = googleAuth.idToken;
-
-      if (accessToken == null || idToken == null) {
-        emit(
-          GeneralErrorState(
-            state.model.copyWith(status: FormzSubmissionStatus.failure),
-          ),
-        );
-        return;
-      }
-
-      final response = await supabase.auth.signInWithIdToken(
-        provider: supabaseauth.OAuthProvider.google,
-        idToken: idToken,
-        accessToken: accessToken,
-      );
-
-      final user = response.user;
-
-      if (user == null) {
-        emit(
-          GeneralErrorState(
-            state.model.copyWith(status: FormzSubmissionStatus.failure),
-          ),
-        );
-        return;
-      }
-    } catch (e, stacktTrace) {
-      log.severe('onAuthWithGoogleEvent error: $e', e, stacktTrace);
-      emit(
-        GeneralErrorState(
-          state.model.copyWith(status: FormzSubmissionStatus.failure),
-        ),
-      );
-    }
   }
 
   FutureOr<void> _onAuthWithGithubEvent(

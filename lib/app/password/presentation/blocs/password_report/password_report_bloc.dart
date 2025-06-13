@@ -81,14 +81,14 @@ class PassReportBloc extends Bloc<PassReportEvent, PassReportState> {
           passwordsList.map(
             (e) async {
               final model = PasswordModel.fromJson(e);
-              model.copyWith(
+              final newModel = model.copyWith(
                 password: SecurityUtils.decryptPassword(
                   model.password,
                   derivedKey,
                 ),
               );
 
-              return PasswordModel.fromJson(e);
+              return newModel;
             },
           ),
         ),

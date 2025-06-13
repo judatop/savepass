@@ -361,5 +361,7 @@
     "savepassDocs": "Documentación",
     "@savepassDocs": {},
     "goBackText": "Tus cambios no se han guardado, ¿deseas volver atrás?",
-    "@goBackText": {}
+    "@goBackText": {},
+    "logoutText": "¿Estás seguro que deseas cerrar sesión?",
+    "@logoutText": {}
 }

@@ -275,11 +275,14 @@ class MasterPasswordBloc
     List<UpdatePasswordsModel> passwordsToUpdate = [];
 
     for (PasswordModel p in passwords) {
+      final password =
+          '${p.password.split('|')[0]}|${p.password.split('|')[1]}';
+
       passwordsToUpdate.add(
         UpdatePasswordsModel(
           id: p.id!,
           password: await SecurityUtils.encryptPassword(
-            p.password,
+            password,
             newDerivedKey,
           ),
           vaultId: p.vaultId!,

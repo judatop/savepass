@@ -106,18 +106,20 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
         return;
       }
 
+      final passwordDecrypted = SecurityUtils.decryptPassword(
+                passModel!.password,
+                derivedKey,
+              );
+
       emit(
         ChangePasswordState(
           state.model.copyWith(
             status: FormzSubmissionStatus.success,
             passwordSelected: passModel,
             name: TextForm.dirty(passModel!.name ?? ''),
-            email: TextForm.dirty(passModel!.username),
+            email: TextForm.dirty(passwordDecrypted.split('|')[0]),
             password: PasswordForm.dirty(
-              SecurityUtils.decryptPassword(
-                passModel!.password,
-                derivedKey,
-              ),
+              passwordDecrypted.split('|')[1],
             ),
             singleTag: TextForm.dirty(passModel!.domain ?? ''),
             desc: TextForm.dirty(passModel!.description ?? ''),
@@ -330,6 +332,8 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
       return;
     }
 
+    final password = '${state.model.email.value}|${state.model.password.value}';
+
     late final Either<Fail, SavePassResponseModel> response;
 
     PasswordModel? passwordSelected = state.model.passwordSelected;
@@ -339,9 +343,8 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
           id: passwordSelected.id,
           typeImg: state.model.imgUrl,
           name: state.model.name.value,
-          username: state.model.email.value,
           password: await SecurityUtils.encryptPassword(
-            state.model.password.value,
+            password,
             derivedKey,
           ),
           description: state.model.desc.value,
@@ -354,9 +357,8 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
         model: PasswordModel(
           typeImg: state.model.imgUrl,
           name: state.model.name.value,
-          username: state.model.email.value,
           password: await SecurityUtils.encryptPassword(
-            state.model.password.value,
+            password,
             derivedKey,
           ),
           description: state.model.desc.value,

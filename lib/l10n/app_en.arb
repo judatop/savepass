@@ -348,7 +348,7 @@
     "@emailNotConfirmed": {},
     "masterPasswordNotRecovered": "If you lose your master password, you will lose access to your data. You can not recover it.",
     "@masterPasswordNotRecovered": {},
-     "weAreExpectingSomeIssues": "We are experiencing some issues with the app. Please be patient while we work on it.",
+    "weAreExpectingSomeIssues": "We are experiencing some issues with the app. Please be patient while we work on it.",
     "@weAreExpectingSomeIssues": {},
     "weApologize": "Our apologies",
     "@weApologize": {},
@@ -361,5 +361,7 @@
     "savepassDocs": "Docs",
     "@savepassDocs": {},
     "goBackText": "Your changes have not been saved. Do you want to go back?",
-    "@goBackText": {}
+    "@goBackText": {},
+    "logoutText": "Are you sure you want to log out?",
+    "@logoutText": {}
 }

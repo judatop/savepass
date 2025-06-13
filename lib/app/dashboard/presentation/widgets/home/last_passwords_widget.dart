@@ -131,7 +131,7 @@ class LastPasswordsWidget extends StatelessWidget {
                                           SizedBox(
                                             width: deviceWidth * 0.35,
                                             child: Text(
-                                              item.username,
+                                              item.password.split('|')[0],
                                               style: const TextStyle(
                                                 fontSize: 14.5,
                                               ),

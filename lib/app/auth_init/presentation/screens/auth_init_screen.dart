@@ -13,6 +13,7 @@ import 'package:savepass/app/auth_init/presentation/widgets/submit_button_widget
 import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/main.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class AuthInitScreen extends StatelessWidget {
@@ -66,7 +67,7 @@ void _listener(context, state) {
     Modular.to.pushNamed(Routes.enrollRoute);
   }
 
-  if(state is UserBlockedState){
+  if (state is UserBlockedState) {
     SnackBarUtils.showErrroSnackBar(context, intl.userBlocked);
   }
 }
@@ -187,7 +188,58 @@ class _Body extends StatelessWidget {
                       if (!status.isInProgress &&
                           (!hasBiometricsSaved ||
                               !canAuthenticateWithBiometrics)) {
-                        return Container();
+                        return AdsTextButton(
+                          text: intl.logOut,
+                          onPressedCallback: () {
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text(intl.attentionTitle),
+                                  content: SingleChildScrollView(
+                                    child: ListBody(
+                                      children: <Widget>[
+                                        Text(
+                                          intl.logoutText,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    AdsFilledIconButton(
+                                      onPressedCallback: () {
+                                        supabase.auth.signOut();
+                                        Modular.to.pushNamedAndRemoveUntil(
+                                          Routes.getStartedRoute,
+                                          (_) => false,
+                                        );
+                                      },
+                                      text: intl.acceptButton,
+                                      icon: Icons.check,
+                                    ),
+                                    TextButton(
+                                      child: Text(
+                                        intl.cancelButton,
+                                        style: const TextStyle(
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Modular.to.pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          textStyle: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                          ),
+                          textAlign: TextAlign.center,
+                        );
                       }
 
                       return Skeletonizer(

@@ -506,7 +506,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       ),
     );
 
-    String cleanPassword = event.password.password;
+    String cleanPassword = event.password.password.split('|')[1];
 
     await Clipboard.setData(ClipboardData(text: cleanPassword));
 

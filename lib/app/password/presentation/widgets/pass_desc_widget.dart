@@ -23,7 +23,14 @@ class PassDescWidget extends StatelessWidget {
       builder: (context, state) {
         final model = state.model;
         final desc = model.desc.value;
-        _controller.text = desc;
+
+        if (_controller.text != desc) {
+          final previousSelection = _controller.selection;
+          _controller.value = TextEditingValue(
+            text: desc,
+            selection: previousSelection,
+          );
+        }
 
         return AdsFormField(
           label: intl.passDesc,

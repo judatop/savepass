@@ -34,12 +34,78 @@ class PassHeaderWidget extends StatelessWidget {
                   ? MainAxisAlignment.spaceBetween
                   : MainAxisAlignment.start,
               children: [
-                AdsFilledRoundIconButton(
-                  icon: const Icon(
-                    Icons.keyboard_arrow_left,
-                  ),
-                  onPressedCallback: () {
-                    Modular.to.pop();
+                BlocBuilder<PasswordBloc, PasswordState>(
+                  buildWhen: (previous, current) =>
+                      (previous.model.name.value != current.model.name.value) ||
+                      (previous.model.email.value !=
+                          current.model.email.value) ||
+                      (previous.model.password.value !=
+                          current.model.password.value) ||
+                      (previous.model.singleTag.value !=
+                          current.model.singleTag.value) ||
+                      (previous.model.desc.value != current.model.desc.value),
+                  builder: (context, state) {
+                    final name = state.model.name.value;
+                    final email = state.model.email.value;
+                    final password = state.model.password.value;
+                    final singleTag = state.model.singleTag.value;
+                    final desc = state.model.desc.value;
+
+                    return AdsFilledRoundIconButton(
+                      icon: const Icon(
+                        Icons.keyboard_arrow_left,
+                      ),
+                      onPressedCallback: () {
+                        if (name.isEmpty &&
+                            email.isEmpty &&
+                            password.isEmpty &&
+                            singleTag.isEmpty &&
+                            desc.isEmpty) {
+                          Modular.to.pop();
+                          return;
+                        }
+
+                        showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text(intl.attentionTitle),
+                              content: SingleChildScrollView(
+                                child: ListBody(
+                                  children: <Widget>[
+                                    Text(
+                                      intl.goBackText,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: <Widget>[
+                                AdsFilledIconButton(
+                                  onPressedCallback: () {
+                                    Modular.to.pop();
+                                    Modular.to.pop();
+                                  },
+                                  text: intl.acceptButton,
+                                  icon: Icons.check,
+                                ),
+                                TextButton(
+                                  child: Text(
+                                    intl.cancelButton,
+                                    style: const TextStyle(
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Modular.to.pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    );
                   },
                 ),
                 if (!isUpdating)

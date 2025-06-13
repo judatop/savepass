@@ -21,9 +21,10 @@ class PassActionButtonsWidget extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
+    final viewInsets = MediaQuery.of(context).viewInsets;
 
     return Positioned(
-      bottom: 0,
+      bottom: viewInsets.bottom > 0 ? viewInsets.bottom : 0,
       left: 0,
       right: 0,
       child: Container(

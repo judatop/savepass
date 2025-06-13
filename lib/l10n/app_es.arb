@@ -359,5 +359,7 @@
     "newVersionAvailableDownload": "Descargar",
     "@newVersionAvailableDownload": {},
     "savepassDocs": "Documentación",
-    "@savepassDocs": {}
+    "@savepassDocs": {},
+    "goBackText": "Tus cambios no se han guardado, ¿deseas volver atrás?",
+    "@goBackText": {}
 }

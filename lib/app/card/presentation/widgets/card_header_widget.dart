@@ -43,7 +43,45 @@ class CardHeaderWidget extends StatelessWidget {
                     Icons.keyboard_arrow_left,
                   ),
                   onPressedCallback: () {
-                    Modular.to.pop();
+                    showDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text(intl.attentionTitle),
+                          content: SingleChildScrollView(
+                            child: ListBody(
+                              children: <Widget>[
+                                Text(
+                                  intl.goBackText,
+                                ),
+                              ],
+                            ),
+                          ),
+                          actions: <Widget>[
+                            AdsFilledIconButton(
+                              onPressedCallback: () {
+                                Modular.to.pop();
+                                Modular.to.pop();
+                              },
+                              text: intl.acceptButton,
+                              icon: Icons.check,
+                            ),
+                            TextButton(
+                              child: Text(
+                                intl.cancelButton,
+                                style: const TextStyle(
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                              onPressed: () {
+                                Modular.to.pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                 ),
                 if (!isUpdating)

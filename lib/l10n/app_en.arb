@@ -359,5 +359,7 @@
     "newVersionAvailableDownload": "Download",
     "@newVersionAvailableDownload": {},
     "savepassDocs": "Docs",
-    "@savepassDocs": {}
+    "@savepassDocs": {},
+    "goBackText": "Your changes have not been saved. Do you want to go back?",
+    "@goBackText": {}
 }

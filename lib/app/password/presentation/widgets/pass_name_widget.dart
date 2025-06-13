@@ -83,7 +83,14 @@ class PassNameWidget extends StatelessWidget {
                       focusNode,
                       onFieldSubmitted,
                     ) {
-                      textEditingController.text = model.name.value;
+                      if (textEditingController.text != model.name.value) {
+                        final previousSelection =
+                            textEditingController.selection;
+                        textEditingController.value = TextEditingValue(
+                          text: model.name.value,
+                          selection: previousSelection,
+                        );
+                      }
 
                       return TextFormField(
                         controller: textEditingController,

@@ -38,12 +38,80 @@ class CardHeaderWidget extends StatelessWidget {
                   ? MainAxisAlignment.spaceBetween
                   : MainAxisAlignment.start,
               children: [
-                AdsFilledRoundIconButton(
-                  icon: const Icon(
-                    Icons.keyboard_arrow_left,
-                  ),
-                  onPressedCallback: () {
-                    Modular.to.pop();
+                BlocBuilder<CardBloc, CardState>(
+                  buildWhen: (previous, current) =>
+                      (previous.model.cardNumber.value !=
+                          current.model.cardNumber.value) ||
+                      (previous.model.cardHolderName.value !=
+                          current.model.cardHolderName.value) ||
+                      (previous.model.cardCvv.value !=
+                          current.model.cardCvv.value) ||
+                      (previous.model.expirationMonth.value !=
+                          current.model.expirationMonth.value) ||
+                      (previous.model.expirationYear.value !=
+                          current.model.expirationYear.value),
+                  builder: (context, state) {
+                    final cardNumber = state.model.cardNumber.value;
+                    final cardHolderName = state.model.cardHolderName.value;
+                    final cardCvv = state.model.cardCvv.value;
+                    final expirationMonth = state.model.expirationMonth.value;
+                    final expirationYear = state.model.expirationYear.value;
+
+                    return AdsFilledRoundIconButton(
+                      icon: const Icon(
+                        Icons.keyboard_arrow_left,
+                      ),
+                      onPressedCallback: () {
+                        if (cardNumber.isEmpty &&
+                            cardHolderName.isEmpty &&
+                            cardCvv.isEmpty &&
+                            expirationMonth.isEmpty &&
+                            expirationYear.isEmpty) {
+                          Modular.to.pop();
+                          return;
+                        }
+
+                        showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text(intl.attentionTitle),
+                              content: SingleChildScrollView(
+                                child: ListBody(
+                                  children: <Widget>[
+                                    Text(
+                                      intl.goBackText,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: <Widget>[
+                                AdsFilledIconButton(
+                                  onPressedCallback: () {
+                                    Modular.to.pop();
+                                    Modular.to.pop();
+                                  },
+                                  text: intl.acceptButton,
+                                  icon: Icons.check,
+                                ),
+                                TextButton(
+                                  child: Text(
+                                    intl.cancelButton,
+                                    style: const TextStyle(
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Modular.to.pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    );
                   },
                 ),
                 if (!isUpdating)

@@ -38,12 +38,18 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     on<ChangeDescEvent>(_onChangeDescEvent);
     on<TogglePasswordEvent>(_onTogglePasswordEvent);
     on<OnChangeTypeEvent>(_onOnChangeTypeEvent);
-    on<OnClickGeneratePasswordEvent>(_onOnClickGeneratePasswordEvent);
     on<SelectNamePasswordEvent>(_onSelectNamePasswordEvent);
     on<SubmitPasswordEvent>(_onSavePasswordEvent);
     on<CopyUserToClipboardEvent>(_onCopyUserToClipboardEvent);
     on<CopyPassToClipboardEvent>(_onCopyPassToClipboardEvent);
     on<DeletePasswordEvent>(_onDeletePasswordEvent);
+    on<ChangeSliderValueEvent>(_onChangeSliderValueEvent);
+    on<ChangeEasyToReadEvent>(_onChangeEasyToReadEvent);
+    on<ChangeUpperLowerCaseEvent>(_onChangeUpperLowerCaseEvent);
+    on<ChangeNumbersEvent>(_onChangeNumbersEvent);
+    on<ChangeSymbolsEvent>(_onChangeSymbolsEvent);
+    on<SubmitPasswordGenerator>(_onSubmitPasswordGenerator);
+    on<GenerateRandomPasswordEvent>(_onGenerateRandomPasswordEvent);
   }
 
   FutureOr<void> _onPasswordInitialEvent(
@@ -106,18 +112,20 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
         return;
       }
 
+      final passwordDecrypted = SecurityUtils.decryptPassword(
+        passModel!.password,
+        derivedKey,
+      );
+
       emit(
         ChangePasswordState(
           state.model.copyWith(
             status: FormzSubmissionStatus.success,
             passwordSelected: passModel,
             name: TextForm.dirty(passModel!.name ?? ''),
-            email: TextForm.dirty(passModel!.username),
+            email: TextForm.dirty(passwordDecrypted.split('|')[0]),
             password: PasswordForm.dirty(
-              SecurityUtils.decryptPassword(
-                passModel!.password,
-                derivedKey,
-              ),
+              passwordDecrypted.split('|')[1],
             ),
             singleTag: TextForm.dirty(passModel!.domain ?? ''),
             desc: TextForm.dirty(passModel!.description ?? ''),
@@ -240,20 +248,6 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     );
   }
 
-  FutureOr<void> _onOnClickGeneratePasswordEvent(
-    OnClickGeneratePasswordEvent event,
-    Emitter<PasswordState> emit,
-  ) {
-    final generatedPassword = PasswordUtils.generateRandomPassword();
-    emit(
-      GeneratedPasswordState(
-        state.model.copyWith(
-          password: PasswordForm.dirty(generatedPassword),
-        ),
-      ),
-    );
-  }
-
   FutureOr<void> _onSelectNamePasswordEvent(
     SelectNamePasswordEvent event,
     Emitter<PasswordState> emit,
@@ -330,6 +324,8 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
       return;
     }
 
+    final password = '${state.model.email.value}|${state.model.password.value}';
+
     late final Either<Fail, SavePassResponseModel> response;
 
     PasswordModel? passwordSelected = state.model.passwordSelected;
@@ -339,9 +335,8 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
           id: passwordSelected.id,
           typeImg: state.model.imgUrl,
           name: state.model.name.value,
-          username: state.model.email.value,
           password: await SecurityUtils.encryptPassword(
-            state.model.password.value,
+            password,
             derivedKey,
           ),
           description: state.model.desc.value,
@@ -354,9 +349,8 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
         model: PasswordModel(
           typeImg: state.model.imgUrl,
           name: state.model.name.value,
-          username: state.model.email.value,
           password: await SecurityUtils.encryptPassword(
-            state.model.password.value,
+            password,
             derivedKey,
           ),
           description: state.model.desc.value,
@@ -518,5 +512,121 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
         },
       );
     }
+  }
+
+  FutureOr<void> _onChangeSliderValueEvent(
+    ChangeSliderValueEvent event,
+    Emitter<PasswordState> emit,
+  ) {
+    emit(
+      ChangePasswordState(
+        state.model.copyWith(
+          sliderValue: event.value,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onChangeEasyToReadEvent(
+    ChangeEasyToReadEvent event,
+    Emitter<PasswordState> emit,
+  ) {
+    final newValue = !state.model.easyToRead;
+
+    emit(
+      ChangePasswordState(
+        state.model.copyWith(
+          easyToRead: newValue,
+          upperLowerCase: true,
+          numbers: true,
+          symbols: false,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onChangeUpperLowerCaseEvent(
+    ChangeUpperLowerCaseEvent event,
+    Emitter<PasswordState> emit,
+  ) {
+    final currentValue = state.model.upperLowerCase;
+    emit(
+      ChangePasswordState(
+        state.model.copyWith(
+          upperLowerCase: !currentValue,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onChangeNumbersEvent(
+    ChangeNumbersEvent event,
+    Emitter<PasswordState> emit,
+  ) {
+    final currentValue = state.model.numbers;
+    emit(
+      ChangePasswordState(
+        state.model.copyWith(
+          numbers: !currentValue,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onChangeSymbolsEvent(
+    ChangeSymbolsEvent event,
+    Emitter<PasswordState> emit,
+  ) {
+    final currentValue = state.model.symbols;
+    emit(
+      ChangePasswordState(
+        state.model.copyWith(
+          symbols: !currentValue,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onSubmitPasswordGenerator(
+    SubmitPasswordGenerator event,
+    Emitter<PasswordState> emit,
+  ) {
+    emit(
+      ChangePasswordState(
+        state.model.copyWith(
+          password: PasswordForm.dirty(state.model.generatedPassword.value),
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onGenerateRandomPasswordEvent(
+    GenerateRandomPasswordEvent event,
+    Emitter<PasswordState> emit,
+  ) async {
+    final allFalse = !(state.model.easyToRead) &&
+        !(state.model.upperLowerCase) &&
+        !(state.model.numbers) &&
+        !(state.model.symbols);
+
+    if (allFalse) {
+      return;
+    }
+
+    final generatedPassword = PasswordUtils.generateRandomPassword(
+      length: state.model.sliderValue.toInt(),
+      easyToRead: state.model.easyToRead,
+      upperLowerCase: state.model.upperLowerCase,
+      numbers: state.model.numbers,
+      symbols: state.model.symbols,
+    );
+
+    emit(
+      ChangePasswordState(
+        state.model.copyWith(
+          generatedPassword: TextForm.dirty(generatedPassword),
+        ),
+      ),
+    );
   }
 }

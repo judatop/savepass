@@ -126,7 +126,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
             (e) async {
               PasswordModel model = PasswordModel.fromJson(e);
               model = model.copyWith(
-                password:  SecurityUtils.decryptPassword(
+                password: SecurityUtils.decryptPassword(
                   model.password,
                   derivedKey,
                 ),
@@ -139,7 +139,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
                   SearchModel(
                     id: model.id!,
                     title: model.name!,
-                    subtitle: model.username,
+                    subtitle: model.password.split('|')[0],
                     type: SearchType.password.name,
                     vaultId: model.vaultId!,
                     imgUrl: model.typeImg,
@@ -198,8 +198,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
             (e) async {
               CardModel model = CardModel.fromJson(e);
               model = model.copyWith(
-                card:
-                     SecurityUtils.decryptPassword(model.card, derivedKey),
+                card: SecurityUtils.decryptPassword(model.card, derivedKey),
               );
 
               if (model.id != null &&

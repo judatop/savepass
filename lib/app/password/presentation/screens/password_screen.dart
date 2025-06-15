@@ -31,7 +31,9 @@ class PasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = Modular.get<PasswordBloc>();
     return BlocProvider.value(
-      value: bloc..add(PasswordInitialEvent(selectedPassId: selectedPassId)),
+      value: bloc
+        ..add(PasswordInitialEvent(selectedPassId: selectedPassId))
+        ..add(const GenerateRandomPasswordEvent()),
       child: const BlocListener<PasswordBloc, PasswordState>(
         listener: _listener,
         child: _Body(),

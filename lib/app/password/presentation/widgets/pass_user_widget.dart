@@ -80,7 +80,14 @@ class _User extends StatelessWidget {
       builder: (context, state) {
         final model = state.model;
         final email = model.email.value;
-        _controller.text = email;
+
+        if (_controller.text != email) {
+          final previousSelection = _controller.selection;
+          _controller.value = TextEditingValue(
+            text: email,
+            selection: previousSelection,
+          );
+        }
 
         return AdsFormField(
           formField: AdsTextField(

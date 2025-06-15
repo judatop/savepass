@@ -18,9 +18,10 @@ class CardActionButtonsWidget extends StatelessWidget {
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
     final bloc = Modular.get<CardBloc>();
+    final viewInsets = MediaQuery.of(context).viewInsets;
 
     return Positioned(
-      bottom: 0,
+      bottom: viewInsets.bottom > 0 ? viewInsets.bottom : 0,
       left: 0,
       right: 0,
       child: Container(
@@ -44,7 +45,8 @@ class CardActionButtonsWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   AdsFilledButton(
-                    onPressedCallback: () => bloc.add(const SubmitEditCardEvent()),
+                    onPressedCallback: () =>
+                        bloc.add(const SubmitEditCardEvent()),
                     text: intl.saveText,
                   ),
                 ],

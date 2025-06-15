@@ -1,13 +1,12 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/password/presentation/blocs/password/password_bloc.dart';
 import 'package:savepass/app/password/presentation/blocs/password/password_event.dart';
 import 'package:savepass/app/password/presentation/blocs/password/password_state.dart';
-import 'package:savepass/core/utils/regex_utils.dart';
+import 'package:savepass/app/password/presentation/widgets/generate_password/pass_generator_modal_widget.dart';
 
 class PassWidget extends StatelessWidget {
   const PassWidget({super.key});
@@ -18,6 +17,7 @@ class PassWidget extends StatelessWidget {
     final bloc = Modular.get<PasswordBloc>();
     final textTheme = Theme.of(context).textTheme;
     final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,13 +46,24 @@ class PassWidget extends StatelessWidget {
                       width: deviceWidth * 0.03,
                     ),
                     AdsFilledRoundIconButton(
-                      icon: Icon(isUpdating ? Icons.copy : Icons.refresh),
+                      icon: Icon(isUpdating ? Icons.copy : Icons.autorenew),
                       onPressedCallback: () {
                         FocusManager.instance.primaryFocus?.unfocus();
                         if (isUpdating) {
                           bloc.add(const CopyPassToClipboardEvent());
                         } else {
-                          bloc.add(const OnClickGeneratePasswordEvent());
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            useSafeArea: true,
+                            builder: (BuildContext context) {
+                              return SizedBox(
+                                width: double.infinity,
+                                height: deviceHeight * 0.70,
+                                child: const PassGeneratorModalWidget(),
+                              );
+                            },
+                          );
                         }
                       },
                     ),
@@ -85,7 +96,14 @@ class _Password extends StatelessWidget {
       builder: (context, state) {
         final model = state.model;
         final password = model.password.value;
-        _controller.text = password;
+
+        if (_controller.text != password) {
+          final previousSelection = _controller.selection;
+          _controller.value = TextEditingValue(
+            text: password,
+            selection: previousSelection,
+          );
+        }
 
         return AdsTextField(
           controller: _controller,
@@ -97,11 +115,6 @@ class _Password extends StatelessWidget {
             bloc.add(ChangePasswordEvent(password: value));
           },
           obscureText: !model.showPassword,
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(
-              RegexUtils.password,
-            ),
-          ],
           textInputAction: TextInputAction.next,
           suffixIcon:
               model.showPassword ? Icons.visibility_off : Icons.visibility,

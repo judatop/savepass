@@ -54,7 +54,7 @@ class PassReportListWidget extends StatelessWidget {
                 textAlign: TextAlign.start,
               ),
               subtitle: Text(
-                item.username,
+                item.password.split('|')[0],
                 textAlign: TextAlign.start,
                 style: const TextStyle(
                   fontWeight: FontWeight.w200,

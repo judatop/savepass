@@ -25,7 +25,14 @@ class PassDomainWidget extends StatelessWidget {
       builder: (context, state) {
         final model = state.model;
         final singleTag = model.singleTag.value;
-        _controller.text = singleTag;
+
+        if (_controller.text != singleTag) {
+          final previousSelection = _controller.selection;
+          _controller.value = TextEditingValue(
+            text: singleTag,
+            selection: previousSelection,
+          );
+        }
 
         return AdsFormField(
           label: intl.domain,

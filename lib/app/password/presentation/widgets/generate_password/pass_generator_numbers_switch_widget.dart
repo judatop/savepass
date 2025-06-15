@@ -26,16 +26,21 @@ class PassGeneratorNumbersSwitchWidget extends StatelessWidget {
         ),
         BlocBuilder<PasswordBloc, PasswordState>(
           buildWhen: (previous, current) =>
-              previous.model.numbers != current.model.numbers,
+              (previous.model.numbers != current.model.numbers) ||
+              (previous.model.easyToRead != current.model.easyToRead),
           builder: (context, state) {
+            final easyToRead = state.model.easyToRead;
             final value = state.model.numbers;
 
             return Switch(
               value: value,
               activeColor: colorScheme.primary,
-              onChanged: (bool value) {
-                bloc.add(const ChangeNumbersEvent());
-              },
+              onChanged: easyToRead
+                  ? null
+                  : (bool value) {
+                      bloc.add(const ChangeNumbersEvent());
+                      bloc.add(const GenerateRandomPasswordEvent());
+                    },
             );
           },
         ),

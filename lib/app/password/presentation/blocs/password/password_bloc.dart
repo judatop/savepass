@@ -38,7 +38,6 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     on<ChangeDescEvent>(_onChangeDescEvent);
     on<TogglePasswordEvent>(_onTogglePasswordEvent);
     on<OnChangeTypeEvent>(_onOnChangeTypeEvent);
-    on<OnClickGeneratePasswordEvent>(_onOnClickGeneratePasswordEvent);
     on<SelectNamePasswordEvent>(_onSelectNamePasswordEvent);
     on<SubmitPasswordEvent>(_onSavePasswordEvent);
     on<CopyUserToClipboardEvent>(_onCopyUserToClipboardEvent);
@@ -49,6 +48,8 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     on<ChangeUpperLowerCaseEvent>(_onChangeUpperLowerCaseEvent);
     on<ChangeNumbersEvent>(_onChangeNumbersEvent);
     on<ChangeSymbolsEvent>(_onChangeSymbolsEvent);
+    on<SubmitPasswordGenerator>(_onSubmitPasswordGenerator);
+    on<GenerateRandomPasswordEvent>(_onGenerateRandomPasswordEvent);
   }
 
   FutureOr<void> _onPasswordInitialEvent(
@@ -242,20 +243,6 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
         state.model.copyWith(
           images: images.map((e) => e.copyWith(selected: false)).toList()
             ..[newIndex] = images[newIndex].copyWith(selected: true),
-        ),
-      ),
-    );
-  }
-
-  FutureOr<void> _onOnClickGeneratePasswordEvent(
-    OnClickGeneratePasswordEvent event,
-    Emitter<PasswordState> emit,
-  ) {
-    final generatedPassword = PasswordUtils.generateRandomPassword();
-    emit(
-      GeneratedPasswordState(
-        state.model.copyWith(
-          password: PasswordForm.dirty(generatedPassword),
         ),
       ),
     );
@@ -544,11 +531,15 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     ChangeEasyToReadEvent event,
     Emitter<PasswordState> emit,
   ) {
-    final currentValue = state.model.easyToRead;
+    final newValue = !state.model.easyToRead;
+
     emit(
       ChangePasswordState(
         state.model.copyWith(
-          easyToRead: !currentValue,
+          easyToRead: newValue,
+          upperLowerCase: true,
+          numbers: true,
+          symbols: false,
         ),
       ),
     );
@@ -591,6 +582,49 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
       ChangePasswordState(
         state.model.copyWith(
           symbols: !currentValue,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onSubmitPasswordGenerator(
+    SubmitPasswordGenerator event,
+    Emitter<PasswordState> emit,
+  ) {
+    emit(
+      ChangePasswordState(
+        state.model.copyWith(
+          password: PasswordForm.dirty(state.model.generatedPassword.value),
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onGenerateRandomPasswordEvent(
+    GenerateRandomPasswordEvent event,
+    Emitter<PasswordState> emit,
+  ) async {
+    final allFalse = !(state.model.easyToRead) &&
+        !(state.model.upperLowerCase) &&
+        !(state.model.numbers) &&
+        !(state.model.symbols);
+
+    if (allFalse) {
+      return;
+    }
+
+    final generatedPassword = PasswordUtils.generateRandomPassword(
+      length: state.model.sliderValue.toInt(),
+      easyToRead: state.model.easyToRead,
+      upperLowerCase: state.model.upperLowerCase,
+      numbers: state.model.numbers,
+      symbols: state.model.symbols,
+    );
+
+    emit(
+      ChangePasswordState(
+        state.model.copyWith(
+          generatedPassword: TextForm.dirty(generatedPassword),
         ),
       ),
     );

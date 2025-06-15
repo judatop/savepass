@@ -58,7 +58,10 @@ class PassGeneratorSliderWidget extends StatelessWidget {
                       onChanged: (value) {
                         bloc.add(ChangeSliderValueEvent(value: value));
                       },
-                      min: 1,
+                      onChangeEnd: (value) {
+                        bloc.add(const GenerateRandomPasswordEvent());
+                      },
+                      min: 4,
                       max: 20,
                     ),
                   ),

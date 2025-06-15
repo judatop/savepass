@@ -53,10 +53,6 @@ class OnChangeTypeEvent extends PasswordEvent {
   const OnChangeTypeEvent({required this.newIndex}) : super();
 }
 
-class OnClickGeneratePasswordEvent extends PasswordEvent {
-  const OnClickGeneratePasswordEvent() : super();
-}
-
 class SelectNamePasswordEvent extends PasswordEvent {
   final String name;
 
@@ -99,4 +95,12 @@ class ChangeNumbersEvent extends PasswordEvent {
 
 class ChangeSymbolsEvent extends PasswordEvent {
   const ChangeSymbolsEvent() : super();
+}
+
+class GenerateRandomPasswordEvent extends PasswordEvent{
+  const GenerateRandomPasswordEvent() : super();
+}
+
+class SubmitPasswordGenerator extends PasswordEvent{
+  const SubmitPasswordGenerator() : super();
 }

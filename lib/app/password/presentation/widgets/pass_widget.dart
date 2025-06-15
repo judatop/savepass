@@ -46,7 +46,7 @@ class PassWidget extends StatelessWidget {
                       width: deviceWidth * 0.03,
                     ),
                     AdsFilledRoundIconButton(
-                      icon: Icon(isUpdating ? Icons.copy : Icons.refresh),
+                      icon: Icon(isUpdating ? Icons.copy : Icons.autorenew),
                       onPressedCallback: () {
                         FocusManager.instance.primaryFocus?.unfocus();
                         if (isUpdating) {
@@ -64,7 +64,6 @@ class PassWidget extends StatelessWidget {
                               );
                             },
                           );
-                          // bloc.add(const OnClickGeneratePasswordEvent());
                         }
                       },
                     ),

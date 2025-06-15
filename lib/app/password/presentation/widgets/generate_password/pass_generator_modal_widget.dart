@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/password/presentation/blocs/password/password_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/app/password/presentation/blocs/password/password_event.dart';
 import 'package:savepass/app/password/presentation/blocs/password/password_state.dart';
 import 'package:savepass/app/password/presentation/widgets/generate_password/pass_generator_numbers_switch_widget.dart';
 import 'package:savepass/app/password/presentation/widgets/generate_password/pass_generator_slider_widget.dart';
@@ -107,7 +108,10 @@ class _Body extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: deviceWidth * 0.06),
               child: AdsFilledButton(
-                onPressedCallback: () {},
+                onPressedCallback: () {
+                  bloc.add(const SubmitPasswordGenerator());
+                  Modular.to.pop();
+                },
                 text: intl.saveText,
               ),
             ),

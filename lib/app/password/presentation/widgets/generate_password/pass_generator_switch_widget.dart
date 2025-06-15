@@ -36,6 +36,7 @@ class PassGeneratorSwitchWidget extends StatelessWidget {
               activeColor: colorScheme.primary,
               onChanged: (bool value) {
                 bloc.add(const ChangeEasyToReadEvent());
+                bloc.add(const GenerateRandomPasswordEvent());
               },
             );
           },

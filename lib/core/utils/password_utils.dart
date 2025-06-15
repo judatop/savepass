@@ -48,43 +48,41 @@ class PasswordUtils {
 
   static String generateRandomPassword({
     int length = 16,
-    bool includeLetters = true,
-    bool includeNumbers = true,
-    bool includeSpecialCharacters = true,
+    bool easyToRead = false,
+    bool upperLowerCase = true,
+    bool numbers = true,
+    bool symbols = true,
   }) {
-    const String letters =
+    const String allLetters =
         'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const String numbers = '0123456789';
-    const String specialCharacters = '!@#\$%^&*(),.?":{}|<>';
+    const String easyLetters =
+        'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ'; // sin l, I, O
+    const String allNumbers = '0123456789';
+    const String easyNumbers = '23456789'; // sin 0,1
+    const String specialChars = '!@#\$%^&*()-_=+[]{}|;:,.<>?';
 
     String allowedChars = '';
-    if (includeLetters) allowedChars += letters;
-    if (includeNumbers) allowedChars += numbers;
-    if (includeSpecialCharacters) allowedChars += specialCharacters;
+
+    if (upperLowerCase) {
+      allowedChars += easyToRead ? easyLetters : allLetters;
+    }
+
+    if (numbers) {
+      allowedChars += easyToRead ? easyNumbers : allNumbers;
+    }
+
+    if (symbols) {
+      allowedChars += specialChars;
+    }
 
     if (allowedChars.isEmpty) {
-      throw ArgumentError('At least one character set must be included.');
+      throw ArgumentError('Debes permitir al menos un tipo de carácter.');
     }
 
-    Random random = Random.secure();
-    String password = List.generate(length, (index) {
+    final random = Random.secure();
+    String password = List.generate(length, (_) {
       return allowedChars[random.nextInt(allowedChars.length)];
     }).join();
-
-    if (!containsLowerCase(password) ||
-        !containsUpperCase(password) ||
-        !containsNumber(password) ||
-        !containsSpecialCharacter(password) ||
-        !atLeast8Characters(password) ||
-        !notContains3RepeatedCharacters(password) ||
-        !notContains3ConsecutiveCharacters(password)) {
-      return generateRandomPassword(
-        length: length,
-        includeLetters: includeLetters,
-        includeNumbers: includeNumbers,
-        includeSpecialCharacters: includeSpecialCharacters,
-      );
-    }
 
     return password;
   }

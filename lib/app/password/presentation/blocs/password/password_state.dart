@@ -54,7 +54,7 @@ class PasswordDeletedState extends PasswordState {
   const PasswordDeletedState(super.model);
 }
 
-class ReachedPasswordsState extends PasswordState{
+class ReachedPasswordsState extends PasswordState {
   const ReachedPasswordsState(super.model);
 }
 
@@ -79,7 +79,6 @@ class PasswordStateModel extends Equatable {
   final bool numbers;
   final bool symbols;
 
-
   const PasswordStateModel({
     this.name = const TextForm.pure(),
     this.email = const TextForm.pure(),
@@ -95,11 +94,11 @@ class PasswordStateModel extends Equatable {
     this.passwordSelected,
     this.isUpdating = false,
     this.generatedPassword = const TextForm.pure(),
-    this.sliderValue = 8,
+    this.sliderValue = 10,
     this.easyToRead = false,
     this.upperLowerCase = true,
     this.numbers = true,
-    this.symbols = false,
+    this.symbols = true,
   });
 
   PasswordStateModel copyWith({

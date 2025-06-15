@@ -26,16 +26,21 @@ class PassGeneratorSymbolsSwitchWidget extends StatelessWidget {
         ),
         BlocBuilder<PasswordBloc, PasswordState>(
           buildWhen: (previous, current) =>
-              previous.model.symbols != current.model.symbols,
+              (previous.model.symbols != current.model.symbols) ||
+              (previous.model.easyToRead != current.model.easyToRead),
           builder: (context, state) {
+            final easyToRead = state.model.easyToRead;
             final value = state.model.symbols;
 
             return Switch(
               value: value,
               activeColor: colorScheme.primary,
-              onChanged: (bool value) {
-                bloc.add(const ChangeSymbolsEvent());
-              },
+              onChanged: easyToRead
+                  ? null
+                  : (bool value) {
+                      bloc.add(const ChangeSymbolsEvent());
+                      bloc.add(const GenerateRandomPasswordEvent());
+                    },
             );
           },
         ),

@@ -26,16 +26,21 @@ class PassGeneratorUpperLowerSwitchWidget extends StatelessWidget {
         ),
         BlocBuilder<PasswordBloc, PasswordState>(
           buildWhen: (previous, current) =>
-              previous.model.upperLowerCase != current.model.upperLowerCase,
+              (previous.model.upperLowerCase != current.model.upperLowerCase) ||
+              (previous.model.easyToRead != current.model.easyToRead),
           builder: (context, state) {
+            final easyToRead = state.model.easyToRead;
             final value = state.model.upperLowerCase;
 
             return Switch(
               value: value,
               activeColor: colorScheme.primary,
-              onChanged: (bool value) {
-                bloc.add(const ChangeUpperLowerCaseEvent());
-              },
+              onChanged: easyToRead
+                  ? null
+                  : (bool value) {
+                      bloc.add(const ChangeUpperLowerCaseEvent());
+                      bloc.add(const GenerateRandomPasswordEvent());
+                    },
             );
           },
         ),

@@ -67,14 +67,36 @@ class SubmitPasswordEvent extends PasswordEvent {
   const SubmitPasswordEvent() : super();
 }
 
-class CopyPassToClipboardEvent extends PasswordEvent{
+class CopyPassToClipboardEvent extends PasswordEvent {
   const CopyPassToClipboardEvent() : super();
 }
 
-class CopyUserToClipboardEvent extends PasswordEvent{
+class CopyUserToClipboardEvent extends PasswordEvent {
   const CopyUserToClipboardEvent() : super();
 }
 
-class DeletePasswordEvent extends PasswordEvent{
+class DeletePasswordEvent extends PasswordEvent {
   const DeletePasswordEvent() : super();
+}
+
+class ChangeSliderValueEvent extends PasswordEvent {
+  final double value;
+
+  const ChangeSliderValueEvent({required this.value}) : super();
+}
+
+class ChangeEasyToReadEvent extends PasswordEvent {
+  const ChangeEasyToReadEvent() : super();
+}
+
+class ChangeUpperLowerCaseEvent extends PasswordEvent {
+  const ChangeUpperLowerCaseEvent() : super();
+}
+
+class ChangeNumbersEvent extends PasswordEvent {
+  const ChangeNumbersEvent() : super();
+}
+
+class ChangeSymbolsEvent extends PasswordEvent {
+  const ChangeSymbolsEvent() : super();
 }

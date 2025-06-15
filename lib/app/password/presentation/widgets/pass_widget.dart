@@ -6,6 +6,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/password/presentation/blocs/password/password_bloc.dart';
 import 'package:savepass/app/password/presentation/blocs/password/password_event.dart';
 import 'package:savepass/app/password/presentation/blocs/password/password_state.dart';
+import 'package:savepass/app/password/presentation/widgets/generate_password/pass_generator_modal_widget.dart';
 
 class PassWidget extends StatelessWidget {
   const PassWidget({super.key});
@@ -16,6 +17,7 @@ class PassWidget extends StatelessWidget {
     final bloc = Modular.get<PasswordBloc>();
     final textTheme = Theme.of(context).textTheme;
     final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +52,19 @@ class PassWidget extends StatelessWidget {
                         if (isUpdating) {
                           bloc.add(const CopyPassToClipboardEvent());
                         } else {
-                          bloc.add(const OnClickGeneratePasswordEvent());
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            useSafeArea: true,
+                            builder: (BuildContext context) {
+                              return SizedBox(
+                                width: double.infinity,
+                                height: deviceHeight * 0.70,
+                                child: const PassGeneratorModalWidget(),
+                              );
+                            },
+                          );
+                          // bloc.add(const OnClickGeneratePasswordEvent());
                         }
                       },
                     ),

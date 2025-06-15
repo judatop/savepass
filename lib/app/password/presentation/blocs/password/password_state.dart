@@ -72,6 +72,13 @@ class PasswordStateModel extends Equatable {
   final String? imgUrl;
   final PasswordModel? passwordSelected;
   final bool isUpdating;
+  final TextForm generatedPassword;
+  final double sliderValue;
+  final bool easyToRead;
+  final bool upperLowerCase;
+  final bool numbers;
+  final bool symbols;
+
 
   const PasswordStateModel({
     this.name = const TextForm.pure(),
@@ -87,6 +94,12 @@ class PasswordStateModel extends Equatable {
     this.imgUrl,
     this.passwordSelected,
     this.isUpdating = false,
+    this.generatedPassword = const TextForm.pure(),
+    this.sliderValue = 8,
+    this.easyToRead = false,
+    this.upperLowerCase = true,
+    this.numbers = true,
+    this.symbols = false,
   });
 
   PasswordStateModel copyWith({
@@ -103,6 +116,12 @@ class PasswordStateModel extends Equatable {
     String? imgUrl,
     PasswordModel? passwordSelected,
     bool? isUpdating,
+    TextForm? generatedPassword,
+    double? sliderValue,
+    bool? easyToRead,
+    bool? upperLowerCase,
+    bool? numbers,
+    bool? symbols,
   }) {
     return PasswordStateModel(
       name: name ?? this.name,
@@ -118,6 +137,12 @@ class PasswordStateModel extends Equatable {
       imgUrl: imgUrl ?? this.imgUrl,
       passwordSelected: passwordSelected ?? this.passwordSelected,
       isUpdating: isUpdating ?? this.isUpdating,
+      generatedPassword: generatedPassword ?? this.generatedPassword,
+      sliderValue: sliderValue ?? this.sliderValue,
+      easyToRead: easyToRead ?? this.easyToRead,
+      upperLowerCase: upperLowerCase ?? this.upperLowerCase,
+      numbers: numbers ?? this.numbers,
+      symbols: symbols ?? this.symbols,
     );
   }
 
@@ -136,5 +161,11 @@ class PasswordStateModel extends Equatable {
         imgUrl,
         passwordSelected,
         isUpdating,
+        generatedPassword,
+        sliderValue,
+        easyToRead,
+        upperLowerCase,
+        numbers,
+        symbols,
       ];
 }

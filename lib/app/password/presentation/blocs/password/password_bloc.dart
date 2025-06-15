@@ -44,6 +44,11 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     on<CopyUserToClipboardEvent>(_onCopyUserToClipboardEvent);
     on<CopyPassToClipboardEvent>(_onCopyPassToClipboardEvent);
     on<DeletePasswordEvent>(_onDeletePasswordEvent);
+    on<ChangeSliderValueEvent>(_onChangeSliderValueEvent);
+    on<ChangeEasyToReadEvent>(_onChangeEasyToReadEvent);
+    on<ChangeUpperLowerCaseEvent>(_onChangeUpperLowerCaseEvent);
+    on<ChangeNumbersEvent>(_onChangeNumbersEvent);
+    on<ChangeSymbolsEvent>(_onChangeSymbolsEvent);
   }
 
   FutureOr<void> _onPasswordInitialEvent(
@@ -107,9 +112,9 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
       }
 
       final passwordDecrypted = SecurityUtils.decryptPassword(
-                passModel!.password,
-                derivedKey,
-              );
+        passModel!.password,
+        derivedKey,
+      );
 
       emit(
         ChangePasswordState(
@@ -520,5 +525,74 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
         },
       );
     }
+  }
+
+  FutureOr<void> _onChangeSliderValueEvent(
+    ChangeSliderValueEvent event,
+    Emitter<PasswordState> emit,
+  ) {
+    emit(
+      ChangePasswordState(
+        state.model.copyWith(
+          sliderValue: event.value,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onChangeEasyToReadEvent(
+    ChangeEasyToReadEvent event,
+    Emitter<PasswordState> emit,
+  ) {
+    final currentValue = state.model.easyToRead;
+    emit(
+      ChangePasswordState(
+        state.model.copyWith(
+          easyToRead: !currentValue,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onChangeUpperLowerCaseEvent(
+    ChangeUpperLowerCaseEvent event,
+    Emitter<PasswordState> emit,
+  ) {
+    final currentValue = state.model.upperLowerCase;
+    emit(
+      ChangePasswordState(
+        state.model.copyWith(
+          upperLowerCase: !currentValue,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onChangeNumbersEvent(
+    ChangeNumbersEvent event,
+    Emitter<PasswordState> emit,
+  ) {
+    final currentValue = state.model.numbers;
+    emit(
+      ChangePasswordState(
+        state.model.copyWith(
+          numbers: !currentValue,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onChangeSymbolsEvent(
+    ChangeSymbolsEvent event,
+    Emitter<PasswordState> emit,
+  ) {
+    final currentValue = state.model.symbols;
+    emit(
+      ChangePasswordState(
+        state.model.copyWith(
+          symbols: !currentValue,
+        ),
+      ),
+    );
   }
 }

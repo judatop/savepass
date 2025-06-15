@@ -65,6 +65,7 @@ class _MasterPasswordWidgetState extends State<MasterPasswordWidget> {
                   model.showPassword ? Icons.visibility_off : Icons.visibility,
               onTapSuffixIcon: () =>
                   bloc.add(const ToggleMasterPasswordEvent()),
+              enableSuggestions: false,
             ),
           ],
         );

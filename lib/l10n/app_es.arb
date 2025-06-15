@@ -363,5 +363,15 @@
     "goBackText": "Tus cambios no se han guardado, ¿deseas volver atrás?",
     "@goBackText": {},
     "logoutText": "¿Estás seguro que deseas cerrar sesión?",
-    "@logoutText": {}
+    "@logoutText": {},
+    "lengthText": "Longitud",
+    "@lengthText": {},
+    "easyToReadText": "Fácil de leer",
+    "@easyToReadText": {},
+    "uppwerLowerCaseText": "Mayúsculas y minúsculas",
+    "@uppwerLowerCaseText": {},
+    "numbersText": "Números",
+    "@numbersText": {},
+    "symbolsText": "Símbolos",
+    "@symbolsText": {}
 }

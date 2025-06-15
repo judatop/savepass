@@ -363,5 +363,15 @@
     "goBackText": "Your changes have not been saved. Do you want to go back?",
     "@goBackText": {},
     "logoutText": "Are you sure you want to log out?",
-    "@logoutText": {}
+    "@logoutText": {},
+    "lengthText": "Length",
+    "@lengthText": {},
+    "easyToReadText": "Easy to read",
+    "@easyToReadText": {},
+    "uppwerLowerCaseText": "Upper and lower case",
+    "@uppwerLowerCaseText": {},
+    "numbersText": "Numbers",
+    "@numbersText": {},
+    "symbolsText": "Symbols",
+    "@symbolsText": {}
 }

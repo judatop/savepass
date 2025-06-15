@@ -5,6 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/password/presentation/blocs/password/password_bloc.dart';
 import 'package:savepass/app/password/presentation/blocs/password/password_event.dart';
 import 'package:savepass/app/password/presentation/blocs/password/password_state.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PassGeneratorSliderWidget extends StatelessWidget {
   const PassGeneratorSliderWidget({super.key});
@@ -15,6 +16,7 @@ class PassGeneratorSliderWidget extends StatelessWidget {
     final deviceWidth = MediaQuery.of(context).size.width;
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+    final intl = AppLocalizations.of(context)!;
 
     return BlocBuilder<PasswordBloc, PasswordState>(
       buildWhen: (previous, current) =>
@@ -28,7 +30,7 @@ class PassGeneratorSliderWidget extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Length',
+                    intl.lengthText,
                     style: textTheme.bodyMedium
                         ?.copyWith(fontWeight: FontWeight.w700),
                     textAlign: TextAlign.start,

@@ -10,7 +10,7 @@ import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/master_password/presentation/blocs/master_password_bloc.dart';
 import 'package:savepass/app/master_password/presentation/blocs/master_password_event.dart';
 import 'package:savepass/app/master_password/presentation/blocs/master_password_state.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 import 'package:savepass/app/master_password/presentation/widget/master_password_header_widget.dart';
 import 'package:savepass/app/master_password/presentation/widget/new_password_widget.dart';
 import 'package:savepass/app/master_password/presentation/widget/old_password_widget.dart';
@@ -61,7 +61,6 @@ void _listener(context, state) {
   if (state is SamePasswordsMasterPasswordState) {
     SnackBarUtils.showErrroSnackBar(context, intl.newPasswordBeDiferent);
   }
-  
 }
 
 class _Body extends StatelessWidget {

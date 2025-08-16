@@ -7,7 +7,7 @@ import 'package:savepass/app/master_password/presentation/blocs/master_password_
 import 'package:savepass/app/master_password/presentation/blocs/master_password_event.dart';
 import 'package:savepass/app/master_password/presentation/blocs/master_password_state.dart';
 import 'package:savepass/core/utils/regex_utils.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class RepeatPasswordWidget extends StatefulWidget {
   const RepeatPasswordWidget({super.key});
@@ -32,9 +32,11 @@ class _RepeatPasswordWidgetState extends State<RepeatPasswordWidget> {
 
     return BlocBuilder<MasterPasswordBloc, MasterPasswordState>(
       buildWhen: (previous, current) =>
-          (previous.model.repeatNewPassword != current.model.repeatNewPassword) ||
+          (previous.model.repeatNewPassword !=
+              current.model.repeatNewPassword) ||
           (previous.model.alreadySubmitted != current.model.alreadySubmitted) ||
-          (previous.model.showRepeatNewPassword != current.model.showRepeatNewPassword),
+          (previous.model.showRepeatNewPassword !=
+              current.model.showRepeatNewPassword),
       builder: (context, state) {
         final model = state.model;
         final masterPassword = model.repeatNewPassword.value;
@@ -46,9 +48,11 @@ class _RepeatPasswordWidgetState extends State<RepeatPasswordWidget> {
             AdsTextField(
               hintText: intl.repeatMasterPassword,
               controller: _controller,
-              key: const Key('updateMasterPassword_repeatNewPassword_textField'),
+              key:
+                  const Key('updateMasterPassword_repeatNewPassword_textField'),
               errorText: model.alreadySubmitted
-                  ? model.repeatNewPassword.getError(intl, model.repeatNewPassword.error)
+                  ? model.repeatNewPassword
+                      .getError(intl, model.repeatNewPassword.error)
                   : null,
               onChanged: (value) {
                 bloc.add(RepeatPasswordChangedEvent(password: value));
@@ -63,7 +67,8 @@ class _RepeatPasswordWidgetState extends State<RepeatPasswordWidget> {
               suffixIcon: model.showRepeatNewPassword
                   ? Icons.visibility_off
                   : Icons.visibility,
-              onTapSuffixIcon: () => bloc.add(const ToggleRepeatPasswordEvent()),
+              onTapSuffixIcon: () =>
+                  bloc.add(const ToggleRepeatPasswordEvent()),
             ),
           ],
         );

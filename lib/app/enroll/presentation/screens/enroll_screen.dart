@@ -17,7 +17,7 @@ import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/lottie/lottie_paths.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class EnrollScreen extends StatelessWidget {
   const EnrollScreen({

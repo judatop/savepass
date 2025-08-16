@@ -11,7 +11,7 @@ import 'package:savepass/app/sync_pass/presentation/widgets/submit_sync_pass_wid
 import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class SyncPassScreen extends StatelessWidget {
   const SyncPassScreen({super.key});

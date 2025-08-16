@@ -7,7 +7,7 @@ import 'package:savepass/app/preferences/domain/entities/preferences_entity.dart
 import 'package:savepass/app/preferences/presentation/blocs/preferences_bloc.dart';
 import 'package:savepass/app/preferences/presentation/blocs/preferences_state.dart';
 import 'package:savepass/core/config/routes.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class AppWidget extends StatelessWidget {
   const AppWidget({super.key});

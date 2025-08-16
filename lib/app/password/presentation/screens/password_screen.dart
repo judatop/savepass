@@ -16,7 +16,7 @@ import 'package:savepass/app/password/presentation/widgets/pass_name_widget.dart
 import 'package:savepass/app/password/presentation/widgets/pass_user_widget.dart';
 import 'package:savepass/app/password/presentation/widgets/pass_widget.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class PasswordScreen extends StatelessWidget {

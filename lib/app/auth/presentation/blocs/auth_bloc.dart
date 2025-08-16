@@ -97,7 +97,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     supabase.auth.signInWithOAuth(
       supabaseauth.OAuthProvider.google,
       redirectTo: Env.supabaseRedirectUrl,
-      authScreenLaunchMode: supabaseauth.LaunchMode.externalApplication,
+      authScreenLaunchMode: supabaseauth.LaunchMode.inAppWebView,
     );
   }
 
@@ -108,7 +108,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     supabase.auth.signInWithOAuth(
       supabaseauth.OAuthProvider.github,
       redirectTo: Env.supabaseRedirectUrl,
-      authScreenLaunchMode: supabaseauth.LaunchMode.externalApplication,
+      authScreenLaunchMode: supabaseauth.LaunchMode.inAppWebView,
     );
   }
 

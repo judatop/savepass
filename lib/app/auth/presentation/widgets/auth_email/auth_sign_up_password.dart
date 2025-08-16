@@ -7,7 +7,7 @@ import 'package:savepass/app/auth/presentation/blocs/auth_bloc.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_event.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_state.dart';
 import 'package:savepass/core/utils/regex_utils.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class AuthSignUpPassword extends StatefulWidget {
   const AuthSignUpPassword({super.key});
@@ -39,7 +39,14 @@ class _AuthSignUpPasswordState extends State<AuthSignUpPassword> {
       builder: (context, state) {
         final model = state.model;
         final masterPassword = model.signUpPassword.value;
-        _controller.text = masterPassword;
+
+        if (_controller.text != masterPassword) {
+          final previousSelection = _controller.selection;
+          _controller.value = TextEditingValue(
+            text: masterPassword,
+            selection: previousSelection,
+          );
+        }
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

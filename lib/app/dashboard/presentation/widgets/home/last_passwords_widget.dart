@@ -11,7 +11,7 @@ import 'package:savepass/app/dashboard/presentation/widgets/home/no_passwords_wi
 import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/image/image_paths.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class LastPasswordsWidget extends StatelessWidget {
   const LastPasswordsWidget({super.key});
@@ -82,11 +82,11 @@ class LastPasswordsWidget extends StatelessWidget {
                         builder: (BuildContext context) {
                           return AdsCard(
                             onLongPress: () {
-                                bloc.add(
-                                  CopyPasswordEvent(
-                                    password: item,
-                                  ),
-                                );
+                              bloc.add(
+                                CopyPasswordEvent(
+                                  password: item,
+                                ),
+                              );
                             },
                             onTap: () {
                               Modular.to.pushNamed(

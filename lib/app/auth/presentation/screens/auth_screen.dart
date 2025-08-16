@@ -16,7 +16,7 @@ import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:savepass/main.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabaseauth;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class AuthScreen extends StatelessWidget {
   final AuthType authType;

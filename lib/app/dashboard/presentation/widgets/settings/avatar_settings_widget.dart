@@ -6,17 +6,20 @@ import 'package:formz/formz.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
+import 'package:savepass/main.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 enum SampleItem { itemOne, itemTwo, itemThree }
 
 class AvatarSettingsWidget extends StatelessWidget {
-  const AvatarSettingsWidget({super.key}); 
+  const AvatarSettingsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     final intl = AppLocalizations.of(context)!;
+    final isAuthWithProvider =
+        supabase.auth.currentUser?.appMetadata['provider'] != 'email';
 
     return BlocBuilder<DashboardBloc, DashboardState>(
       buildWhen: (previous, current) =>
@@ -49,7 +52,9 @@ class AvatarSettingsWidget extends StatelessWidget {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          intl.avatarDesc,
+                          isAuthWithProvider
+                              ? intl.avatarManagedByProviderDesc
+                              : intl.avatarDesc,
                           textAlign: TextAlign.start,
                         ),
                       ],
@@ -57,10 +62,12 @@ class AvatarSettingsWidget extends StatelessWidget {
                   ),
                   const SizedBox(width: 15),
                   InkWell(
-                    onTap: () {
-                      final bloc = Modular.get<DashboardBloc>();
-                      bloc.add(const ChangeAvatarEvent());
-                    },
+                    onTap: isAuthWithProvider
+                        ? null
+                        : () {
+                            final bloc = Modular.get<DashboardBloc>();
+                            bloc.add(const ChangeAvatarEvent());
+                          },
                     child: AdsAvatar(
                       imageUrl: photoURL,
                       iconSize: 45,

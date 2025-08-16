@@ -5,7 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_bloc.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_event.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_state.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class AuthEmail extends StatefulWidget {
   const AuthEmail({super.key});
@@ -34,7 +34,14 @@ class _AuthEmailState extends State<AuthEmail> {
       builder: (context, state) {
         final model = state.model;
         final email = model.email.value;
-        _controller.text = email;
+
+        if (_controller.text != email) {
+          final previousSelection = _controller.selection;
+          _controller.value = TextEditingValue(
+            text: email,
+            selection: previousSelection,
+          );
+        }
 
         return AdsFormField(
           label: '${intl.emailSignUpForm}:',

@@ -1,6 +1,6 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/settings/language_dropdown_widget.dart';
 
 class LanguageSettingsWidget extends StatelessWidget {

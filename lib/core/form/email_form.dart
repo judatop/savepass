@@ -1,5 +1,5 @@
 import 'package:formz/formz.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 enum EmailFormValidationError { invalid, empty }
 

@@ -7,7 +7,7 @@ import 'package:savepass/app/preferences/presentation/blocs/preferences_bloc.dar
 import 'package:savepass/app/preferences/presentation/blocs/preferences_event.dart';
 import 'package:savepass/app/preferences/presentation/blocs/preferences_state.dart';
 import 'package:savepass/app/preferences/utils/preferences_utils.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class LanguageDropdownWidget extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();

@@ -10,7 +10,7 @@ import 'package:savepass/app/password/presentation/blocs/password_report/passwor
 import 'package:savepass/app/password/presentation/widgets/report/pass_report_header_widget.dart';
 import 'package:savepass/app/password/presentation/widgets/report/pass_report_list_widget.dart';
 import 'package:savepass/core/lottie/lottie_paths.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class PasswordReportScreen extends StatelessWidget {

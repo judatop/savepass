@@ -11,7 +11,7 @@ import 'package:savepass/app/search/presentation/widgets/search_header_widget.da
 import 'package:savepass/app/search/presentation/widgets/search_list_widget.dart';
 import 'package:savepass/core/lottie/lottie_paths.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});

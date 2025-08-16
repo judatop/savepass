@@ -7,7 +7,7 @@ import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/settings/display_name_form_widget.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class DisplayNameWidget extends StatelessWidget {
@@ -49,7 +49,8 @@ class DisplayNameWidget extends StatelessWidget {
                         width: 5,
                       ),
                       AdsFilledButton(
-                        onPressedCallback: () => bloc.add(const SaveDisplayNameEvent()),
+                        onPressedCallback: () =>
+                            bloc.add(const SaveDisplayNameEvent()),
                         text: 'Save',
                       ),
                     ],

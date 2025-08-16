@@ -13,7 +13,7 @@ import 'package:savepass/app/dashboard/presentation/widgets/settings_widget.dart
 import 'package:savepass/app/dashboard/presentation/widgets/tools_widget.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});

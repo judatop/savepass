@@ -7,7 +7,7 @@ import 'package:savepass/app/sync_pass/presentation/blocs/sync_bloc.dart';
 import 'package:savepass/app/sync_pass/presentation/blocs/sync_event.dart';
 import 'package:savepass/app/sync_pass/presentation/blocs/sync_state.dart';
 import 'package:savepass/core/utils/regex_utils.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class MasterPasswordWidget extends StatefulWidget {
   const MasterPasswordWidget({super.key});

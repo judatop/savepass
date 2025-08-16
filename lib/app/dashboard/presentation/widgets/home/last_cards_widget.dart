@@ -12,7 +12,7 @@ import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/home/no_cards_widget.dart';
 import 'package:savepass/core/config/routes.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 import 'package:savepass/core/image/image_paths.dart';
 import 'package:savepass/core/utils/password_utils.dart';
 import 'package:skeletonizer/skeletonizer.dart';

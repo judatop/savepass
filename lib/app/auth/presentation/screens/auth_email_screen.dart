@@ -7,7 +7,7 @@ import 'package:savepass/app/auth/infrastructure/models/auth_type.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_bloc.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_event.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_state.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 import 'package:savepass/app/auth/presentation/widgets/auth_email/auth_email.dart';
 import 'package:savepass/app/auth/presentation/widgets/auth_email/auth_header_widget.dart';
 import 'package:savepass/app/auth/presentation/widgets/auth_email/auth_sign_in_password.dart';

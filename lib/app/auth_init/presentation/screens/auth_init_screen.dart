@@ -12,7 +12,7 @@ import 'package:savepass/app/auth_init/presentation/widgets/master_password_widg
 import 'package:savepass/app/auth_init/presentation/widgets/submit_button_widget.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 import 'package:savepass/main.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 

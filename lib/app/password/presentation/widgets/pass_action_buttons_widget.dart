@@ -9,7 +9,7 @@ import 'package:savepass/app/password/presentation/blocs/password/password_bloc.
 import 'package:savepass/app/password/presentation/blocs/password/password_event.dart';
 import 'package:savepass/app/password/presentation/blocs/password/password_state.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class PassActionButtonsWidget extends StatelessWidget {
   const PassActionButtonsWidget({super.key});

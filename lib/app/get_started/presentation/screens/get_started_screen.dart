@@ -9,7 +9,7 @@ import 'package:savepass/app/get_started/presentation/blocs/get_started_event.da
 import 'package:savepass/app/get_started/presentation/blocs/get_started_state.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:savepass/core/lottie/lottie_paths.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class GetStartedScreen extends StatelessWidget {
   const GetStartedScreen({super.key});

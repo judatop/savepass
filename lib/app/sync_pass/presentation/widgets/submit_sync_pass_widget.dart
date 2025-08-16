@@ -1,6 +1,6 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/sync_pass/presentation/blocs/sync_bloc.dart';
 import 'package:savepass/app/sync_pass/presentation/blocs/sync_event.dart';

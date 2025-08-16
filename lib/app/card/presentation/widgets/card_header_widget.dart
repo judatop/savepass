@@ -5,7 +5,7 @@ import 'package:atomic_design_system/molecules/button/ads_filled_round_icon_butt
 import 'package:atomic_design_system/molecules/text/ads_headline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/card/presentation/blocs/card/card_bloc.dart';
 import 'package:savepass/app/card/presentation/blocs/card/card_event.dart';

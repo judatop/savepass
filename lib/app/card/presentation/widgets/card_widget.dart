@@ -11,7 +11,7 @@ import 'package:savepass/app/card/presentation/blocs/card/card_state.dart';
 import 'package:savepass/app/card/utils/card_utils.dart';
 import 'package:savepass/core/image/image_paths.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class CardWidget extends StatelessWidget {
   const CardWidget({super.key});

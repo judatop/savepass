@@ -1,7 +1,7 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:lottie/lottie.dart';
 import 'package:savepass/app/profile/presentation/blocs/new_app_version/new_app_version_bloc.dart';
@@ -81,7 +81,8 @@ class _Body extends StatelessWidget {
                   children: [
                     AdsFilledIconButton(
                       icon: Icons.download,
-                      onPressedCallback: () => bloc.add(const DownloadNewVersionEvent()),
+                      onPressedCallback: () =>
+                          bloc.add(const DownloadNewVersionEvent()),
                       text: intl.newVersionAvailableDownload,
                     ),
                   ],

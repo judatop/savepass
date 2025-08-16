@@ -5,7 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/password/presentation/blocs/password_report/password_report_bloc.dart';
 import 'package:savepass/app/password/presentation/blocs/password_report/password_report_event.dart';
 import 'package:savepass/core/utils/regex_utils.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class PassReportSearchWidget extends StatefulWidget {
   const PassReportSearchWidget({super.key});

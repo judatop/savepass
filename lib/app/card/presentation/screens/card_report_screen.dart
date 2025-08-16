@@ -9,7 +9,7 @@ import 'package:lottie/lottie.dart';
 import 'package:savepass/app/card/presentation/blocs/card_report/card_report_bloc.dart';
 import 'package:savepass/app/card/presentation/blocs/card_report/card_report_event.dart';
 import 'package:savepass/app/card/presentation/blocs/card_report/card_report_state.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 import 'package:savepass/app/card/presentation/widgets/report/card_report_header_widget.dart';
 import 'package:savepass/app/card/presentation/widgets/report/card_report_list_widget.dart';
 import 'package:savepass/core/lottie/lottie_paths.dart';

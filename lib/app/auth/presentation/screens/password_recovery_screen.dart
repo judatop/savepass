@@ -12,7 +12,7 @@ import 'package:savepass/app/auth/presentation/widgets/recovery_password/recover
 import 'package:savepass/app/auth/presentation/widgets/recovery_password/repeat_auth_recovery_password.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class PasswordRecoveryScreen extends StatelessWidget {
   const PasswordRecoveryScreen({super.key});

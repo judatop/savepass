@@ -11,7 +11,7 @@ import 'package:savepass/app/auth/presentation/widgets/forgot_password/forgot_pa
 import 'package:savepass/app/auth/presentation/widgets/forgot_password/forgot_password_submit.dart';
 import 'package:savepass/core/config/routes.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class ForgotPasswordMailScreen extends StatelessWidget {
   const ForgotPasswordMailScreen({super.key});

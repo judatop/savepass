@@ -9,7 +9,7 @@ import 'package:lottie/lottie.dart';
 import 'package:savepass/app/biometric/presentation/blocs/biometric_bloc.dart';
 import 'package:savepass/app/biometric/presentation/blocs/biometric_event.dart';
 import 'package:savepass/app/biometric/presentation/blocs/biometric_state.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 import 'package:savepass/app/biometric/presentation/widgets/biometric_header_widget.dart';
 import 'package:savepass/app/biometric/presentation/widgets/biometric_master_password_widget.dart';
 import 'package:savepass/app/biometric/presentation/widgets/submit_biometric_widget.dart';

@@ -11,8 +11,9 @@ import 'package:savepass/app/dashboard/presentation/widgets/settings/log_out_set
 import 'package:savepass/app/dashboard/presentation/widgets/settings/policy_settings_widget.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/settings/terms_settings_widget.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/settings/theme_settings_widget.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/settings/update_master_password_widget.dart';
+import 'package:savepass/main.dart';
 
 class SettingsWidget extends StatelessWidget {
   const SettingsWidget({super.key});
@@ -22,6 +23,9 @@ class SettingsWidget extends StatelessWidget {
     final intl = AppLocalizations.of(context)!;
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
+
+    final isAuthWithProvider =
+        supabase.auth.currentUser?.appMetadata['provider'] != 'email';
 
     return SingleChildScrollView(
       child: Padding(
@@ -44,13 +48,18 @@ class SettingsWidget extends StatelessWidget {
             SizedBox(height: deviceHeight * 0.02),
             const AvatarSettingsWidget(),
             SizedBox(height: deviceHeight * 0.02),
-            const DisplayNameWidget(),
-            SizedBox(height: deviceHeight * 0.02),
+            if (!isAuthWithProvider)
+              Column(
+                children: [
+                  const DisplayNameWidget(),
+                  SizedBox(height: deviceHeight * 0.02),
+                ],
+              ),
             const ThemeSettingsWidget(),
             SizedBox(height: deviceHeight * 0.02),
-            const LanguageSettingsWidget(),
-            SizedBox(height: deviceHeight * 0.02),
             const BiometricSettingsWidget(),
+            SizedBox(height: deviceHeight * 0.02),
+            const LanguageSettingsWidget(),
             const PolicySettingsWidget(),
             SizedBox(height: deviceHeight * 0.02),
             const TermsSettingsWidget(),

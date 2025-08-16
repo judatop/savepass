@@ -1,5 +1,5 @@
 import 'package:formz/formz.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 import 'package:savepass/core/utils/form_utils.dart';
 import 'package:savepass/core/utils/password_utils.dart';
 

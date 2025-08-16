@@ -8,7 +8,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/auth/infrastructure/models/auth_type.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_bloc.dart';
 import 'package:savepass/app/auth/presentation/blocs/auth_state.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class AuthHeaderWidget extends StatelessWidget {
   const AuthHeaderWidget({super.key});

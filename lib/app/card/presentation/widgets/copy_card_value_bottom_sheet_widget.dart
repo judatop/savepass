@@ -5,7 +5,7 @@ import 'package:savepass/app/card/infrastructure/models/card_model.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class CopyCardValueBottomSheetWidget extends StatelessWidget {
   final FormzSubmissionStatus status;

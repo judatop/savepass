@@ -108,6 +108,8 @@
     "@avatar": {},
     "avatarDesc": "Haz clic para cambiar tu avatar",
     "@avatarDesc": {},
+    "avatarManagedByProviderDesc": "Tu avatar es administrado por el proveedor de autenticación",
+    "@avatarManagedByProviderDesc": {},
     "accountSettings": "Ajustes",
     "@accountSettings": {},
     "displayName": "Nombre para mostrar",

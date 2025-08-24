@@ -748,7 +748,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
     final idToken = credential.identityToken;
     if (idToken == null) {
-      throw Exception('Could not find ID Token from generated credential.');
+      emit(
+        GeneralErrorState(
+          state.model
+              .copyWith(forgotPasswordStatus: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
     }
     supabase.auth.signInWithIdToken(
       provider: supabaseauth.OAuthProvider.apple,

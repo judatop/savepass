@@ -46,6 +46,7 @@ dependencies:
   pointycastle: ^3.6.2
   sentry_flutter: ^8.14.1
   sentry_logging: ^8.14.1
+  sign_in_with_apple: ^7.0.1
   skeletonizer: 2.0.0
   supabase_flutter: ^2.8.0
   syncfusion_flutter_pdfviewer: ^28.2.7

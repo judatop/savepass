@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +22,7 @@ class AuthOptions extends StatelessWidget {
     final deviceHeight = MediaQuery.of(context).size.height;
     final appLocalizations = AppLocalizations.of(context)!;
     final bloc = Modular.get<AuthBloc>();
+    final colorScheme = Theme.of(context).colorScheme;
 
     return BlocBuilder<AuthBloc, AuthState>(
       buildWhen: (previous, current) =>
@@ -60,39 +63,39 @@ class AuthOptions extends StatelessWidget {
                 ),
               ),
             ),
-            // SizedBox(height: deviceHeight * 0.01),
-            // AdsFilledIconButton(
-            //   onPressedCallback: () {},
-            //   text:
-            //       '${appLocalizations.getStartedSingUp} ${appLocalizations.authWithApple}',
-            //   icon: Icons.apple,
-            //   iconSize: ADSFoundationSizes.sizeIconMedium,
-            //   iconColor: colorScheme.brightness == Brightness.light
-            //       ? ADSFoundationsColors.whiteColor
-            //       : ADSFoundationsColors.blackColor,
-            //   buttonStyle: ButtonStyle(
-            //     backgroundColor: colorScheme.brightness == Brightness.light
-            //         ? WidgetStateProperty.all(
-            //             ADSFoundationsColors.blackColor,
-            //           )
-            //         : WidgetStateProperty.all(
-            //             ADSFoundationsColors.whiteColor,
-            //           ),
-            //     overlayColor: colorScheme.brightness == Brightness.light
-            //         ? WidgetStateProperty.all(
-            //             Colors.red.withOpacity(0.4),
-            //           )
-            //         : WidgetStateProperty.all(
-            //             Colors.red.withOpacity(0.2),
-            //           ),
-            //   ),
-            //   textStyle: TextStyle(
-            //     color: colorScheme.brightness == Brightness.light
-            //         ? ADSFoundationsColors.whiteColor
-            //         : ADSFoundationsColors.blackColor,
-            //   ),
-            // ),
             SizedBox(height: deviceHeight * 0.01),
+            if (Platform.isIOS)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  AdsFilledIconButton(
+                    onPressedCallback: () =>
+                        bloc.add(const AuthWithAppleEvent()),
+                    text: '$textByAuthType ${appLocalizations.authWithApple}',
+                    icon: Icons.apple,
+                    iconSize: ADSFoundationSizes.sizeIconMedium,
+                    iconColor: colorScheme.brightness == Brightness.light
+                        ? ADSFoundationsColors.whiteColor
+                        : ADSFoundationsColors.blackColor,
+                    buttonStyle: ButtonStyle(
+                      backgroundColor:
+                          colorScheme.brightness == Brightness.light
+                              ? WidgetStateProperty.all(
+                                  ADSFoundationsColors.blackColor,
+                                )
+                              : WidgetStateProperty.all(
+                                  ADSFoundationsColors.whiteColor,
+                                ),
+                    ),
+                    textStyle: TextStyle(
+                      color: colorScheme.brightness == Brightness.light
+                          ? ADSFoundationsColors.whiteColor
+                          : ADSFoundationsColors.blackColor,
+                    ),
+                  ),
+                  SizedBox(height: deviceHeight * 0.01),
+                ],
+              ),
             AdsFilledIconButton(
               onPressedCallback: () => bloc.add(const AuthWithGithubEvent()),
               text: '$textByAuthType ${appLocalizations.authWithGithub}',

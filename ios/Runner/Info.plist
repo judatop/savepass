@@ -7,7 +7,7 @@
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
-		<string>Savepass</string>
+		<string>SavePass</string>
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>
@@ -52,7 +52,7 @@
 			<string>UIInterfaceOrientationLandscapeRight</string>
 		</array>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>SavePass requires access to your photo library to save your images</string>
+		<string>SavePass requires access to your photo library so you can select a profile picture.</string>
 		<!-- Google Sign-in Section -->
 		<key>GIDClientID</key>
 		<string>213130304295-2hhn22a63pns7274oj5l5it74e73anb2.apps.googleusercontent.com</string>

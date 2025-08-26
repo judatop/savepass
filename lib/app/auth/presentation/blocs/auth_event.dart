@@ -72,6 +72,10 @@ class AuthWithGithubEvent extends AuthEvent {
   const AuthWithGithubEvent() : super();
 }
 
+class AuthWithAppleEvent extends AuthEvent {
+  const AuthWithAppleEvent() : super();
+}
+
 class ProcessSignedInEvent extends AuthEvent {
   const ProcessSignedInEvent() : super();
 }

@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:crypto/crypto.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -16,6 +18,7 @@ import 'package:savepass/core/form/email_form.dart';
 import 'package:savepass/core/form/password_form.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:savepass/main.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabaseauth;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -37,6 +40,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<OpenSignUpEvent>(_onOpenSignUpEvent);
     on<AuthWithGoogleEvent>(_onAuthWithGoogleEvent);
     on<AuthWithGithubEvent>(_onAuthWithGithubEvent);
+    on<AuthWithAppleEvent>(_onAuthWithAppleEvent);
     on<AuthWithEmailEvent>(_onAuthWithEmailEvent);
     on<OpenPrivacyEvent>(_onOpenPrivacyEvent);
     on<OpenTermsEvent>(_onOpenTermsEvent);
@@ -726,6 +730,36 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) {
     emit(
       EmailLinkInvalidExpiredState(state.model),
+    );
+  }
+
+  FutureOr<void> _onAuthWithAppleEvent(
+    AuthWithAppleEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    final rawNonce = supabase.auth.generateRawNonce();
+    final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
+    final credential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+      nonce: hashedNonce,
+    );
+    final idToken = credential.identityToken;
+    if (idToken == null) {
+      emit(
+        GeneralErrorState(
+          state.model
+              .copyWith(forgotPasswordStatus: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+    supabase.auth.signInWithIdToken(
+      provider: supabaseauth.OAuthProvider.apple,
+      idToken: idToken,
+      nonce: rawNonce,
     );
   }
 }

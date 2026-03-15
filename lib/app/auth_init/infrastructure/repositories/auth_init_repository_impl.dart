@@ -12,11 +12,15 @@ class AuthInitRepositoryImpl implements AuthInitRepository {
   Future<Either<Fail, SavePassResponseModel>> checkMasterPassword({
     required String inputSecret,
     required String deviceId,
+    required String deviceName,
+    required String type,
     required String biometricHash,
   }) async {
     return await datasource.checkMasterPassword(
       inputSecret: inputSecret,
       deviceId: deviceId,
+      deviceName: deviceName,
+      type: type,
       biometricHash: biometricHash,
     );
   }

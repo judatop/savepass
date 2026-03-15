@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
 import 'package:savepass/core/config/routes.dart';
-
+import 'package:savepass/l10n/app_localizations.dart';
 import '../../blocs/dashboard_bloc.dart';
 
 class CardsWidget extends StatelessWidget {
@@ -12,6 +12,7 @@ class CardsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final intl = AppLocalizations.of(context)!;
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
     final theme = Theme.of(context);
@@ -52,7 +53,7 @@ class CardsWidget extends StatelessWidget {
                           ?.copyWith(color: Colors.white),
                     ),
                     Text(
-                      'card${value == 1 ? '' : 's'}',
+                      '${intl.singularCard}${value == 1 ? '' : 's'}',
                       style: theme.textTheme.headlineMedium?.copyWith(
                         color: Colors.white,
                         fontSize: 19,
@@ -67,9 +68,9 @@ class CardsWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'View All',
-                  style: TextStyle(
+                Text(
+                  intl.viewAll,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

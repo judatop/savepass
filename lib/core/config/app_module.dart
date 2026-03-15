@@ -89,7 +89,13 @@ import 'package:savepass/core/utils/security_utils.dart';
 class AppModule extends Module {
   @override
   void binds(i) {
-    i.addSingleton(FlutterSecureStorage.new);
+    i.addSingleton<FlutterSecureStorage>(
+      () => const FlutterSecureStorage(
+        aOptions: AndroidOptions(
+          encryptedSharedPreferences: true,
+        ),
+      ),
+    );
     i.addSingleton(PreferencesBloc.new);
     i.addSingleton<Logger>(() => Logger('SavePassLogger'));
     i.addSingleton(SupabaseMiddleware.new);
@@ -228,6 +234,10 @@ class AppModule extends Module {
     r.child(
       Routes.newAppVersionRoute,
       child: (context) => const NewAppVersionScreen(),
+    );
+    r.child(
+      Routes.oauthCallback,
+      child: (_) => const SearchScreen(),
     );
   }
 }

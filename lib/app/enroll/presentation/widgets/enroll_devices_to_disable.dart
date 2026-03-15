@@ -13,6 +13,8 @@ class EnrollDevicesToDisable extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = Modular.get<EnrollBloc>();
     final textTheme = Theme.of(context).textTheme;
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
 
     return BlocBuilder<EnrollBloc, EnrollState>(
       buildWhen: (previous, current) =>
@@ -24,29 +26,33 @@ class EnrollDevicesToDisable extends StatelessWidget {
           return Container();
         }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: devices
-              .map(
-                (e) => AdsCard(
-                  onTap: () => bloc.add(
-                    EnrollNewDeviceEvent(deviceId: e.deviceId),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Row(
-                      children: [
-                        Icon(e.type == 'Android' ? Icons.android : Icons.apple),
-                        Text(
-                          '  ${e.deviceName}',
-                          style: textTheme.bodyLarge,
-                        ),
-                      ],
+        return ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: devices.length,
+          separatorBuilder: (_, __) =>
+               SizedBox(height: deviceHeight * 0.01),
+          itemBuilder: (context, index) {
+            final e = devices[index];
+
+            return AdsCard(
+              onTap: () => bloc.add(
+                EnrollNewDeviceEvent(deviceId: e.deviceId),
+              ),
+              child: Padding(
+                padding:  EdgeInsets.all(deviceWidth * 0.035),
+                child: Row(
+                  children: [
+                    Icon(e.type == 'Android' ? Icons.android : Icons.apple),
+                    Text(
+                      '  ${e.deviceName}',
+                      style: textTheme.bodyLarge,
                     ),
-                  ),
+                  ],
                 ),
-              )
-              .toList(),
+              ),
+            );
+          },
         );
       },
     );

@@ -3,7 +3,7 @@ import 'package:savepass/app/enroll/infrastructure/models/enroll_new_device_mode
 import 'package:savepass/core/api/savepass_response_model.dart';
 
 abstract class EnrollRepository {
-  Future<Either<Fail, SavePassResponseModel>> getDeviceName();
+  Future<Either<Fail, SavePassResponseModel>> getCurrentSessions();
   Future<Either<Fail, SavePassResponseModel>> enrollNewDevice({
     required EnrollNewDeviceModel model,
   });

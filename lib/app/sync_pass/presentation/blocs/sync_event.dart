@@ -24,3 +24,9 @@ class SubmitSyncPasswordEvent extends SyncEvent {
 class ToggleMasterPasswordEvent extends SyncEvent {
   const ToggleMasterPasswordEvent() : super();
 }
+
+class EnrollBiometricsEvent extends SyncEvent {
+  final bool enroll;
+
+  const EnrollBiometricsEvent({required this.enroll}) : super();
+}

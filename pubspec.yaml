@@ -3,7 +3,7 @@ description: "App for store passwords or safe notes in a secure way"
 
 publish_to: "none"
 
-version: 1.0.4+7
+version: 1.0.5+8
 
 environment:
   sdk: ">=3.3.4 <4.0.0"
@@ -61,6 +61,7 @@ dev_dependencies:
     sdk: flutter
 
 flutter:
+  default-flavor: dev
   uses-material-design: true
   assets:
     - assets/images/logo/

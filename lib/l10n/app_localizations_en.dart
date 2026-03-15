@@ -450,7 +450,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wantToLink =>
-      'If you want to continue with this device, you can register it and we will unlink the previous one.';
+      'If you want to continue with this device, you can select the device you want to unlink.';
 
   @override
   String get linkDevice => 'Register device';
@@ -600,4 +600,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get symbolsText => 'Symbols';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get enrollBiometrics =>
+      'You won\'t have to enter your master password again, just authenticate with your fingerprint or Face ID.';
+
+  @override
+  String get enable => 'Enable';
+
+  @override
+  String get skip => 'Skip';
+
+  @override
+  String get singularPassword => 'password';
+
+  @override
+  String get singularCard => 'card';
+
+  @override
+  String get addPassword => 'Add password';
+
+  @override
+  String get addCard => 'Add card';
+
+  @override
+  String get viewAll => 'View All';
 }

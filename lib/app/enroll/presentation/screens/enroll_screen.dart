@@ -1,7 +1,5 @@
-import 'dart:io';
 
-import 'package:atomic_design_system/molecules/text/ads_headline.dart';
-import 'package:atomic_design_system/templates/ads_screen_template.dart';
+import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -10,7 +8,7 @@ import 'package:lottie/lottie.dart';
 import 'package:savepass/app/enroll/presentation/blocs/enroll_bloc.dart';
 import 'package:savepass/app/enroll/presentation/blocs/enroll_event.dart';
 import 'package:savepass/app/enroll/presentation/blocs/enroll_state.dart';
-import 'package:savepass/app/enroll/presentation/widgets/enroll_submit_button.dart';
+import 'package:savepass/app/enroll/presentation/widgets/enroll_devices_to_disable.dart';
 import 'package:savepass/app/profile/presentation/blocs/profile/profile_bloc.dart';
 import 'package:savepass/app/profile/presentation/blocs/profile/profile_event.dart';
 import 'package:savepass/core/config/routes.dart';
@@ -56,7 +54,6 @@ class _Body extends StatelessWidget {
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
-    final textTheme = Theme.of(context).textTheme;
     final intl = AppLocalizations.of(context)!;
 
     return AdsScreenTemplate(
@@ -77,9 +74,6 @@ class _Body extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(
-                    height: deviceHeight * (Platform.isAndroid ? 0.05 : 0.02),
-                  ),
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
@@ -93,37 +87,10 @@ class _Body extends StatelessWidget {
                             height: deviceHeight * 0.35,
                             LottiePaths.device,
                           ),
-                          BlocBuilder<EnrollBloc, EnrollState>(
-                            buildWhen: (previous, current) =>
-                                (previous.model.enrolledDevice !=
-                                    current.model.enrolledDevice),
-                            builder: (context, state) {
-                              final device = state.model.enrolledDevice;
-
-                              if (device.isEmpty) {
-                                return Container();
-                              }
-
-                              return RichText(
-                                text: TextSpan(
-                                  text: intl.currentSessionWith,
-                                  style: textTheme.bodyMedium,
-                                  children: [
-                                    TextSpan(
-                                      text: state.model.enrolledDevice,
-                                      style: textTheme.bodyMedium?.copyWith(
-                                        fontWeight: FontWeight.w900,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                          SizedBox(height: deviceHeight * 0.01),
                           Text(intl.wantToLink),
+                          SizedBox(height: deviceHeight * 0.02),
+                          const EnrollDevicesToDisable(),
                           SizedBox(height: deviceHeight * 0.025),
-                          const EnrollSubmitButton(),
                         ],
                       ),
                     ),

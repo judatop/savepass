@@ -27,6 +27,18 @@ class GeneralErrorState extends SyncState {
   const GeneralErrorState(super.model);
 }
 
+class OpenBiometricsEnrollmentState extends SyncState {
+  const OpenBiometricsEnrollmentState(super.model);
+}
+
+class InvalidMasterPasswordState extends SyncState {
+  const InvalidMasterPasswordState(super.model);
+}
+
+class BiometricsEnrolledState extends SyncState {
+  const BiometricsEnrolledState(super.model);
+}
+
 class SyncStateModel extends Equatable {
   final MasterPasswordForm masterPassword;
   final bool showPassword;

@@ -8,7 +8,7 @@ import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
 import 'package:savepass/app/password/presentation/blocs/password/password_bloc.dart';
 import 'package:savepass/app/password/presentation/blocs/password/password_event.dart';
 import 'package:savepass/app/password/presentation/blocs/password/password_state.dart';
-import 'package:savepass/app/password/presentation/widgets/pass_action_buttons_widget.dart';
+import 'package:savepass/app/password/presentation/widgets/delete_button_widget.dart';
 import 'package:savepass/app/password/presentation/widgets/pass_desc_widget.dart';
 import 'package:savepass/app/password/presentation/widgets/pass_domain_widget.dart';
 import 'package:savepass/app/password/presentation/widgets/pass_header_widget.dart';
@@ -96,48 +96,45 @@ class _Body extends StatelessWidget {
       safeAreaTop: true,
       wrapScroll: false,
       padding: EdgeInsets.zero,
-      child: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: deviceWidth * ADSFoundationSizes.defaultHorizontalPadding,
-                right:
-                    deviceWidth * ADSFoundationSizes.defaultHorizontalPadding,
-                bottom:
-                    screenHeight * ADSFoundationSizes.defaultVerticalPadding,
-              ),
-              child: BlocBuilder<PasswordBloc, PasswordState>(
-                buildWhen: (previous, current) =>
-                    previous.model.status != current.model.status,
-                builder: (context, state) {
-                  final status = state.model.status;
-
-                  return Skeletonizer(
-                    enabled: status.isInProgress,
-                    child: Column(
-                      children: [
-                        const PassHeaderWidget(),
-                        SizedBox(height: screenHeight * 0.05),
-                        const PassNameWidget(),
-                        SizedBox(height: screenHeight * 0.02),
-                        const PassUserWidget(),
-                        SizedBox(height: screenHeight * 0.02),
-                        const PassWidget(),
-                        SizedBox(height: screenHeight * 0.02),
-                        PassDomainWidget(),
-                        SizedBox(height: screenHeight * 0.02),
-                        PassDescWidget(),
-                        SizedBox(height: screenHeight * 0.4),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: deviceWidth * ADSFoundationSizes.defaultHorizontalPadding,
+            right: deviceWidth * ADSFoundationSizes.defaultHorizontalPadding,
+            bottom: screenHeight * ADSFoundationSizes.defaultVerticalPadding,
           ),
-          const PassActionButtonsWidget(),
-        ],
+          child: BlocBuilder<PasswordBloc, PasswordState>(
+            buildWhen: (previous, current) =>
+                previous.model.status != current.model.status ||
+                previous.model.isUpdating != current.model.isUpdating,
+            builder: (context, state) {
+              final status = state.model.status;
+              final isUpdating = state.model.isUpdating;
+
+              return Skeletonizer(
+                enabled: status.isInProgress,
+                child: Column(
+                  children: [
+                    const PassHeaderWidget(),
+                    SizedBox(height: screenHeight * 0.05),
+                    const PassNameWidget(),
+                    SizedBox(height: screenHeight * 0.02),
+                    const PassUserWidget(),
+                    SizedBox(height: screenHeight * 0.02),
+                    const PassWidget(),
+                    SizedBox(height: screenHeight * 0.02),
+                    PassDomainWidget(),
+                    SizedBox(height: screenHeight * 0.02),
+                    PassDescWidget(),
+                    SizedBox(height: screenHeight * 0.03),
+                    if (isUpdating) const DeleteButtonWidget(),
+                    SizedBox(height: screenHeight * 0.1),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }

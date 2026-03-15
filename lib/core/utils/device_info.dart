@@ -42,10 +42,24 @@ class DeviceInfo {
 
   Future<String> getDeviceName() async {
     final deviceInfo = DeviceInfoPlugin();
+
     if (Platform.isAndroid) {
-      return (await deviceInfo.androidInfo).model;
+      final android = await deviceInfo.androidInfo;
+      return '${android.manufacturer} ${android.model}';
     } else {
-      return (await deviceInfo.iosInfo).utsname.machine;
+      final ios = await deviceInfo.iosInfo;
+      return '${ios.name} (${ios.model})';
+    }
+  }
+
+  Future<bool> isPhysicalDevice() async {
+    final deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      final android = await deviceInfo.androidInfo;
+      return android.isPhysicalDevice;
+    } else {
+      final ios = await deviceInfo.iosInfo;
+      return ios.isPhysicalDevice;
     }
   }
 

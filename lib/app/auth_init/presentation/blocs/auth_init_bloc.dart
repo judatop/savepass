@@ -9,6 +9,8 @@ import 'package:logging/logging.dart';
 import 'package:savepass/app/auth_init/domain/repositories/auth_init_repository.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_event.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_state.dart';
+import 'package:savepass/app/biometric/domain/repositories/biometric_repository.dart';
+import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/app/profile/presentation/blocs/profile/profile_bloc.dart';
 import 'package:savepass/app/profile/presentation/blocs/profile/profile_event.dart';
@@ -26,6 +28,8 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
   final Logger log;
   final FlutterSecureStorage secureStorage;
   final DeviceInfo deviceInfo;
+  final PreferencesRepository preferencesRepository;
+  final BiometricRepository biometricRepository;
 
   AuthInitBloc({
     required this.profileRepository,
@@ -34,6 +38,8 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
     required this.log,
     required this.secureStorage,
     required this.deviceInfo,
+    required this.preferencesRepository,
+    required this.biometricRepository,
   }) : super(const AuthInitInitialState()) {
     on<AuthInitInitialEvent>(_onAuthInitInitial);
     on<PasswordChangedEvent>(_onPasswordChanged);
@@ -42,6 +48,7 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
     on<SubmitWithBiometricsEvent>(_onSubmitWithBiometricsEvent);
     on<CheckSupabaseBiometricsEvent>(_onCheckSupabaseBiometricsEvent);
     on<GetProfileEvent>(_onGetProfileEvent);
+    on<EnrollBiometricsEvent>(_onEnrollBiometricsEvent);
   }
 
   FutureOr<void> _onAuthInitInitial(
@@ -102,6 +109,19 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
         return;
       }
 
+      final hasShownEnrollBiometricsDialogResult =
+          await preferencesRepository.getHasShownEnrollBiometricsDialog();
+      late bool hasShownEnrollBiometricsDialog = false;
+
+      hasShownEnrollBiometricsDialogResult.fold(
+        (l) {
+          hasShownEnrollBiometricsDialog = false;
+        },
+        (r) {
+          hasShownEnrollBiometricsDialog = r;
+        },
+      );
+
       final saltResponse = await authInitRepository.getUserSalt();
       late String? salt;
       saltResponse.fold(
@@ -122,11 +142,13 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
         return;
       }
 
-      final clearMasterPassword = state.model.password.value;
+      final clearMasterPassword = state.model.password.value.trim();
       final derivedKey =
           await SecurityUtils.deriveMasterKey(clearMasterPassword, salt!, 32);
       final hashedPassword = SecurityUtils.hashMasterKey(derivedKey);
       final deviceId = await deviceInfo.getDeviceId();
+      final deviceName = await deviceInfo.getDeviceName();
+      final deviceType = deviceInfo.getDeviceType();
       final profileBloc = Modular.get<ProfileBloc>();
 
       if (deviceId == null) {
@@ -141,6 +163,8 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
       final response = await authInitRepository.checkMasterPassword(
         inputSecret: hashedPassword,
         deviceId: deviceId,
+        deviceName: deviceName,
+        type: deviceType,
         biometricHash: '',
       );
 
@@ -181,6 +205,7 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
           }
 
           if (r.code == ApiCodes.alreadyHasDeviceEnrolled ||
+              r.code == ApiCodes.deviceNotEnrolled ||
               r.code == ApiCodes.success) {
             profileBloc.add(SaveDerivedKeyEvent(derivedKey: derivedKey));
             profileBloc.add(SaveJwtEvent(jwt: r.data!['jwt']));
@@ -189,6 +214,17 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
               emit(
                 DeviceAlreadyEnrolledState(
                   state.model.copyWith(status: FormzSubmissionStatus.failure),
+                ),
+              );
+              return;
+            }
+
+            if (!hasShownEnrollBiometricsDialog &&
+                !state.model.hasBiometricsSaved &&
+                state.model.canAuthenticateWithBiometrics) {
+              emit(
+                OpenBiometricsEnrollmentState(
+                  state.model.copyWith(status: FormzSubmissionStatus.success),
                 ),
               );
               return;
@@ -238,13 +274,10 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
 
       final profileBloc = Modular.get<ProfileBloc>();
       final deviceId = await deviceInfo.getDeviceId();
-      AndroidOptions androidOptions() => const AndroidOptions(
-            encryptedSharedPreferences: true,
-          );
-      final storage = FlutterSecureStorage(aOptions: androidOptions());
-      final biometricHash = await storage.read(key: Env.biometricHashKey);
-
-      final derivedKeyStored = await storage.read(key: Env.derivedKey);
+      final deviceName = await deviceInfo.getDeviceName();
+      final deviceType = deviceInfo.getDeviceType();
+      final biometricHash = await secureStorage.read(key: Env.biometricHashKey);
+      final derivedKeyStored = await secureStorage.read(key: Env.derivedKey);
 
       if (deviceId == null ||
           biometricHash == null ||
@@ -262,6 +295,8 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
       final response = await authInitRepository.checkMasterPassword(
         inputSecret: '',
         deviceId: deviceId,
+        deviceName: deviceName,
+        type: deviceType,
         biometricHash: biometricHash,
       );
 
@@ -404,6 +439,12 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
         ),
       ),
     );
+
+    if (hasSupabaseBiometricsSaved && hasLocalBiometricsSaved && canAuthenticate) {
+      emit(
+        RequestBiometricsState(state.model),
+      );
+    }
   }
 
   FutureOr<void> _onGetProfileEvent(
@@ -440,5 +481,154 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
         );
       },
     );
+  }
+
+  FutureOr<void> _onEnrollBiometricsEvent(
+    EnrollBiometricsEvent event,
+    Emitter<AuthInitState> emit,
+  ) async {
+    try {
+      await preferencesRepository.setHasShownEnrollBiometricsDialog(true);
+
+      emit(
+        ChangeAuthInitState(
+          state.model.copyWith(
+            alreadySubmitted: true,
+            status: FormzSubmissionStatus.inProgress,
+          ),
+        ),
+      );
+
+      if (!event.enroll) {
+        emit(
+          OpenHomeState(
+            state.model.copyWith(status: FormzSubmissionStatus.success),
+          ),
+        );
+        return;
+      }
+
+      final isAuthenticated = await biometricUtils.authenticate();
+
+      if (!isAuthenticated) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(status: FormzSubmissionStatus.failure),
+          ),
+        );
+        return;
+      }
+
+      final saltResponse = await authInitRepository.getUserSalt();
+      late String? salt;
+      saltResponse.fold(
+        (l) {
+          salt = null;
+        },
+        (r) {
+          salt = r.data?['salt'];
+        },
+      );
+
+      if (salt == null) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(status: FormzSubmissionStatus.failure),
+          ),
+        );
+        return;
+      }
+
+      final clearMasterPassword = state.model.password.value.trim();
+      final derivedKey =
+          await SecurityUtils.deriveMasterKey(clearMasterPassword, salt!, 32);
+      final hashedPassword = SecurityUtils.hashMasterKey(derivedKey);
+      final deviceId = await deviceInfo.getDeviceId();
+
+      if (deviceId == null) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(status: FormzSubmissionStatus.failure),
+          ),
+        );
+        return;
+      }
+
+      final response = await biometricRepository.enrollBiometric(
+        inputSecret: hashedPassword,
+        deviceId: deviceId,
+      );
+
+      late final String? code;
+      late final Map<String, dynamic>? data;
+      response.fold(
+        (l) {
+          code = null;
+        },
+        (r) {
+          code = r.code;
+          data = r.data;
+        },
+      );
+
+      if (code == null) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(status: FormzSubmissionStatus.failure),
+          ),
+        );
+        return;
+      }
+
+      if (data == null || code == ApiCodes.alreadyHasDeviceEnrolled) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(status: FormzSubmissionStatus.failure),
+          ),
+        );
+        return;
+      }
+
+      if (code == ApiCodes.invalidMasterPassword) {
+        emit(
+          InvalidMasterPasswordState(
+            state.model.copyWith(status: FormzSubmissionStatus.failure),
+          ),
+        );
+        return;
+      }
+
+      if (code != ApiCodes.success) {
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(status: FormzSubmissionStatus.failure),
+          ),
+        );
+        return;
+      }
+
+      final biometricHash = data!['hash'];
+      await secureStorage.write(
+        key: Env.biometricHashKey,
+        value: biometricHash,
+      );
+      await secureStorage.write(
+        key: Env.derivedKey,
+        value: base64Encode(derivedKey),
+      );
+
+      emit(
+        BiometricsEnrolledState(
+          state.model.copyWith(status: FormzSubmissionStatus.success),
+        ),
+      );
+    } catch (e, stackTrace) {
+      log.severe('Exception _onEnrollBiometricsEvent: $e', e, stackTrace);
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
+        ),
+      );
+    }
   }
 }

@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_event.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class AddCardWidget extends StatelessWidget {
   const AddCardWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final intl = AppLocalizations.of(context)!;
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
     final textTheme = Theme.of(context).textTheme;
@@ -43,7 +45,7 @@ class AddCardWidget extends StatelessWidget {
             ),
             SizedBox(height: deviceWidth * 0.02),
             Text(
-              'Add card',
+              intl.addCard,
               style: textTheme.titleMedium?.copyWith(
                 color: isLight ? Colors.black : Colors.white,
                 fontSize: 19.5,

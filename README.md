@@ -67,6 +67,13 @@ Then, you can generate the offuscated values from the .env file using the follow
 dart run build_runner build -d
 ```
 
+Provide run access to the init scripts:
+
+```bash
+chmod +x build.sh
+chmod +x pre_build.sh
+```
+
 Install the dependencies with the following command:
 
 ```bash

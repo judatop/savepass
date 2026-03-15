@@ -58,6 +58,9 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.juda.savepass"
+        manifestPlaceholders = [
+            appAuthScheme: "savepass"
+        ]
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 23
@@ -83,6 +86,28 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("release")
+        }
+    }
+
+    flavorDimensions += "default"
+    productFlavors {
+        dev {
+            dimension "default"
+            resValue "string", "app_name", "SavePassDev"
+            applicationId = "com.juda.savepassdev"
+            manifestPlaceholders = [
+                appAuthScheme: "savepassdev",
+                appAuthHost: "com.juda.savepassdev"
+            ]
+        }
+        prod {
+            dimension "default"
+            resValue "string", "app_name", "SavePass"
+            applicationId "com.juda.savepass"
+            manifestPlaceholders = [
+                appAuthScheme: "savepass",
+                appAuthHost: "com.juda.savepass"
+            ]
         }
     }
 }

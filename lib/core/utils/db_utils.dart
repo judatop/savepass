@@ -8,7 +8,7 @@ class DbUtils {
 
   static const hasMasterPasswordFunction = 'has_master_password';
   static const checkMasterPasswordFunction = 'check_master_password';
-  static const deviceNameFunction = 'get_device_name';
+  static const getCurrentSessions = 'get_current_sessions';
   static const enrollNewDeviceFunction = 'enroll_new_device';
   static const getUserSaltFunction = 'get_user_salt';
   static const isEmailExistsFunction = 'is_email_exist';

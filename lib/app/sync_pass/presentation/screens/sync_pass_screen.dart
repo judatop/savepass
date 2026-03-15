@@ -39,6 +39,62 @@ void _listener(context, state) {
   if (state is GeneralErrorState) {
     SnackBarUtils.showErrroSnackBar(context, intl.genericError);
   }
+
+  if (state is OpenBiometricsEnrollmentState) {
+    showEnrollBiometricsDialog(context, intl);
+  }
+
+  if (state is InvalidMasterPasswordState) {
+    SnackBarUtils.showErrroSnackBar(context, intl.invalidCredentials);
+  }
+
+  if (state is BiometricsEnrolledState) {
+    SnackBarUtils.showSuccessSnackBar(context, intl.biometricsEnrolled);
+    Modular.to.pushNamedAndRemoveUntil(Routes.dashboardRoute, (_) => false);
+  }
+}
+
+void showEnrollBiometricsDialog(BuildContext context, AppLocalizations intl) {
+  final bloc = Modular.get<SyncBloc>();
+  showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text(intl.attentionTitle),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text(
+                intl.enrollBiometrics,
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          AdsFilledButton(
+            onPressedCallback: () {
+              bloc.add(const EnrollBiometricsEvent(enroll: true));
+              Modular.to.pop();
+            },
+            text: intl.enable,
+          ),
+          TextButton(
+            child: Text(
+              intl.skip,
+              style: const TextStyle(
+                decoration: TextDecoration.underline,
+              ),
+            ),
+            onPressed: () {
+              bloc.add(const EnrollBiometricsEvent(enroll: false));
+              Modular.to.pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
 
 class _Body extends StatelessWidget {

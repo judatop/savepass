@@ -13,8 +13,8 @@ class EnrollRepositoryImpl implements EnrollRepository {
   EnrollRepositoryImpl({required this.datasource});
 
   @override
-  Future<Either<Fail, SavePassResponseModel>> getDeviceName() async {
-    return await datasource.getDeviceName();
+  Future<Either<Fail, SavePassResponseModel>> getCurrentSessions() async {
+    return await datasource.getCurrentSessions();
   }
   
   @override

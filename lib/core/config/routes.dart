@@ -28,4 +28,5 @@ class Routes {
   static const String signUpConfirmMail = '/signUpConfirmMail';
   static const String weAreExperiencingIssuesRoute = '/weAreExperiencingIssues';
   static const String newAppVersionRoute = '/newAppVersion';
+  static const String oauthCallback = '/oauth';
 }

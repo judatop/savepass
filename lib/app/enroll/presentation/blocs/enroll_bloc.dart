@@ -4,11 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
 import 'package:savepass/app/enroll/domain/repositories/enroll_repository.dart';
+import 'package:savepass/app/enroll/infrastructure/models/device_model.dart';
 import 'package:savepass/app/enroll/infrastructure/models/enroll_new_device_model.dart';
 import 'package:savepass/app/enroll/presentation/blocs/enroll_event.dart';
 import 'package:savepass/app/enroll/presentation/blocs/enroll_state.dart';
 import 'package:savepass/app/profile/presentation/blocs/profile/profile_bloc.dart';
 import 'package:savepass/app/profile/presentation/blocs/profile/profile_event.dart';
+import 'package:savepass/core/api/api_codes.dart';
+import 'package:savepass/core/api/savepass_response_model.dart';
 import 'package:savepass/core/utils/device_info.dart';
 
 class EnrollBloc extends Bloc<EnrollEvent, EnrollState> {
@@ -20,46 +23,57 @@ class EnrollBloc extends Bloc<EnrollEvent, EnrollState> {
     required this.deviceInfo,
   }) : super(const EnrollInitialState()) {
     on<EnrollInitialEvent>(_onEnrollInitialEvent);
-    on<SubmitEnrollEvent>(_onSubmitEnrollEvent);
+    on<EnrollNewDeviceEvent>(_onEnrollNewDeviceEvent);
   }
 
   FutureOr<void> _onEnrollInitialEvent(
     EnrollInitialEvent event,
     Emitter<EnrollState> emit,
   ) async {
-    final response = await enrollRepository.getDeviceName();
-
+    final response = await enrollRepository.getCurrentSessions();
+    late final SavePassResponseModel? savePassResponse;
     response.fold(
       (l) {
-        emit(
-          GeneralErrorState(
-            state.model.copyWith(status: FormzSubmissionStatus.failure),
-          ),
-        );
+        savePassResponse = null;
       },
       (r) {
-        if (r.data == null) {
-          emit(
-            GeneralErrorState(
-              state.model.copyWith(status: FormzSubmissionStatus.failure),
-            ),
-          );
-          return;
-        }
-
-        emit(
-          ChangeEnrollState(
-            state.model.copyWith(
-              enrolledDevice: r.data!['device_name'],
-            ),
-          ),
-        );
+        savePassResponse = r;
       },
+    );
+
+    if (savePassResponse == null ||
+        savePassResponse?.code != ApiCodes.success) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
+    List<DeviceModel> devices = [];
+    final devicesData = savePassResponse?.data;
+
+    if (devicesData != null && devicesData['list'] != null) {
+      final devicesList = devicesData['list'] as List;
+
+      final newResult =
+          devicesList.map((e) => DeviceModel.fromJson(e)).toList();
+
+      devices.addAll(newResult);
+    }
+
+    emit(
+      ChangeEnrollState(
+        state.model.copyWith(
+          devices: devices,
+        ),
+      ),
     );
   }
 
-  FutureOr<void> _onSubmitEnrollEvent(
-    SubmitEnrollEvent event,
+  FutureOr<void> _onEnrollNewDeviceEvent(
+    EnrollNewDeviceEvent event,
     Emitter<EnrollState> emit,
   ) async {
     emit(
@@ -70,6 +84,7 @@ class EnrollBloc extends Bloc<EnrollEvent, EnrollState> {
       ),
     );
 
+    final deviceIdToDisable = event.deviceId;
     final deviceId = await deviceInfo.getDeviceId();
     final deviceName = await deviceInfo.getDeviceName();
     final type = deviceInfo.getDeviceType();
@@ -88,6 +103,7 @@ class EnrollBloc extends Bloc<EnrollEvent, EnrollState> {
         deviceId: deviceId,
         deviceName: deviceName,
         type: type,
+        deviceIdToDisable: deviceIdToDisable,
       ),
     );
 

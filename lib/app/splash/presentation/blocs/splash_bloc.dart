@@ -39,6 +39,20 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     ManageRouteChangeEvent event,
     Emitter<SplashState> emit,
   ) async {
+    try {
+      final userResponse = await supabase.auth.getUser();
+
+      if (userResponse.user == null) {
+        await supabase.auth.signOut();
+        emit(OpenGetStartedState(state.model));
+        return;
+      }
+    } catch (_) {
+      await supabase.auth.signOut();
+      emit(OpenGetStartedState(state.model));
+      return;
+    }
+
     final user = supabase.auth.currentUser;
     final session = supabase.auth.currentSession;
 

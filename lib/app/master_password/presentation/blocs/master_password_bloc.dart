@@ -183,6 +183,8 @@ class MasterPasswordBloc
         await SecurityUtils.deriveMasterKey(clearOldPassword, salt!, 32);
     final oldHashedPassword = SecurityUtils.hashMasterKey(derivedKey);
     final deviceId = await deviceInfo.getDeviceId();
+    final deviceName = await deviceInfo.getDeviceName();
+    final type = deviceInfo.getDeviceType();
 
     if (deviceId == null) {
       emit(
@@ -197,6 +199,8 @@ class MasterPasswordBloc
     final checkResponse = await authInitRepository.checkMasterPassword(
       inputSecret: oldHashedPassword,
       deviceId: deviceId,
+      deviceName: deviceName,
+      type: type,
       biometricHash: '',
     );
 

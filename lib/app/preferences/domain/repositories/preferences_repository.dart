@@ -19,4 +19,6 @@ abstract class PreferencesRepository {
   Future<Either<Fail, String>> getSupportMail();
   Future<Either<Fail, List<PassImageModel>>> getPassImages();
   Future<Either<Fail, List<CardImageModel>>> getCardImages();
+  Future<Either<Fail, bool>> getHasShownEnrollBiometricsDialog();
+  Future<Either<Fail, bool>> setHasShownEnrollBiometricsDialog(bool value);
 }

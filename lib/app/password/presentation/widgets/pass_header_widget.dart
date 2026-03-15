@@ -2,10 +2,12 @@ import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:formz/formz.dart';
 import 'package:savepass/l10n/app_localizations.dart';
 import 'package:savepass/app/password/presentation/blocs/password/password_bloc.dart';
 import 'package:savepass/app/password/presentation/blocs/password/password_event.dart';
 import 'package:savepass/app/password/presentation/blocs/password/password_state.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class PassHeaderWidget extends StatelessWidget {
   const PassHeaderWidget({super.key});
@@ -14,15 +16,12 @@ class PassHeaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = Modular.get<PasswordBloc>();
     final intl = AppLocalizations.of(context)!;
-    final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
     return BlocBuilder<PasswordBloc, PasswordState>(
       buildWhen: (previous, current) =>
           previous.model.isUpdating != current.model.isUpdating,
       builder: (context, state) {
-        final isUpdating = state.model.isUpdating;
-
         return Column(
           children: [
             SizedBox(
@@ -30,9 +29,7 @@ class PassHeaderWidget extends StatelessWidget {
                   screenHeight,
             ),
             Row(
-              mainAxisAlignment: isUpdating
-                  ? MainAxisAlignment.spaceBetween
-                  : MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 BlocBuilder<PasswordBloc, PasswordState>(
                   buildWhen: (previous, current) =>
@@ -108,65 +105,24 @@ class PassHeaderWidget extends StatelessWidget {
                     );
                   },
                 ),
-                if (!isUpdating)
-                  SizedBox(
-                    width: screenWidth * 0.05,
-                  ),
-                isUpdating
-                    ? AdsFilledRoundIconButton(
-                        backgroundColor: ADSFoundationsColors.errorBackground,
-                        icon: const Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                        ),
-                        onPressedCallback: () {
-                          showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text(intl.attentionTitle),
-                                content: SingleChildScrollView(
-                                  child: ListBody(
-                                    children: <Widget>[
-                                      Text(
-                                        intl.deletePasswordText,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                actions: <Widget>[
-                                  AdsFilledIconButton(
-                                    onPressedCallback: () {
-                                      Modular.to.pop();
-                                      bloc.add(const DeletePasswordEvent());
-                                    },
-                                    text: intl.acceptButton,
-                                    icon: Icons.check,
-                                  ),
-                                  TextButton(
-                                    child: Text(
-                                      intl.cancelButton,
-                                      style: const TextStyle(
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      Modular.to.pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      )
-                    : AdsHeadline(
-                        text: isUpdating
-                            ? intl.passwordEditTitle
-                            : intl.passwordTitle,
-                        overflow: TextOverflow.ellipsis,
+                BlocBuilder<PasswordBloc, PasswordState>(
+                  buildWhen: (previous, current) =>
+                      (previous.model.status != current.model.status) ||
+                      (previous.model.isUpdating != current.model.isUpdating),
+                  builder: (context, state) {
+                    final status = state.model.status;
+                    final isUpdating = state.model.isUpdating;
+
+                    return Skeletonizer(
+                      enabled: status.isInProgress,
+                      child: AdsFilledButton(
+                        onPressedCallback: () =>
+                            bloc.add(const SubmitPasswordEvent()),
+                        text: isUpdating ? intl.editText : intl.saveText,
                       ),
+                    );
+                  },
+                ),
               ],
             ),
           ],

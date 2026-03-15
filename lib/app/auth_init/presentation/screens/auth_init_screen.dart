@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
+import 'package:lottie/lottie.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_bloc.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_event.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_state.dart';
 import 'package:savepass/app/auth_init/presentation/widgets/master_password_widget.dart';
 import 'package:savepass/app/auth_init/presentation/widgets/submit_button_widget.dart';
 import 'package:savepass/core/config/routes.dart';
+import 'package:savepass/core/lottie/lottie_paths.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:savepass/l10n/app_localizations.dart';
 import 'package:savepass/main.dart';
@@ -70,6 +72,80 @@ void _listener(context, state) {
   if (state is UserBlockedState) {
     SnackBarUtils.showErrroSnackBar(context, intl.userBlocked);
   }
+
+  if (state is OpenBiometricsEnrollmentState) {
+    showEnrollBiometricsDialog(context, intl);
+  }
+
+  if (state is BiometricsEnrolledState) {
+    SnackBarUtils.showSuccessSnackBar(context, intl.biometricsEnrolled);
+    Modular.to.pushNamedAndRemoveUntil(Routes.dashboardRoute, (_) => false);
+  }
+
+  if(state is RequestBiometricsState){
+    final bloc = Modular.get<AuthInitBloc>();
+    bloc.add(const SubmitWithBiometricsEvent());
+  }
+}
+
+void showEnrollBiometricsDialog(BuildContext context, AppLocalizations intl) {
+  final deviceWidth = MediaQuery.of(context).size.width;
+  final deviceHeight = MediaQuery.of(context).size.height;
+  final bloc = Modular.get<AuthInitBloc>();
+  final colorScheme = Theme.of(context).colorScheme;
+
+  showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text(intl.useBiometrics),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                  colorScheme.primary,
+                  BlendMode.modulate,
+                ),
+                child: Lottie.asset(
+                  LottiePaths.biometrics,
+                  width: deviceWidth * 0.2,
+                  height: deviceHeight * 0.2,
+                ),
+              ),
+              SizedBox(height: deviceHeight * 0.015),
+              Text(
+                intl.enrollBiometrics,
+              ),
+              SizedBox(height: deviceHeight * 0.015),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          AdsFilledButton(
+            onPressedCallback: () {
+              bloc.add(const EnrollBiometricsEvent(enroll: true));
+              Modular.to.pop();
+            },
+            text: intl.enable,
+          ),
+          TextButton(
+            child: Text(
+              intl.skip,
+              style: const TextStyle(
+                decoration: TextDecoration.underline,
+              ),
+            ),
+            onPressed: () {
+              bloc.add(const EnrollBiometricsEvent(enroll: false));
+              Modular.to.pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
 
 class _Body extends StatelessWidget {

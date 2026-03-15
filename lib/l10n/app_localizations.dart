@@ -947,7 +947,7 @@ abstract class AppLocalizations {
   /// No description provided for @wantToLink.
   ///
   /// In en, this message translates to:
-  /// **'If you want to continue with this device, you can register it and we will unlink the previous one.'**
+  /// **'If you want to continue with this device, you can select the device you want to unlink.'**
   String get wantToLink;
 
   /// No description provided for @linkDevice.
@@ -1225,6 +1225,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Symbols'**
   String get symbolsText;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @enrollBiometrics.
+  ///
+  /// In en, this message translates to:
+  /// **'You won\'t have to enter your master password again, just authenticate with your fingerprint or Face ID.'**
+  String get enrollBiometrics;
+
+  /// No description provided for @enable.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable'**
+  String get enable;
+
+  /// No description provided for @skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skip;
+
+  /// No description provided for @singularPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'password'**
+  String get singularPassword;
+
+  /// No description provided for @singularCard.
+  ///
+  /// In en, this message translates to:
+  /// **'card'**
+  String get singularCard;
+
+  /// No description provided for @addPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Add password'**
+  String get addPassword;
+
+  /// No description provided for @addCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Add card'**
+  String get addCard;
+
+  /// No description provided for @viewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View All'**
+  String get viewAll;
 }
 
 class _AppLocalizationsDelegate

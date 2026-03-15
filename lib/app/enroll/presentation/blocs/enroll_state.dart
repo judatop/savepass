@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:savepass/app/enroll/infrastructure/models/device_model.dart';
 
 abstract class EnrollState extends Equatable {
   final EnrollStateModel model;
@@ -27,27 +28,27 @@ class SuccessEnrolledState extends EnrollState {
 }
 
 class EnrollStateModel extends Equatable {
-  final String enrolledDevice;
+  final List<DeviceModel> devices;
   final FormzSubmissionStatus status;
 
   const EnrollStateModel({
-    this.enrolledDevice = '',
+    this.devices = const <DeviceModel>[],
     this.status = FormzSubmissionStatus.initial,
   });
 
   EnrollStateModel copyWith({
-    String? enrolledDevice,
+    List<DeviceModel>? devices,
     FormzSubmissionStatus? status,
   }) {
     return EnrollStateModel(
-      enrolledDevice: enrolledDevice ?? this.enrolledDevice,
+      devices: devices ?? this.devices,
       status: status ?? this.status,
     );
   }
 
   @override
   List<Object?> get props => [
-        enrolledDevice,
+        devices,
         status,
       ];
 }

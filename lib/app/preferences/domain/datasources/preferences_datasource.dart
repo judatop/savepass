@@ -7,4 +7,6 @@ abstract class PreferencesDatasource {
   Future<Either<Fail, PreferencesModel>> setTheme(BrightnessType brightness);
   Future<Either<Fail, String?>> getLanguage();
   Future<Either<Fail, String>> setLanguage(String language);
+  Future<Either<Fail, bool>> getHasShownEnrollBiometricsDialog();
+  Future<Either<Fail, bool>> setHasShownEnrollBiometricDialog(bool value);
 }

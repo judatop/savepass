@@ -454,7 +454,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get wantToLink =>
-      'Si deseas continuar con este dispositivo, puedes registrarlo y desvincularemos el anterior.';
+      'Si deseas continuar con este dispositivo, puedes seleccionar el dispositivo que deseas desvincular.';
 
   @override
   String get linkDevice => 'Registrar dispositivo';
@@ -606,4 +606,32 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get symbolsText => 'Símbolos';
+
+  @override
+  String get delete => 'Eliminar';
+
+  @override
+  String get enrollBiometrics =>
+      'No tendrás que volver a ingresar tu contraseña maestra, solo autentícate con tu huella o Face ID.';
+
+  @override
+  String get enable => 'Activar';
+
+  @override
+  String get skip => 'Saltar';
+
+  @override
+  String get singularPassword => 'contraseña';
+
+  @override
+  String get singularCard => 'tarjeta';
+
+  @override
+  String get addPassword => 'Agregar contraseña';
+
+  @override
+  String get addCard => 'Agregar tarjeta';
+
+  @override
+  String get viewAll => 'Ver todo';
 }

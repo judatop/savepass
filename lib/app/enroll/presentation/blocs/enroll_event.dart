@@ -11,6 +11,8 @@ class EnrollInitialEvent extends EnrollEvent {
   const EnrollInitialEvent() : super();
 }
 
-class SubmitEnrollEvent extends EnrollEvent {
-  const SubmitEnrollEvent() : super();
+class EnrollNewDeviceEvent extends EnrollEvent {
+  final String deviceId;
+
+  const EnrollNewDeviceEvent({required this.deviceId}) : super();
 }

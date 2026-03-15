@@ -1,0 +1,17 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build-dev-env",
+            "type": "shell",
+            "command": "./build.sh dev",
+            "problemMatcher": []
+        },
+        {
+            "label": "build-prod-env",
+            "type": "shell",
+            "command": "./build.sh prod",
+            "problemMatcher": []
+        }
+    ]
+}

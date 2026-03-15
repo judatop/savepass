@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Flutter DEV",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "preLaunchTask": "build-dev-env",
+      "toolArgs": [
+        "--flavor", "dev",
+        "-t", "lib/main.dart",
+        "--dart-define=ENABLE_SENTRY=false"
+      ]
+    },
+    {
+      "name": "Flutter PROD",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "preLaunchTask": "build-prod-env",
+      "toolArgs": [
+        "--flavor", "prod",
+        "-t", "lib/main.dart",
+        "--dart-define=ENABLE_SENTRY=true"
+      ]
+    }
+  ]
+}

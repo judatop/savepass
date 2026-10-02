@@ -1,5 +1,6 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:savepass/core/utils/dialog_utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
@@ -79,6 +80,8 @@ class PassHeaderWidget extends StatelessWidget {
                               ),
                               actions: <Widget>[
                                 AdsFilledIconButton(
+                                  buttonStyle: DialogUtils.confirmButtonStyle,
+                                  iconSize: DialogUtils.confirmButtonIconSize,
                                   onPressedCallback: () {
                                     Modular.to.pop();
                                     Modular.to.pop();

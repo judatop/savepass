@@ -9,12 +9,12 @@ import 'package:logging/logging.dart';
 import 'package:savepass/app/auth_init/domain/repositories/auth_init_repository.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_event.dart';
 import 'package:savepass/app/auth_init/presentation/blocs/auth_init_state.dart';
-import 'package:savepass/app/biometric/domain/repositories/biometric_repository.dart';
 import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/app/profile/presentation/blocs/profile/profile_bloc.dart';
 import 'package:savepass/app/profile/presentation/blocs/profile/profile_event.dart';
 import 'package:savepass/core/api/api_codes.dart';
+import 'package:savepass/core/utils/biometric_enrollment_service.dart';
 import 'package:savepass/core/env/env.dart';
 import 'package:savepass/core/form/password_form.dart';
 import 'package:savepass/core/utils/biometric_utils.dart';
@@ -25,21 +25,21 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
   final ProfileRepository profileRepository;
   final AuthInitRepository authInitRepository;
   final BiometricUtils biometricUtils;
+  final BiometricEnrollmentService biometricEnrollmentService;
   final Logger log;
   final FlutterSecureStorage secureStorage;
   final DeviceInfo deviceInfo;
   final PreferencesRepository preferencesRepository;
-  final BiometricRepository biometricRepository;
 
   AuthInitBloc({
     required this.profileRepository,
     required this.authInitRepository,
     required this.biometricUtils,
+    required this.biometricEnrollmentService,
     required this.log,
     required this.secureStorage,
     required this.deviceInfo,
     required this.preferencesRepository,
-    required this.biometricRepository,
   }) : super(const AuthInitInitialState()) {
     on<AuthInitInitialEvent>(_onAuthInitInitial);
     on<PasswordChangedEvent>(_onPasswordChanged);
@@ -487,148 +487,50 @@ class AuthInitBloc extends Bloc<AuthInitEvent, AuthInitState> {
     EnrollBiometricsEvent event,
     Emitter<AuthInitState> emit,
   ) async {
-    try {
-      await preferencesRepository.setHasShownEnrollBiometricsDialog(true);
+    await preferencesRepository.setHasShownEnrollBiometricsDialog(true);
 
+    emit(
+      ChangeAuthInitState(
+        state.model.copyWith(
+          alreadySubmitted: true,
+          status: FormzSubmissionStatus.inProgress,
+        ),
+      ),
+    );
+
+    if (!event.enroll) {
       emit(
-        ChangeAuthInitState(
-          state.model.copyWith(
-            alreadySubmitted: true,
-            status: FormzSubmissionStatus.inProgress,
-          ),
+        OpenHomeState(
+          state.model.copyWith(status: FormzSubmissionStatus.success),
         ),
       );
+      return;
+    }
 
-      if (!event.enroll) {
+    final result = await biometricEnrollmentService.enroll(
+      masterPassword: state.model.password.value,
+    );
+
+    switch (result) {
+      case BiometricEnrollmentResult.enrolled:
         emit(
-          OpenHomeState(
+          BiometricsEnrolledState(
             state.model.copyWith(status: FormzSubmissionStatus.success),
           ),
         );
-        return;
-      }
-
-      final isAuthenticated = await biometricUtils.authenticate();
-
-      if (!isAuthenticated) {
-        emit(
-          GeneralErrorState(
-            state.model.copyWith(status: FormzSubmissionStatus.failure),
-          ),
-        );
-        return;
-      }
-
-      final saltResponse = await authInitRepository.getUserSalt();
-      late String? salt;
-      saltResponse.fold(
-        (l) {
-          salt = null;
-        },
-        (r) {
-          salt = r.data?['salt'];
-        },
-      );
-
-      if (salt == null) {
-        emit(
-          GeneralErrorState(
-            state.model.copyWith(status: FormzSubmissionStatus.failure),
-          ),
-        );
-        return;
-      }
-
-      final clearMasterPassword = state.model.password.value.trim();
-      final derivedKey =
-          await SecurityUtils.deriveMasterKey(clearMasterPassword, salt!, 32);
-      final hashedPassword = SecurityUtils.hashMasterKey(derivedKey);
-      final deviceId = await deviceInfo.getDeviceId();
-
-      if (deviceId == null) {
-        emit(
-          GeneralErrorState(
-            state.model.copyWith(status: FormzSubmissionStatus.failure),
-          ),
-        );
-        return;
-      }
-
-      final response = await biometricRepository.enrollBiometric(
-        inputSecret: hashedPassword,
-        deviceId: deviceId,
-      );
-
-      late final String? code;
-      late final Map<String, dynamic>? data;
-      response.fold(
-        (l) {
-          code = null;
-        },
-        (r) {
-          code = r.code;
-          data = r.data;
-        },
-      );
-
-      if (code == null) {
-        emit(
-          GeneralErrorState(
-            state.model.copyWith(status: FormzSubmissionStatus.failure),
-          ),
-        );
-        return;
-      }
-
-      if (data == null || code == ApiCodes.alreadyHasDeviceEnrolled) {
-        emit(
-          GeneralErrorState(
-            state.model.copyWith(status: FormzSubmissionStatus.failure),
-          ),
-        );
-        return;
-      }
-
-      if (code == ApiCodes.invalidMasterPassword) {
+      case BiometricEnrollmentResult.invalidMasterPassword:
         emit(
           InvalidMasterPasswordState(
             state.model.copyWith(status: FormzSubmissionStatus.failure),
           ),
         );
-        return;
-      }
-
-      if (code != ApiCodes.success) {
+      case BiometricEnrollmentResult.notAuthenticated:
+      case BiometricEnrollmentResult.failed:
         emit(
           GeneralErrorState(
             state.model.copyWith(status: FormzSubmissionStatus.failure),
           ),
         );
-        return;
-      }
-
-      final biometricHash = data!['hash'];
-      await secureStorage.write(
-        key: Env.biometricHashKey,
-        value: biometricHash,
-      );
-      await secureStorage.write(
-        key: Env.derivedKey,
-        value: base64Encode(derivedKey),
-      );
-
-      emit(
-        BiometricsEnrolledState(
-          state.model.copyWith(status: FormzSubmissionStatus.success),
-        ),
-      );
-    } catch (e, stackTrace) {
-      log.severe('Exception _onEnrollBiometricsEvent: $e', e, stackTrace);
-      emit(
-        GeneralErrorState(
-          state.model.copyWith(status: FormzSubmissionStatus.failure),
-        ),
-      );
     }
   }
 }

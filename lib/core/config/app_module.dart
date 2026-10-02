@@ -85,6 +85,8 @@ import 'package:savepass/core/global/presentation/screens/photo_permission_scree
 import 'package:savepass/core/utils/biometric_utils.dart';
 import 'package:savepass/core/utils/device_info.dart';
 import 'package:savepass/core/utils/security_utils.dart';
+import 'package:savepass/core/utils/biometric_enrollment_service.dart';
+import 'package:savepass/core/utils/session_utils.dart';
 
 class AppModule extends Module {
   @override
@@ -101,6 +103,8 @@ class AppModule extends Module {
     i.addSingleton(SupabaseMiddleware.new);
     i.addSingleton(SecurityUtils.new);
     i.addSingleton(BiometricUtils.new);
+    i.addSingleton(SessionUtils.new);
+    i.addSingleton(BiometricEnrollmentService.new);
     i.addSingleton(LocalAuthentication.new);
     i.addSingleton(DeviceInfo.new);
     i.addSingleton<ProfileRepository>(ProfileRepositoryImpl.new);

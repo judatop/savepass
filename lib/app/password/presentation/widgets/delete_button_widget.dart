@@ -1,5 +1,6 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:savepass/core/utils/dialog_utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
@@ -47,6 +48,7 @@ class DeleteButtonWidget extends StatelessWidget {
                         ),
                         actions: <Widget>[
                           AdsFilledButton(
+                            buttonStyle: DialogUtils.confirmButtonStyle,
                             onPressedCallback: () {
                               Modular.to.pop();
                               bloc.add(const DeletePasswordEvent());

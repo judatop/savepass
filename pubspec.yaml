@@ -69,6 +69,7 @@ flutter:
     - assets/images/dashboard/
     - assets/images/card/
     - assets/lotties/
+    - shorebird.yaml
   fonts:
     - family: Geist
       fonts:

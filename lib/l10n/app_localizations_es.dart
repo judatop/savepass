@@ -634,4 +634,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get viewAll => 'Ver todo';
+
+  @override
+  String get logOutTitle => '¿Cerrar sesión en este dispositivo?';
+
+  @override
+  String get logOutWarning =>
+      'Este dispositivo se desvinculará de tu cuenta y dejará de ocupar un lugar en tu límite de sesiones. Si activaste biometría aquí, deberás configurarla de nuevo con tu contraseña maestra la próxima vez.';
 }

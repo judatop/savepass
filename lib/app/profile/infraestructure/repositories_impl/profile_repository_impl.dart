@@ -54,6 +54,13 @@ class ProfileRepositoryImpl implements ProfileRepository {
   Future<Either<Fail, SavePassResponseModel>> deleteAccount() async {
     return await datasource.deleteAccount();
   }
+
+  @override
+  Future<Either<Fail, SavePassResponseModel>> closeSession({
+    required String deviceId,
+  }) async {
+    return await datasource.closeSession(deviceId: deviceId);
+  }
   
   @override
   Future<Either<Fail, Unit>> deleteAvatar() async {

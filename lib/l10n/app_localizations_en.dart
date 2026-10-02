@@ -628,4 +628,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get viewAll => 'View All';
+
+  @override
+  String get logOutTitle => 'Sign out of this device?';
+
+  @override
+  String get logOutWarning =>
+      'This device will be unlinked from your account and will stop counting towards your session limit. If you enabled biometrics here, you will have to set them up again with your master password next time.';
 }

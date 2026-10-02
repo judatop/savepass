@@ -1279,6 +1279,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View All'**
   String get viewAll;
+
+  /// No description provided for @logOutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out of this device?'**
+  String get logOutTitle;
+
+  /// No description provided for @logOutWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This device will be unlinked from your account and will stop counting towards your session limit. If you enabled biometrics here, you will have to set them up again with your master password next time.'**
+  String get logOutWarning;
 }
 
 class _AppLocalizationsDelegate

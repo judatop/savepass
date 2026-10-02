@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:savepass/core/utils/dialog_utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
@@ -12,10 +13,10 @@ import 'package:savepass/app/auth_init/presentation/blocs/auth_init_state.dart';
 import 'package:savepass/app/auth_init/presentation/widgets/master_password_widget.dart';
 import 'package:savepass/app/auth_init/presentation/widgets/submit_button_widget.dart';
 import 'package:savepass/core/config/routes.dart';
+import 'package:savepass/core/utils/session_utils.dart';
 import 'package:savepass/core/lottie/lottie_paths.dart';
 import 'package:savepass/core/utils/snackbar_utils.dart';
 import 'package:savepass/l10n/app_localizations.dart';
-import 'package:savepass/main.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class AuthInitScreen extends StatelessWidget {
@@ -124,6 +125,7 @@ void showEnrollBiometricsDialog(BuildContext context, AppLocalizations intl) {
         ),
         actions: <Widget>[
           AdsFilledButton(
+            buttonStyle: DialogUtils.confirmButtonStyle,
             onPressedCallback: () {
               bloc.add(const EnrollBiometricsEvent(enroll: true));
               Modular.to.pop();
@@ -284,8 +286,11 @@ class _Body extends StatelessWidget {
                                   ),
                                   actions: <Widget>[
                                     AdsFilledIconButton(
+                                      buttonStyle: DialogUtils.confirmButtonStyle,
+                                      iconSize: DialogUtils.confirmButtonIconSize,
                                       onPressedCallback: () {
-                                        supabase.auth.signOut();
+                                        Modular.get<SessionUtils>()
+                                            .clearLocalSession();
                                         Modular.to.pushNamedAndRemoveUntil(
                                           Routes.getStartedRoute,
                                           (_) => false,

@@ -25,6 +25,7 @@ import 'package:savepass/core/api/savepass_response_model.dart';
 import 'package:savepass/core/form/text_form.dart';
 import 'package:savepass/core/utils/biometric_utils.dart';
 import 'package:savepass/core/utils/device_info.dart';
+import 'package:savepass/core/utils/session_utils.dart';
 import 'package:savepass/core/utils/password_utils.dart';
 import 'package:savepass/main.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -40,6 +41,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final FlutterSecureStorage secureStorage;
   final DeviceInfo deviceInfo;
   final AuthInitRepository authInitRepository;
+  final SessionUtils sessionUtils;
 
   DashboardBloc({
     required this.log,
@@ -51,6 +53,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     required this.secureStorage,
     required this.deviceInfo,
     required this.authInitRepository,
+    required this.sessionUtils,
   }) : super(const DashboardInitialState()) {
     on<DashboardInitialEvent>(_onDashboardInitialEvent);
     on<ChangeIndexEvent>(_onChangeIndexEvent);
@@ -413,9 +416,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       return;
     }
 
-    await secureStorage.deleteAll();
     await profileRepository.deleteAvatar();
-    supabase.auth.signOut();
+    await sessionUtils.clearLocalSession();
     emit(
       LogOutState(
         state.model.copyWith(
@@ -428,9 +430,29 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   FutureOr<void> _onLogOutEvent(
     LogOutEvent event,
     Emitter<DashboardState> emit,
-  ) {
-    supabase.auth.signOut();
-    emit(LogOutState(state.model));
+  ) async {
+    emit(
+      ChangeDashboardState(
+        state.model.copyWith(logOutStatus: FormzSubmissionStatus.inProgress),
+      ),
+    );
+
+    final closed = await sessionUtils.closeSession();
+
+    if (!closed) {
+      emit(
+        GeneralErrorState(
+          state.model.copyWith(logOutStatus: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
+
+    emit(
+      LogOutState(
+        state.model.copyWith(logOutStatus: FormzSubmissionStatus.success),
+      ),
+    );
   }
 
   FutureOr<void> _onSaveDisplayNameEvent(

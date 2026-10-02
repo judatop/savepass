@@ -169,6 +169,25 @@ class SupabaseProfileDatasource implements ProfileDatasource {
   }
 
   @override
+  Future<Either<Fail, SavePassResponseModel>> closeSession({
+    required String deviceId,
+  }) async {
+    try {
+      final response = await middleware.doHttp(
+        rpc: DbUtils.closeSessionFunction,
+        params: {
+          'current_device_id': deviceId,
+        },
+      );
+
+      return Right(response);
+    } catch (e, stackTrace) {
+      log.severe('closeSession: $e', e, stackTrace);
+      return Left(Fail(SnackBarErrors.generalErrorCode));
+    }
+  }
+
+  @override
   Future<Either<Fail, Unit>> deleteAvatar() async {
     try {
       final user = supabase.auth.currentUser;

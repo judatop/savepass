@@ -37,6 +37,10 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<!-- Defaults to YES. The OAuth redirect has no path and Modular's parser
+	     throws on an empty one. Mirrors flutter_deeplinking_enabled on Android. -->
+	<key>FlutterDeepLinkingEnabled</key>
+	<false/>
 	<key>GIDClientID</key>
 	<string>$(GOOGLE_CLIENT_ID)</string>
 	<key>LSApplicationQueriesSchemes</key>

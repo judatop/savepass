@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:logging/logging.dart';
 import 'package:savepass/app/app_widget.dart';
 import 'package:savepass/core/config/app_module.dart';
 import 'package:savepass/core/env/env.dart';
@@ -24,6 +26,15 @@ final GoogleSignIn googleSignIn = GoogleSignIn(
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  if (kDebugMode) {
+    Logger.root.level = Level.ALL;
+    Logger.root.onRecord.listen((record) {
+      debugPrint('[${record.level.name}] ${record.loggerName}: ${record.message}');
+      if (record.error != null) debugPrint('  error: ${record.error}');
+      if (record.stackTrace != null) debugPrint('  ${record.stackTrace}');
+    });
+  }
+
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -36,18 +47,27 @@ void main() async {
     anonKey: Env.supabaseAnonKey,
   );
 
+  runSavePass() => runApp(
+        ModularApp(
+          module: AppModule(),
+          child: const AppWidget(),
+        ),
+      );
+
+  // The flavor without a DSN skips Sentry: initialising it anyway boots the
+  // native layer and reports nothing.
+  if (Env.sentryDsn.isEmpty) {
+    runSavePass();
+    return;
+  }
+
   await SentryFlutter.init(
     (options) {
       options.dsn = Env.sentryDsn;
       options.sendDefaultPii = true;
       options.addIntegration(LoggingIntegration());
     },
-    appRunner: () => runApp(
-      ModularApp(
-        module: AppModule(),
-        child: const AppWidget(),
-      ),
-    ),
+    appRunner: runSavePass,
   );
 }
 

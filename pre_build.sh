@@ -1,15 +1,6 @@
 #!/bin/bash
+# Kept for backwards compatibility: it used to only copy .env.<flavor>, leaving
+# env.g.dart with the previous flavor's secrets. Always go through build.sh.
+set -euo pipefail
 
-ENV=$1
-
-if [ -z "$ENV" ]; then
-  echo "No environment specified. Exiting."
-  exit 1
-fi
-
-cp ".env.$ENV" ".env"
-
-# Add any other setup tasks here
-echo "Environment set to $ENV"
-     
-# chmod +x pre_build.sh - make the script executable
+exec "$(dirname "$0")/build.sh" "$@"

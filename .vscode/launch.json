@@ -9,8 +9,7 @@
       "preLaunchTask": "build-dev-env",
       "toolArgs": [
         "--flavor", "dev",
-        "-t", "lib/main.dart",
-        "--dart-define=ENABLE_SENTRY=false"
+        "-t", "lib/main.dart"
       ]
     },
     {
@@ -21,8 +20,7 @@
       "preLaunchTask": "build-prod-env",
       "toolArgs": [
         "--flavor", "prod",
-        "-t", "lib/main.dart",
-        "--dart-define=ENABLE_SENTRY=true"
+        "-t", "lib/main.dart"
       ]
     }
   ]

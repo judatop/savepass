@@ -6,7 +6,6 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:formz/formz.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -184,65 +183,48 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     }
 
     if (Platform.isAndroid) {
-      final androidInfo = await DeviceInfoPlugin().androidInfo;
+      // The photo picker grants access to the one file the user chose, so
+      // there is no permission to ask for.
+      await _uploadAvatarAndRefresh(emit);
+    }
+  }
 
-      PermissionStatus status;
-      if (androidInfo.version.sdkInt <= 32) {
-        status = await Permission.storage.status;
-      } else {
-        status = await Permission.photos.status;
-      }
+  Future<void> _uploadAvatarAndRefresh(Emitter<DashboardState> emit) async {
+    final response = await _uploadPhoto();
 
-      if (status.isGranted) {
-        final response = await _uploadPhoto();
+    if (response == null) {
+      emit(
+        ChangeDashboardState(
+          state.model.copyWith(status: FormzSubmissionStatus.initial),
+        ),
+      );
+      return;
+    }
 
-        if (response == null) {
-          emit(
-            ChangeDashboardState(
-              state.model.copyWith(status: FormzSubmissionStatus.initial),
-            ),
-          );
-          return;
-        }
+    if (!response) {
+      emit(
+        UploadAvatarFailedState(
+          state.model.copyWith(status: FormzSubmissionStatus.failure),
+        ),
+      );
+      return;
+    }
 
-        if (!response) {
-          emit(
-            UploadAvatarFailedState(
-              state.model.copyWith(status: FormzSubmissionStatus.failure),
-            ),
-          );
-          return;
-        }
+    final res = await profileRepository.getProfile();
 
-        final res = await profileRepository.getProfile();
-
-        res.fold(
-          (l) {},
-          (r) {
-            emit(
-              ChangeDashboardState(
-                state.model.copyWith(
-                  profile: r,
-                  status: FormzSubmissionStatus.success,
-                ),
-              ),
-            );
-          },
-        );
-        return;
-      }
-
-      if (status.isDenied || status.isPermanentlyDenied) {
+    res.fold(
+      (l) {},
+      (r) {
         emit(
-          OpenPhotoPermissionState(
+          ChangeDashboardState(
             state.model.copyWith(
-              status: FormzSubmissionStatus.failure,
+              profile: r,
+              status: FormzSubmissionStatus.success,
             ),
           ),
         );
-        return;
-      }
-    }
+      },
+    );
   }
 
   Future<bool?> _uploadPhoto() async {

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker_android/image_picker_android.dart';
+import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:logging/logging.dart';
 import 'package:savepass/app/app_widget.dart';
@@ -41,6 +43,14 @@ void main() async {
   ]);
 
   await initializeDateFormatting('es', null);
+
+  // The Android photo picker needs no storage permission at all. Play rejects
+  // READ_MEDIA_IMAGES unless the picker is technically insufficient, and the
+  // plugin still defaults this to false.
+  final imagePicker = ImagePickerPlatform.instance;
+  if (imagePicker is ImagePickerAndroid) {
+    imagePicker.useAndroidPhotoPicker = true;
+  }
 
   await Supabase.initialize(
     url: Env.supabaseURL,

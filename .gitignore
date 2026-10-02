@@ -54,3 +54,5 @@ GoogleService-Info.plist
 .kotlin
 .env.dev
 .env.prod
+
+.envied.lock

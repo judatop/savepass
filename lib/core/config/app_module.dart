@@ -85,16 +85,26 @@ import 'package:savepass/core/global/presentation/screens/photo_permission_scree
 import 'package:savepass/core/utils/biometric_utils.dart';
 import 'package:savepass/core/utils/device_info.dart';
 import 'package:savepass/core/utils/security_utils.dart';
+import 'package:savepass/core/utils/biometric_enrollment_service.dart';
+import 'package:savepass/core/utils/session_utils.dart';
 
 class AppModule extends Module {
   @override
   void binds(i) {
-    i.addSingleton(FlutterSecureStorage.new);
+    i.addSingleton<FlutterSecureStorage>(
+      () => const FlutterSecureStorage(
+        aOptions: AndroidOptions(
+          encryptedSharedPreferences: true,
+        ),
+      ),
+    );
     i.addSingleton(PreferencesBloc.new);
     i.addSingleton<Logger>(() => Logger('SavePassLogger'));
     i.addSingleton(SupabaseMiddleware.new);
     i.addSingleton(SecurityUtils.new);
     i.addSingleton(BiometricUtils.new);
+    i.addSingleton(SessionUtils.new);
+    i.addSingleton(BiometricEnrollmentService.new);
     i.addSingleton(LocalAuthentication.new);
     i.addSingleton(DeviceInfo.new);
     i.addSingleton<ProfileRepository>(ProfileRepositoryImpl.new);
@@ -228,6 +238,10 @@ class AppModule extends Module {
     r.child(
       Routes.newAppVersionRoute,
       child: (context) => const NewAppVersionScreen(),
+    );
+    r.child(
+      Routes.oauthCallback,
+      child: (_) => const SearchScreen(),
     );
   }
 }

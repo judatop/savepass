@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:formz/formz.dart';
+import 'package:logging/logging.dart';
+import 'package:savepass/app/preferences/domain/repositories/preferences_repository.dart';
 import 'package:savepass/app/profile/domain/repositories/profile_repository.dart';
 import 'package:savepass/app/profile/infraestructure/models/insert_master_password_model.dart';
 import 'package:savepass/app/profile/presentation/blocs/profile/profile_bloc.dart';
@@ -10,7 +12,9 @@ import 'package:savepass/app/profile/presentation/blocs/profile/profile_event.da
 import 'package:savepass/app/sync_pass/infrastructure/models/master_password_form.dart';
 import 'package:savepass/app/sync_pass/presentation/blocs/sync_event.dart';
 import 'package:savepass/app/sync_pass/presentation/blocs/sync_state.dart';
+import 'package:savepass/core/utils/biometric_enrollment_service.dart';
 import 'package:savepass/core/global/utils/secret_utils.dart';
+import 'package:savepass/core/utils/biometric_utils.dart';
 import 'package:savepass/core/utils/device_info.dart';
 import 'package:savepass/core/utils/security_utils.dart';
 import 'package:uuid/uuid.dart';
@@ -18,15 +22,24 @@ import 'package:uuid/uuid.dart';
 class SyncBloc extends Bloc<SyncEvent, SyncState> {
   final ProfileRepository profileRepository;
   final DeviceInfo deviceInfo;
+  final PreferencesRepository preferencesRepository;
+  final BiometricUtils biometricUtils;
+  final BiometricEnrollmentService biometricEnrollmentService;
+  final Logger log;
 
   SyncBloc({
     required this.profileRepository,
     required this.deviceInfo,
+    required this.preferencesRepository,
+    required this.biometricUtils,
+    required this.biometricEnrollmentService,
+    required this.log,
   }) : super(const SyncInitialState()) {
     on<SyncInitialEvent>(_onSyncInitial);
     on<SyncPasswordChangedEvent>(_onSyncPasswordChanged);
     on<SubmitSyncPasswordEvent>(_onSubmitSyncPassword);
     on<ToggleMasterPasswordEvent>(_onToggleMasterPasswordEvent);
+    on<EnrollBiometricsEvent>(_onEnrollBiometricsEvent);
   }
 
   FutureOr<void> _onSyncInitial(
@@ -72,6 +85,23 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
       );
       return;
     }
+
+    final hasShownEnrollBiometricsDialogResult =
+        await preferencesRepository.getHasShownEnrollBiometricsDialog();
+    late bool hasShownEnrollBiometricsDialog = false;
+
+    hasShownEnrollBiometricsDialogResult.fold(
+      (l) {
+        hasShownEnrollBiometricsDialog = false;
+      },
+      (r) {
+        hasShownEnrollBiometricsDialog = r;
+      },
+    );
+    final hasBiometricsSaved = await biometricUtils.hasBiometricsSaved();
+    final canAuthenticateWithBiometrics =
+        await biometricUtils.canAuthenticateWithBiometrics();
+
 
     final clearMasterPassword = state.model.masterPassword.value;
     final name = '${const Uuid().v4()}-${SecretUtils.masterPasswordKey}';
@@ -125,6 +155,17 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
         profileBloc.add(SaveDerivedKeyEvent(derivedKey: derivedKey));
         profileBloc.add(SaveJwtEvent(jwt: r.data!['jwt']));
 
+        if (!hasShownEnrollBiometricsDialog &&
+            !hasBiometricsSaved &&
+            canAuthenticateWithBiometrics) {
+          emit(
+            OpenBiometricsEnrollmentState(
+              state.model.copyWith(status: FormzSubmissionStatus.success),
+            ),
+          );
+          return;
+        }
+
         emit(
           OpenHomeState(
             state.model.copyWith(status: FormzSubmissionStatus.success),
@@ -143,5 +184,56 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
         state.model.copyWith(showPassword: !state.model.showPassword),
       ),
     );
+  }
+
+  FutureOr<void> _onEnrollBiometricsEvent(
+    EnrollBiometricsEvent event,
+    Emitter<SyncState> emit,
+  ) async {
+    await preferencesRepository.setHasShownEnrollBiometricsDialog(true);
+
+    emit(
+      ChangeSyncState(
+        state.model.copyWith(
+          alreadySubmitted: true,
+          status: FormzSubmissionStatus.inProgress,
+        ),
+      ),
+    );
+
+    if (!event.enroll) {
+      emit(
+        OpenHomeState(
+          state.model.copyWith(status: FormzSubmissionStatus.success),
+        ),
+      );
+      return;
+    }
+
+    final result = await biometricEnrollmentService.enroll(
+      masterPassword: state.model.masterPassword.value,
+    );
+
+    switch (result) {
+      case BiometricEnrollmentResult.enrolled:
+        emit(
+          BiometricsEnrolledState(
+            state.model.copyWith(status: FormzSubmissionStatus.success),
+          ),
+        );
+      case BiometricEnrollmentResult.invalidMasterPassword:
+        emit(
+          InvalidMasterPasswordState(
+            state.model.copyWith(status: FormzSubmissionStatus.failure),
+          ),
+        );
+      case BiometricEnrollmentResult.notAuthenticated:
+      case BiometricEnrollmentResult.failed:
+        emit(
+          GeneralErrorState(
+            state.model.copyWith(status: FormzSubmissionStatus.failure),
+          ),
+        );
+    }
   }
 }

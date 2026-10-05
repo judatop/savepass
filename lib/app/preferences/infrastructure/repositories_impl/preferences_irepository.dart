@@ -87,4 +87,16 @@ class PreferencesIRepository implements PreferencesRepository {
   Future<Either<Fail, String>> getSupportMail() async {
     return await supabaseDatasource.getSupportMail();
   }
+
+  @override
+  Future<Either<Fail, bool>> getHasShownEnrollBiometricsDialog() async {
+    return await localDatasource.getHasShownEnrollBiometricsDialog();
+  }
+
+  @override
+  Future<Either<Fail, bool>> setHasShownEnrollBiometricsDialog(
+    bool value,
+  ) async {
+    return await localDatasource.setHasShownEnrollBiometricDialog(value);
+  }
 }

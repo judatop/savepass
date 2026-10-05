@@ -1,14 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:label="SavePass"
-        android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -16,7 +13,6 @@
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
-            android:enableOnBackInvokedCallback="true"
             android:windowSoftInputMode="adjustResize">
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
@@ -25,6 +21,12 @@
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme"
+            />
+            <!-- The OAuth redirect has no path and Modular's parser throws on
+                 an empty one. app_links consumes the redirect instead. -->
+            <meta-data
+                android:name="flutter_deeplinking_enabled"
+                android:value="false"
             />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,8 +38,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
-                    android:scheme="savepass"
-                    android:host="com.juda.savepass">
+                    android:scheme="${appAuthScheme}"
+                    android:host="${appAuthHost}">
 
                 </data>
             </intent-filter>

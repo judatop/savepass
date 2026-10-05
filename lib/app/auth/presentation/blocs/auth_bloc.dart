@@ -98,22 +98,35 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthWithGoogleEvent event,
     Emitter<AuthState> emit,
   ) async {
-    supabase.auth.signInWithOAuth(
-      supabaseauth.OAuthProvider.google,
-      redirectTo: Env.supabaseRedirectUrl,
-      authScreenLaunchMode: supabaseauth.LaunchMode.inAppWebView,
-    );
+    try {
+      await supabase.auth.signInWithOAuth(
+        supabaseauth.OAuthProvider.google,
+        redirectTo: Env.supabaseRedirectUrl,
+        authScreenLaunchMode: supabaseauth.LaunchMode.inAppWebView,
+        // Supabase's signOut leaves Google's own web view session, which would
+        // silently reuse the last account.
+        queryParams: const {'prompt': 'select_account'},
+      );
+    } catch (e, stackTrace) {
+      log.severe('_onAuthWithGoogleEvent: $e', e, stackTrace);
+      emit(GeneralErrorState(state.model));
+    }
   }
 
   FutureOr<void> _onAuthWithGithubEvent(
     AuthWithGithubEvent event,
     Emitter<AuthState> emit,
   ) async {
-    supabase.auth.signInWithOAuth(
-      supabaseauth.OAuthProvider.github,
-      redirectTo: Env.supabaseRedirectUrl,
-      authScreenLaunchMode: supabaseauth.LaunchMode.inAppWebView,
-    );
+    try {
+      await supabase.auth.signInWithOAuth(
+        supabaseauth.OAuthProvider.github,
+        redirectTo: Env.supabaseRedirectUrl,
+        authScreenLaunchMode: supabaseauth.LaunchMode.inAppWebView,
+      );
+    } catch (e, stackTrace) {
+      log.severe('_onAuthWithGithubEvent: $e', e, stackTrace);
+      emit(GeneralErrorState(state.model));
+    }
   }
 
   FutureOr<void> _onAuthWithEmailEvent(
@@ -366,6 +379,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     ProcessSignedInEvent event,
     Emitter<AuthState> emit,
   ) async {
+    // supabase_flutter never closes the OAuth web view. No-op when none was
+    // opened, such as email sign in.
+    try {
+      await closeInAppWebView();
+    } catch (e, stackTrace) {
+      log.severe('closeInAppWebView: $e', e, stackTrace);
+    }
+
     emit(
       ChangeAuthState(
         state.model.copyWith(

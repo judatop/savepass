@@ -5,6 +5,8 @@ abstract class AuthInitDatasource {
   Future<Either<Fail, SavePassResponseModel>> checkMasterPassword({
     required String inputSecret,
     required String deviceId,
+    required String deviceName,
+    required String type,
     required String biometricHash,
   });
 

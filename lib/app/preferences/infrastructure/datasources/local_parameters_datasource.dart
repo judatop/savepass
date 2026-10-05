@@ -71,4 +71,33 @@ class LocalPreferencesDatasource implements PreferencesDatasource {
       return Left(Fail('Error setting language'));
     }
   }
+
+  @override
+  Future<Either<Fail, bool>> getHasShownEnrollBiometricsDialog() async {
+    try {
+      final showEnrollBiometricsDialogValue = await storage.read(
+        key: StoragePreferences.hasShownEnrollBiometricsDialogKey,
+      );
+
+      return Right(showEnrollBiometricsDialogValue == 'true');
+    } catch (e) {
+      return Left(Fail('Error getting show enroll biometrics dialog'));
+    }
+  }
+
+  @override
+  Future<Either<Fail, bool>> setHasShownEnrollBiometricDialog(
+    bool value,
+  ) async {
+    try {
+      await storage.write(
+        key: StoragePreferences.hasShownEnrollBiometricsDialogKey,
+        value: value.toString(),
+      );
+
+      return Right(value);
+    } catch (e) {
+      return Left(Fail('Error setting show enroll biometrics dialog'));
+    }
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:atomic_design_system/atomic_design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:savepass/core/utils/dialog_utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:savepass/l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -57,6 +58,8 @@ class DeleteAccountSettingsWidget extends StatelessWidget {
                             ),
                             actions: <Widget>[
                               AdsFilledIconButton(
+                                buttonStyle: DialogUtils.confirmButtonStyle,
+                                iconSize: DialogUtils.confirmButtonIconSize,
                                 onPressedCallback: () {
                                   Modular.to.pop();
                                   bloc.add(const DeleteAccountEvent());

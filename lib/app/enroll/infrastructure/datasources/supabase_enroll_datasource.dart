@@ -17,15 +17,15 @@ class SupabaseEnrollDatasource implements EnrollDatasource {
   });
 
   @override
-  Future<Either<Fail, SavePassResponseModel>> getDeviceName() async {
+  Future<Either<Fail, SavePassResponseModel>> getCurrentSessions() async {
     try {
       final response = await middleware.doHttp(
-        rpc: DbUtils.deviceNameFunction,
+        rpc: DbUtils.getCurrentSessions,
       );
 
       return Right(response);
     } catch (e, stackTrace) {
-      log.severe('getDeviceName: $e', e, stackTrace);
+      log.severe('getCurrentSessions: $e', e, stackTrace);
       return Left(Fail(SnackBarErrors.generalErrorCode));
     }
   }

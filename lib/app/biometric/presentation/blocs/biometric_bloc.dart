@@ -97,7 +97,7 @@ class BiometricBloc extends Bloc<BiometricEvent, BiometricState> {
       return;
     }
 
-    final clearMasterPassword = state.model.masterPassword.value;
+    final clearMasterPassword = state.model.masterPassword.value.trim();
     final derivedKey =
         await SecurityUtils.deriveMasterKey(clearMasterPassword, salt!, 32);
     final hashedPassword = SecurityUtils.hashMasterKey(derivedKey);
@@ -167,7 +167,8 @@ class BiometricBloc extends Bloc<BiometricEvent, BiometricState> {
 
     final biometricHash = data!['hash'];
     await secureStorage.write(key: Env.biometricHashKey, value: biometricHash);
-    await secureStorage.write(key: Env.derivedKey, value: base64Encode(derivedKey));
+    await secureStorage.write(
+        key: Env.derivedKey, value: base64Encode(derivedKey));
 
     emit(
       EnrolledSuccessfulState(

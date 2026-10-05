@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/tools/add_card_widget.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/tools/add_password_widget.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/tools/cards_widget.dart';
+import 'package:savepass/app/dashboard/presentation/widgets/tools/join_biometrics_widget.dart';
 import 'package:savepass/app/dashboard/presentation/widgets/tools/passwords_widget.dart';
 
 class ToolsWidget extends StatelessWidget {
@@ -70,8 +71,7 @@ class ToolsWidget extends StatelessWidget {
               right: deviceWidth * 0.04,
               bottom: deviceHeight * 0.02,
             ),
-            child: Container(),
-            // child: const JoinBiometricsWidget(),
+            child: const JoinBiometricsWidget(),
           ),
         ),
         Expanded(

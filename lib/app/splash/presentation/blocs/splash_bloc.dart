@@ -9,17 +9,27 @@ import 'package:savepass/app/profile/domain/repositories/profile_repository.dart
 import 'package:savepass/app/splash/presentation/blocs/splash_event.dart';
 import 'package:savepass/app/splash/presentation/blocs/splash_state.dart';
 import 'package:savepass/core/config/routes.dart';
+import 'package:savepass/core/utils/session_utils.dart';
+import 'package:savepass/core/utils/version_utils.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:savepass/main.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
+  /// Retried, but bounded: neither call is awaited, so an unbounded loop stays
+  /// alive after the user has moved on and can navigate from underneath them.
+  static const _maxCheckAttempts = 4;
+  static const _checkRetryDelay = Duration(seconds: 3);
+
   final ProfileRepository profileRepository;
   final PreferencesRepository preferencesRepository;
+  final SessionUtils sessionUtils;
   final Logger log;
 
   SplashBloc({
     required this.log,
     required this.profileRepository,
     required this.preferencesRepository,
+    required this.sessionUtils,
   }) : super(const SplashInitialState()) {
     on<SplashInitialEvent>(_onSplashInitial);
     on<ManageRouteChangeEvent>(_onManageRouteChangeEvent);
@@ -39,6 +49,29 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     ManageRouteChangeEvent event,
     Emitter<SplashState> emit,
   ) async {
+    // Only a verdict from the server ends the session; a transport failure
+    // falls through to the local checks below.
+    try {
+      final userResponse = await supabase.auth.getUser();
+
+      if (userResponse.user == null) {
+        await sessionUtils.clearLocalSession();
+        emit(OpenGetStartedState(state.model));
+        return;
+      }
+    } on AuthRetryableFetchException catch (e, stackTrace) {
+      // Extends AuthException, so it MUST be caught first: it means the request
+      // never got an answer, not that the token was rejected.
+      log.warning('getUser unreachable, keeping session: $e', e, stackTrace);
+    } on AuthException catch (e, stackTrace) {
+      log.info('getUser rejected the session: $e', e, stackTrace);
+      await sessionUtils.clearLocalSession();
+      emit(OpenGetStartedState(state.model));
+      return;
+    } catch (e, stackTrace) {
+      log.warning('getUser failed, keeping session: $e', e, stackTrace);
+    }
+
     final user = supabase.auth.currentUser;
     final session = supabase.auth.currentSession;
 
@@ -98,20 +131,20 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   }
 
   Future<void> _checkFeatureFlag() async {
-    bool success = false;
+    for (var attempt = 0; attempt < _maxCheckAttempts; attempt++) {
+      if (attempt > 0) {
+        await Future.delayed(_checkRetryDelay * attempt);
+      }
 
-    while (!success) {
       final response = await preferencesRepository.getFeatureFlag();
 
       if (response.isLeft()) {
-        await Future.delayed(const Duration(seconds: 3));
         continue;
       }
 
       final featureFlag = response.getOrElse(() => '');
 
       if (featureFlag.isEmpty) {
-        await Future.delayed(const Duration(seconds: 3));
         continue;
       }
 
@@ -120,44 +153,45 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
           Routes.weAreExperiencingIssuesRoute,
           (_) => false,
         );
-        break;
       }
 
-      success = true;
+      return;
     }
+
+    log.warning('Feature flag unavailable after $_maxCheckAttempts attempts');
   }
 
   Future<void> _checkAppVersion() async {
     final packageInfo = await PackageInfo.fromPlatform();
-
     final currentAppVersion = packageInfo.version;
 
-    bool success = false;
+    for (var attempt = 0; attempt < _maxCheckAttempts; attempt++) {
+      if (attempt > 0) {
+        await Future.delayed(_checkRetryDelay * attempt);
+      }
 
-    while (!success) {
       final response = await preferencesRepository.getAppVersion();
 
       if (response.isLeft()) {
-        await Future.delayed(const Duration(seconds: 3));
         continue;
       }
 
       final appVersion = response.getOrElse(() => '');
 
       if (appVersion.isEmpty) {
-        await Future.delayed(const Duration(seconds: 3));
         continue;
       }
 
-      if (appVersion != currentAppVersion) {
+      if (VersionUtils.isOlderThan(currentAppVersion, appVersion)) {
         Modular.to.pushNamedAndRemoveUntil(
           Routes.newAppVersionRoute,
           (_) => false,
         );
-        break;
       }
 
-      success = true;
+      return;
     }
+
+    log.warning('App version unavailable after $_maxCheckAttempts attempts');
   }
 }

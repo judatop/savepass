@@ -6,19 +6,21 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_bloc.dart';
 import 'package:savepass/app/dashboard/presentation/blocs/dashboard_state.dart';
 import 'package:savepass/core/config/routes.dart';
+import 'package:savepass/l10n/app_localizations.dart';
 
 class PasswordsWidget extends StatelessWidget {
   const PasswordsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final intl = AppLocalizations.of(context)!;
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
     final theme = Theme.of(context);
 
     return AdsCard(
       onTap: () async {
-         Modular.to.pushNamed(Routes.passwordReport);
+        Modular.to.pushNamed(Routes.passwordReport);
       },
       elevation: 1,
       bgColor: ADSFoundationsColors.primaryColor,
@@ -52,7 +54,7 @@ class PasswordsWidget extends StatelessWidget {
                           ?.copyWith(color: Colors.white),
                     ),
                     Text(
-                      'password${value == 1 ? '' : 's'}',
+                      '${intl.singularPassword}${value == 1 ? '' : 's'}',
                       style: theme.textTheme.headlineMedium?.copyWith(
                         color: Colors.white,
                         fontSize: 17.5,
@@ -67,9 +69,9 @@ class PasswordsWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'View All',
-                  style: TextStyle(
+                Text(
+                  intl.viewAll,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

@@ -38,33 +38,37 @@ class PassWidget extends StatelessWidget {
               buildWhen: (previous, current) =>
                   previous.model.isUpdating != current.model.isUpdating,
               builder: (context, state) {
-                final isUpdating = state.model.isUpdating;
-
                 return Row(
                   children: [
                     SizedBox(
                       width: deviceWidth * 0.03,
                     ),
                     AdsFilledRoundIconButton(
-                      icon: Icon(isUpdating ? Icons.copy : Icons.autorenew),
+                      icon: const Icon(Icons.autorenew),
                       onPressedCallback: () {
                         FocusManager.instance.primaryFocus?.unfocus();
-                        if (isUpdating) {
-                          bloc.add(const CopyPassToClipboardEvent());
-                        } else {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            useSafeArea: true,
-                            builder: (BuildContext context) {
-                              return SizedBox(
-                                width: double.infinity,
-                                height: deviceHeight * 0.70,
-                                child: const PassGeneratorModalWidget(),
-                              );
-                            },
-                          );
-                        }
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          useSafeArea: true,
+                          builder: (BuildContext context) {
+                            return SizedBox(
+                              width: double.infinity,
+                              height: deviceHeight * 0.70,
+                              child: const PassGeneratorModalWidget(),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    SizedBox(
+                      width: deviceWidth * 0.015,
+                    ),
+                    AdsFilledRoundIconButton(
+                      icon: const Icon(Icons.copy),
+                      onPressedCallback: () {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        bloc.add(const CopyPassToClipboardEvent());
                       },
                     ),
                   ],

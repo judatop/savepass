@@ -13,6 +13,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
     final blockSizeHorizontal = deviceWidth / 100;
 
     return Positioned(
@@ -32,7 +33,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
           elevation: 5,
           child: Container(
             width: deviceWidth,
-            height: blockSizeHorizontal * (Platform.isAndroid ? 18 : 17),
+            height: blockSizeHorizontal *
+                (Platform.isAndroid
+                    ? deviceHeight * 0.02
+                    : deviceHeight * 0.018),
             decoration: BoxDecoration(
               color: Colors.black,
               borderRadius:

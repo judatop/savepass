@@ -28,6 +28,10 @@ class OpenHomeState extends AuthInitState {
   const OpenHomeState(super.model);
 }
 
+class OpenBiometricsEnrollmentState extends AuthInitState {
+  const OpenBiometricsEnrollmentState(super.model);
+}
+
 class RefreshSuccessState extends AuthInitState {
   const RefreshSuccessState(super.model);
 }
@@ -48,8 +52,16 @@ class DeviceNotEnrolledState extends AuthInitState {
   const DeviceNotEnrolledState(super.model);
 }
 
-class UserBlockedState extends AuthInitState{
+class UserBlockedState extends AuthInitState {
   const UserBlockedState(super.model);
+}
+
+class BiometricsEnrolledState extends AuthInitState {
+  const BiometricsEnrolledState(super.model);
+}
+
+class RequestBiometricsState extends AuthInitState {
+  const RequestBiometricsState(super.model);
 }
 
 class AuthInitStateModel extends Equatable {

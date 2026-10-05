@@ -13,7 +13,7 @@ class AuthInitInitialEvent extends AuthInitEvent {
   const AuthInitInitialEvent({required this.refreshAuth}) : super();
 }
 
-class CheckSupabaseBiometricsEvent extends AuthInitEvent{
+class CheckSupabaseBiometricsEvent extends AuthInitEvent {
   const CheckSupabaseBiometricsEvent() : super();
 }
 
@@ -31,10 +31,16 @@ class SubmitEvent extends AuthInitEvent {
   const SubmitEvent() : super();
 }
 
-class SubmitWithBiometricsEvent extends AuthInitEvent{
+class SubmitWithBiometricsEvent extends AuthInitEvent {
   const SubmitWithBiometricsEvent() : super();
 }
 
-class GetProfileEvent extends AuthInitEvent{
+class GetProfileEvent extends AuthInitEvent {
   const GetProfileEvent() : super();
+}
+
+class EnrollBiometricsEvent extends AuthInitEvent {
+  final bool enroll;
+
+  const EnrollBiometricsEvent({required this.enroll}) : super();
 }
